@@ -1,0 +1,16 @@
+{
+  "name": "parfumerya",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix frontend",
+    "dev:storefront": "npm run dev --prefix frontend/storefront",
+    "dev:admin": "npm run dev --prefix frontend/admin",
+    "dev:api": "npm run dev --prefix api",
+    "dev:backend": "dotnet run --project backend/src/Parfumerya.WebAPI",
+    "stop": "node scripts/stop-dev.js",
+    "build": "npm run build --prefix frontend/storefront && npm run build --prefix frontend/admin"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
