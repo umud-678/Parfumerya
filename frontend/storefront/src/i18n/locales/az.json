@@ -1,0 +1,210 @@
+{
+  "nav": {
+    "home": "Ana səhifə",
+    "shop": "Mağaza",
+    "categories": "Kateqoriyalar",
+    "about": "Haqqımızda",
+    "contact": "Əlaqə",
+    "search": "Axtar...",
+    "cart": "Səbət",
+    "favorites": "Favoritlər",
+    "account": "Hesab",
+    "login": "Daxil ol",
+    "register": "Qeydiyyat"
+  },
+  "hero": {
+    "title": "Seçilmiş",
+    "titleHighlight": "ətirlərimiz",
+    "titleEnd": "ilə aşiq olun",
+    "subtitle": "Geniş ətir kolleksiyamızla sizin üçün mükəmməl qoxunu kəşf edin.",
+    "perfumes": "Ətir",
+    "customers": "Müştəri",
+    "shopNow": "İNDİ AL",
+    "discover": "Kəşf et"
+  },
+  "home": {
+    "categoriesTitle": "Kolleksiyalarımız",
+    "productsTitle": "Geniş qoxu seçimimiz",
+    "trendingTitle": "Sizin üçün seçilənlər",
+    "trendingSubtitle": "Fərqli kateqoriyalardan trend məhsullar",
+    "products": "məhsul",
+    "catWomen": "Qadın ətirləri",
+    "catMen": "Kişi ətirləri",
+    "catCosmetic": "Kosmetika"
+  },
+  "category": {
+    "collection": "Kolleksiya",
+    "productCount": "{{count}} məhsul",
+    "empty": "Bu kateqoriyada hələ məhsul yoxdur."
+  },
+  "shop": {
+    "title": "Mağaza",
+    "search": "Məhsul axtar...",
+    "sortName": "Ada görə",
+    "sortPrice": "Qiymət (aşağı)",
+    "sortPriceDesc": "Qiymət (yuxarı)",
+    "noProducts": "Məhsul tapılmadı."
+  },
+  "product": {
+    "notFound": "Məhsul tapılmadı.",
+    "loading": "Yüklənir...",
+    "addToCart": "Səbətə əlavə et",
+    "favorite": "Favorit",
+    "volume": "həcm",
+    "description": "Premium keyfiyyətli ətir. Uzunmüddətli, zərif qoxu profili ilə gündəlik istifadə üçün ideal."
+  },
+  "cart": {
+    "title": "Səbət",
+    "empty": "Səbətiniz boşdur",
+    "startShopping": "Alış-verişə başla",
+    "total": "Ümumi",
+    "checkout": "Sifarişi tamamla"
+  },
+  "checkout": {
+    "title": "Sifariş",
+    "stepAddress": "Çatdırılma ünvanı",
+    "stepSummary": "Sifariş xülasəsi",
+    "fullName": "Ad Soyad",
+    "phone": "Telefon",
+    "address": "Ünvan",
+    "city": "Şəhər",
+    "region": "Bölgə",
+    "continue": "Davam et",
+    "products": "Məhsullar",
+    "shipping": "Çatdırılma",
+    "discount": "Endirim",
+    "total": "Ümumi",
+    "confirmOrder": "Sifarişi təsdiqlə",
+    "paymentOnDeliveryNote": "Ödəniş çatdırılma zamanı həyata keçiriləcək.",
+    "creating": "Sifariş yaradılır...",
+    "promoCode": "Endirim kodu",
+    "promoPlaceholder": "Məs: YAY20",
+    "applyPromo": "Tətbiq et",
+    "orderSummary": "Sifariş",
+    "productsCount": "{{count}} məhsul",
+    "confirmed": "Sifariş təsdiqləndi!",
+    "confirmedMsg": "Sifarişiniz qəbul edildi və hazırlanır.",
+    "orderNo": "Sifariş №",
+    "myOrders": "Sifarişlərim",
+    "orderFailed": "Sifariş yaradılmadı",
+    "couponApplied": "Endirim tətbiq edildi",
+    "couponInvalid": "Endirim kodu etibarsızdır",
+    "promoLabel": "Endirim",
+    "defaultCity": "Bakı",
+    "defaultRegion": "Bakı"
+  },
+  "auth": {
+    "login": "Daxil ol",
+    "register": "Qeydiyyat",
+    "email": "E-poçt",
+    "password": "Şifrə",
+    "fullName": "Ad Soyad",
+    "passwordHint": "Şifrə (minimum 8 simvol)",
+    "loggingIn": "Giriş edilir...",
+    "registering": "Qeydiyyat edilir...",
+    "noAccount": "Hesabınız yoxdur?",
+    "hasAccount": "Artıq hesabınız var?",
+    "adminPanel": "Admin panelinə daxil ol",
+    "or": "və ya",
+    "loginError": "Giriş uğursuz oldu",
+    "registerError": "Qeydiyyat uğursuz oldu"
+  },
+  "wishlist": {
+    "title": "Favoritlər",
+    "loginRequired": "Favoritlər üçün daxil olmalısınız.",
+    "empty": "Hələ favorit məhsul yoxdur.",
+    "addToCart": "Səbətə at",
+    "remove": "Sil"
+  },
+  "account": {
+    "title": "Profil",
+    "welcome": "Xoş gəlmisiniz",
+    "name": "Ad Soyad",
+    "phone": "Telefon",
+    "phonePlaceholder": "+994 XX XXX XX XX",
+    "saveProfile": "Profili yadda saxla",
+    "saving": "Saxlanılır...",
+    "profileSaved": "Profil uğurla yeniləndi",
+    "profileError": "Profil yenilənmədi",
+    "email": "E-poçt",
+    "myOrders": "Sifarişlərim",
+    "logout": "Çıxış",
+    "viewAll": "Hamısına bax",
+    "recentOrders": "Son sifarişlər",
+    "cartSummary": "{{count}} məhsul · {{total}} ₼",
+    "wishlistSummary": "{{count}} favorit məhsul",
+    "moreItems": "məhsul daha",
+    "orderTracking": "Sifariş izləmə",
+    "orderCancelled": "Bu sifariş ləğv edilib",
+    "statusHistory": "Vəziyyət dəyişiklikləri",
+    "shippingAddress": "Çatdırılma ünvanı",
+    "tabs": {
+      "overview": "Ümumi baxış",
+      "orders": "Sifarişlərim",
+      "cart": "Səbətim",
+      "wishlist": "Favoritlər",
+      "profile": "Profilim"
+    },
+    "stats": {
+      "orders": "Sifariş",
+      "pending": "Gözləyən",
+      "delivered": "Çatdırılan",
+      "spent": "Ümumi xərclənən"
+    },
+    "filters": {
+      "all": "Hamısı",
+      "active": "Gözləyən / Yolda",
+      "delivered": "Təhvil alınan",
+      "cancelled": "Ləğv edilən"
+    }
+  },
+  "orders": {
+    "title": "Sifarişlərim",
+    "loading": "Yüklənir...",
+    "empty": "Hələ sifariş yoxdur.",
+    "discount": "Endirim",
+    "statusNotes": {
+      "orderReceived": "Sifariş qəbul edildi",
+      "orderCancelled": "Sifariş ləğv edildi"
+    },
+    "statusChange": "Vəziyyət: {{status}}",
+    "status": {
+      "Pending": "Gözləyir",
+      "Confirmed": "Təsdiqləndi",
+      "Shipped": "Göndərildi",
+      "Delivered": "Çatdırıldı",
+      "Cancelled": "Ləğv edildi"
+    }
+  },
+  "notifications": {
+    "title": "Bildirişlər",
+    "viewOrder": "Sifarişə bax",
+    "dismiss": "Bağla",
+    "markAllRead": "Hamısını oxundu et",
+    "orderCancelledTitle": "Sifarişiniz ləğv edildi",
+    "orderStatusTitle": "Sifariş statusu yeniləndi"
+  },
+  "about": {
+    "title": "Haqqımızda",
+    "text": "Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik."
+  },
+  "contact": {
+    "title": "Əlaqə",
+    "email": "E-poçt",
+    "phone": "Telefon",
+    "address": "Ünvan",
+    "addressValue": "Bakı, Azərbaycan"
+  },
+  "footer": {
+    "desc": "Premium ətir və kosmetika mağazası. Seçilmiş brendlər, unikal qoxular.",
+    "categories": "Kateqoriyalar",
+    "support": "Dəstək",
+    "contact": "Əlaqə",
+    "rights": "Bütün hüquqlar qorunur."
+  },
+  "common": {
+    "loading": "Yüklənir...",
+    "currency": "₼",
+    "brandName": "Amoria"
+  }
+}

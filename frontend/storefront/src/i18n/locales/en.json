@@ -1,0 +1,208 @@
+{
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "categories": "Categories",
+    "about": "About Us",
+    "contact": "Contact",
+    "search": "Search...",
+    "cart": "Cart",
+    "favorites": "Wishlist",
+    "account": "Account",
+    "login": "Sign In",
+    "register": "Register"
+  },
+  "hero": {
+    "title": "Fall in love with Our Signature",
+    "titleHighlight": "Perfumes",
+    "titleEnd": "",
+    "subtitle": "Discover the perfect fragrance for you with our wide selection of perfumes.",
+    "perfumes": "Perfumes",
+    "customers": "Customers",
+    "shopNow": "SHOP NOW",
+    "discover": "Discover"
+  },
+  "home": {
+    "categoriesTitle": "Our Collections",
+    "productsTitle": "Shop Our Wide Selection of Scents",
+    "trendingTitle": "Selected for You",
+    "trendingSubtitle": "Trending products from different categories",
+    "products": "products",
+    "catWomen": "Women's Fragrances",
+    "catMen": "Men's Fragrances",
+    "catCosmetic": "Cosmetics"
+  },
+  "category": {
+    "collection": "Collection",
+    "productCount": "{{count}} products",
+    "empty": "No products in this category yet."
+  },
+  "shop": {
+    "title": "Shop",
+    "search": "Search products...",
+    "sortName": "By name",
+    "sortPrice": "Price (low)",
+    "sortPriceDesc": "Price (high)",
+    "noProducts": "No products found."
+  },
+  "product": {
+    "notFound": "Product not found.",
+    "loading": "Loading...",
+    "addToCart": "Add to Cart",
+    "favorite": "Favorite",
+    "volume": "volume",
+    "description": "Premium quality fragrance. Ideal for daily use with a long-lasting, elegant scent profile."
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "startShopping": "Start shopping",
+    "total": "Total",
+    "checkout": "Checkout"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "stepAddress": "Shipping address",
+    "stepSummary": "Order summary",
+    "fullName": "Full name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "region": "Region",
+    "continue": "Continue",
+    "products": "Products",
+    "shipping": "Shipping",
+    "discount": "Discount",
+    "total": "Total",
+    "confirmOrder": "Confirm order",
+    "paymentOnDeliveryNote": "Payment will be collected upon delivery.",
+    "creating": "Creating order...",
+    "promoCode": "Promo code",
+    "promoPlaceholder": "e.g. SUMMER20",
+    "applyPromo": "Apply",
+    "orderSummary": "Order",
+    "productsCount": "{{count}} items",
+    "confirmed": "Order confirmed!",
+    "confirmedMsg": "Your order has been received and is being prepared.",
+    "orderNo": "Order #",
+    "myOrders": "My Orders",
+    "orderFailed": "Order could not be created",
+    "couponApplied": "Discount applied",
+    "couponInvalid": "Invalid promo code",
+    "promoLabel": "Promo",
+    "defaultCity": "Baku",
+    "defaultRegion": "Baku"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full name",
+    "passwordHint": "Password (min 8 characters)",
+    "loggingIn": "Signing in...",
+    "registering": "Registering...",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "adminPanel": "Admin Panel Login",
+    "or": "or",
+    "loginError": "Login failed",
+    "registerError": "Registration failed"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "loginRequired": "Please sign in to use wishlist.",
+    "empty": "No favorite products yet.",
+    "addToCart": "Add to cart",
+    "remove": "Remove"
+  },
+  "account": {
+    "title": "Profile",
+    "welcome": "Welcome back",
+    "name": "Full name",
+    "phone": "Phone",
+    "phonePlaceholder": "+994 XX XXX XX XX",
+    "saveProfile": "Save profile",
+    "saving": "Saving...",
+    "profileSaved": "Profile updated successfully",
+    "profileError": "Could not update profile",
+    "email": "Email",
+    "myOrders": "My Orders",
+    "logout": "Sign Out",
+    "viewAll": "View all",
+    "recentOrders": "Recent orders",
+    "cartSummary": "{{count}} items · ₼ {{total}}",
+    "wishlistSummary": "{{count}} favorite items",
+    "moreItems": "more items",
+    "orderTracking": "Order tracking",
+    "orderCancelled": "This order was cancelled",
+    "statusHistory": "Status updates",
+    "shippingAddress": "Shipping address",
+    "tabs": {
+      "overview": "Overview",
+      "orders": "My Orders",
+      "cart": "My Cart",
+      "wishlist": "Wishlist",
+      "profile": "My Profile"
+    },
+    "stats": {
+      "orders": "Orders",
+      "pending": "In progress",
+      "delivered": "Delivered",
+      "spent": "Total spent"
+    },
+    "filters": {
+      "all": "All",
+      "active": "Pending / In transit",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  },
+  "orders": {
+    "title": "My Orders",
+    "loading": "Loading...",
+    "empty": "No orders yet.",
+    "discount": "Discount",
+    "statusNotes": {
+      "orderReceived": "Order received",
+      "orderCancelled": "Order cancelled"
+    },
+    "statusChange": "Status: {{status}}",
+    "status": {
+      "Pending": "Pending",
+      "Confirmed": "Confirmed",
+      "Shipped": "Shipped",
+      "Delivered": "Delivered",
+      "Cancelled": "Cancelled"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "viewOrder": "View order",
+    "dismiss": "Dismiss",
+    "markAllRead": "Mark all as read"
+  },
+  "about": {
+    "title": "About Us",
+    "text": "Parfumerya is a premium fragrance and cosmetics experience in Azerbaijan. We offer original products from Dior, Chanel, Tom Ford and other selected brands."
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "addressValue": "Baku, Azerbaijan"
+  },
+  "footer": {
+    "desc": "Premium fragrance and cosmetics store. Selected brands, unique scents.",
+    "categories": "Categories",
+    "support": "Support",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "currency": "₼",
+    "brandName": "Amoria"
+  }
+}

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-plum-950: #1a1218;
+  --color-plum-900: #2a1f2d;
+  --color-plum-800: #3d2b3a;
+  --color-plum-700: #4a3548;
+  --color-mint-300: #b8f2d0;
+  --color-mint-400: #a8e6cf;
+  --color-mint-500: #7dd3b0;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-plum-950 text-white font-sans antialiased m-0;
+}
+
+.card-admin {
+  @apply bg-plum-900/80 rounded-2xl border border-plum-700/40 p-6;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/70 hover:bg-plum-800 hover:text-mint-400 transition-colors;
+}
+
+.sidebar-link.active {
+  @apply bg-plum-800 text-mint-400 border border-mint-400/20;
+}

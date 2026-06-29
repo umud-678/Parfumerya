@@ -1,0 +1,208 @@
+{
+  "nav": {
+    "home": "Главная",
+    "shop": "Магазин",
+    "categories": "Категории",
+    "about": "О нас",
+    "contact": "Контакты",
+    "search": "Поиск...",
+    "cart": "Корзина",
+    "favorites": "Избранное",
+    "account": "Аккаунт",
+    "login": "Войти",
+    "register": "Регистрация"
+  },
+  "hero": {
+    "title": "Влюбитесь в наши",
+    "titleHighlight": "Ароматы",
+    "titleEnd": "",
+    "subtitle": "Откройте для себя идеальный аромат из нашей широкой коллекции парфюмерии.",
+    "perfumes": "Ароматы",
+    "customers": "Клиентов",
+    "shopNow": "КУПИТЬ",
+    "discover": "Открыть"
+  },
+  "home": {
+    "categoriesTitle": "Наши коллекции",
+    "productsTitle": "Широкий выбор ароматов",
+    "trendingTitle": "Подобрано для вас",
+    "trendingSubtitle": "Трендовые товары из разных категорий",
+    "products": "товаров",
+    "catWomen": "Женские ароматы",
+    "catMen": "Мужские ароматы",
+    "catCosmetic": "Косметика"
+  },
+  "category": {
+    "collection": "Коллекция",
+    "productCount": "{{count}} товаров",
+    "empty": "В этой категории пока нет товаров."
+  },
+  "shop": {
+    "title": "Магазин",
+    "search": "Поиск товаров...",
+    "sortName": "По названию",
+    "sortPrice": "Цена (низкая)",
+    "sortPriceDesc": "Цена (высокая)",
+    "noProducts": "Товары не найдены."
+  },
+  "product": {
+    "notFound": "Товар не найден.",
+    "loading": "Загрузка...",
+    "addToCart": "В корзину",
+    "favorite": "Избранное",
+    "volume": "объём",
+    "description": "Парфюм премиум-класса. Идеален для ежедневного использования с изысканным долгим ароматом."
+  },
+  "cart": {
+    "title": "Корзина",
+    "empty": "Ваша корзина пуста",
+    "startShopping": "Начать покупки",
+    "total": "Итого",
+    "checkout": "Оформить"
+  },
+  "checkout": {
+    "title": "Оформление",
+    "stepAddress": "Адрес доставки",
+    "stepSummary": "Сводка заказа",
+    "fullName": "ФИО",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "city": "Город",
+    "region": "Регион",
+    "continue": "Продолжить",
+    "products": "Товары",
+    "shipping": "Доставка",
+    "discount": "Скидка",
+    "total": "Итого",
+    "confirmOrder": "Подтвердить заказ",
+    "paymentOnDeliveryNote": "Оплата будет произведена при доставке.",
+    "creating": "Создание заказа...",
+    "promoCode": "Промокод",
+    "promoPlaceholder": "напр. SUMMER20",
+    "applyPromo": "Применить",
+    "orderSummary": "Заказ",
+    "productsCount": "{{count}} товаров",
+    "confirmed": "Заказ подтверждён!",
+    "confirmedMsg": "Ваш заказ принят и готовится.",
+    "orderNo": "Заказ №",
+    "myOrders": "Мои заказы",
+    "orderFailed": "Не удалось создать заказ",
+    "couponApplied": "Скидка применена",
+    "couponInvalid": "Неверный промокод",
+    "promoLabel": "Промо",
+    "defaultCity": "Баку",
+    "defaultRegion": "Баку"
+  },
+  "auth": {
+    "login": "Войти",
+    "register": "Регистрация",
+    "email": "Email",
+    "password": "Пароль",
+    "fullName": "ФИО",
+    "passwordHint": "Пароль (мин. 8 символов)",
+    "loggingIn": "Вход...",
+    "registering": "Регистрация...",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "adminPanel": "Вход в Admin Panel",
+    "or": "или",
+    "loginError": "Ошибка входа",
+    "registerError": "Ошибка регистрации"
+  },
+  "wishlist": {
+    "title": "Избранное",
+    "loginRequired": "Войдите, чтобы использовать избранное.",
+    "empty": "Пока нет избранных товаров.",
+    "addToCart": "В корзину",
+    "remove": "Удалить"
+  },
+  "account": {
+    "title": "Профиль",
+    "welcome": "Добро пожаловать",
+    "name": "ФИО",
+    "phone": "Телефон",
+    "phonePlaceholder": "+994 XX XXX XX XX",
+    "saveProfile": "Сохранить профиль",
+    "saving": "Сохранение...",
+    "profileSaved": "Профиль успешно обновлён",
+    "profileError": "Не удалось обновить профиль",
+    "email": "Email",
+    "myOrders": "Мои заказы",
+    "logout": "Выйти",
+    "viewAll": "Смотреть все",
+    "recentOrders": "Последние заказы",
+    "cartSummary": "{{count}} товаров · {{total}} ₼",
+    "wishlistSummary": "{{count}} избранных",
+    "moreItems": "ещё товаров",
+    "orderTracking": "Отслеживание заказа",
+    "orderCancelled": "Заказ отменён",
+    "statusHistory": "Изменения статуса",
+    "shippingAddress": "Адрес доставки",
+    "tabs": {
+      "overview": "Обзор",
+      "orders": "Мои заказы",
+      "cart": "Корзина",
+      "wishlist": "Избранное",
+      "profile": "Профиль"
+    },
+    "stats": {
+      "orders": "Заказов",
+      "pending": "В процессе",
+      "delivered": "Доставлено",
+      "spent": "Всего потрачено"
+    },
+    "filters": {
+      "all": "Все",
+      "active": "Ожидают / В пути",
+      "delivered": "Доставленные",
+      "cancelled": "Отменённые"
+    }
+  },
+  "orders": {
+    "title": "Мои заказы",
+    "loading": "Загрузка...",
+    "empty": "Заказов пока нет.",
+    "discount": "Скидка",
+    "statusNotes": {
+      "orderReceived": "Заказ принят",
+      "orderCancelled": "Заказ отменён"
+    },
+    "statusChange": "Статус: {{status}}",
+    "status": {
+      "Pending": "Ожидает",
+      "Confirmed": "Подтверждён",
+      "Shipped": "Отправлен",
+      "Delivered": "Доставлен",
+      "Cancelled": "Отменён"
+    }
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "viewOrder": "Смотреть заказ",
+    "dismiss": "Закрыть",
+    "markAllRead": "Отметить все прочитанными"
+  },
+  "about": {
+    "title": "О нас",
+    "text": "Parfumerya — премиальный опыт парфюмерии и косметики в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов."
+  },
+  "contact": {
+    "title": "Контакты",
+    "email": "Email",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "addressValue": "Баку, Азербайджан"
+  },
+  "footer": {
+    "desc": "Магазин премиальной парфюмерии и косметики. Избранные бренды, уникальные ароматы.",
+    "categories": "Категории",
+    "support": "Поддержка",
+    "contact": "Контакты",
+    "rights": "Все права защищены."
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "currency": "₼",
+    "brandName": "Amoria"
+  }
+}
