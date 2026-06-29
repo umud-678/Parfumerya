@@ -7,6 +7,13 @@ export interface SocialLink {
   url: string;
 }
 
+export interface PaymentMethod {
+  id: string;
+  code: string;
+  name: string;
+  active: boolean;
+}
+
 export interface SiteSettings {
   siteName: string;
   siteTagline?: string;
@@ -17,6 +24,10 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   shippingFee: number;
   freeShippingThreshold: number;
+  aboutTextAz?: string;
+  aboutTextEn?: string;
+  aboutTextRu?: string;
+  paymentMethods?: PaymentMethod[];
 }
 
 export async function getSettings(): Promise<SiteSettings> {

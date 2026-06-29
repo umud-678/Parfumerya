@@ -24,7 +24,7 @@ export default function WishlistAdminPage() {
 
   useEffect(() => {
     load();
-    const interval = setInterval(load, 15000);
+    const interval = setInterval(load, 5000);
     return () => clearInterval(interval);
   }, [load]);
 

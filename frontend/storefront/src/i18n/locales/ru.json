@@ -10,7 +10,10 @@
     "favorites": "Избранное",
     "account": "Аккаунт",
     "login": "Войти",
-    "register": "Регистрация"
+    "register": "Регистрация",
+    "searchLoading": "Поиск...",
+    "searchNoResults": "Товары не найдены",
+    "searchAllResults": "Показать все ({{count}})"
   },
   "hero": {
     "title": "Влюбитесь в наши",
@@ -20,7 +23,8 @@
     "perfumes": "Ароматы",
     "customers": "Клиентов",
     "shopNow": "КУПИТЬ",
-    "discover": "Открыть"
+    "discover": "Открыть",
+    "empty": "Контент hero ещё не настроен."
   },
   "home": {
     "categoriesTitle": "Наши коллекции",
@@ -58,6 +62,8 @@
     "empty": "Ваша корзина пуста",
     "startShopping": "Начать покупки",
     "total": "Итого",
+    "subtotal": "Подытог",
+    "shippingAtCheckout": "Стоимость доставки выбирается при оформлении",
     "checkout": "Оформить"
   },
   "checkout": {
@@ -91,7 +97,16 @@
     "couponInvalid": "Неверный промокод",
     "promoLabel": "Промо",
     "defaultCity": "Баку",
-    "defaultRegion": "Баку"
+    "defaultRegion": "Баку",
+    "deliveryChoose": "Выберите тип доставки",
+    "deliveryExpress": "Экспресс-доставка",
+    "deliveryExpressDesc": "В течение 24 часов",
+    "deliveryStandard": "Обычная доставка",
+    "deliveryStandardDesc": "Только до метро",
+    "deliveryInfoTitle": "Варианты доставки",
+    "deliveryTo": "Адрес доставки",
+    "addressRequired": "Укажите имя, телефон и адрес",
+    "back": "Назад"
   },
   "auth": {
     "login": "Войти",
@@ -99,7 +114,25 @@
     "email": "Email",
     "password": "Пароль",
     "fullName": "ФИО",
-    "passwordHint": "Пароль (мин. 8 символов)",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "passwordHint": "Пароль",
+    "confirmPassword": "Повторите пароль",
+    "passwordRules": "Минимум 8 символов, хотя бы 1 заглавная буква (A-Z).",
+    "passwordMin": "Пароль должен быть не менее 8 символов",
+    "passwordUppercase": "Пароль должен содержать хотя бы одну заглавную букву",
+    "passwordMismatch": "Пароли не совпадают",
+    "continueWithOtp": "Отправить код",
+    "sendingOtp": "Отправка кода...",
+    "otpStepHint": "Введите 6-значный код из письма",
+    "otpPlaceholder": "000000",
+    "otpSent": "Код отправлен на {{email}}",
+    "otpResent": "Новый код отправлен",
+    "verifyAndRegister": "Подтвердить и зарегистрироваться",
+    "verifyingOtp": "Проверка...",
+    "resendOtp": "Отправить код снова",
+    "resendIn": "Повтор через {{sec}}с",
+    "backToForm": "← Назад",
     "loggingIn": "Вход...",
     "registering": "Регистрация...",
     "noAccount": "Нет аккаунта?",
@@ -184,14 +217,16 @@
   },
   "about": {
     "title": "О нас",
-    "text": "Parfumerya — премиальный опыт парфюмерии и косметики в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов."
+    "text": "Parfumerya — премиальный опыт парфюмерии и косметики в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов.",
+    "empty": "Текст «О нас» ещё не добавлен."
   },
   "contact": {
     "title": "Контакты",
     "email": "Email",
     "phone": "Телефон",
     "address": "Адрес",
-    "addressValue": "Баку, Азербайджан"
+    "addressValue": "Баку, Азербайджан",
+    "empty": "Контактные данные ещё не добавлены."
   },
   "footer": {
     "desc": "Магазин премиальной парфюмерии и косметики. Избранные бренды, уникальные ароматы.",
@@ -204,5 +239,22 @@
     "loading": "Загрузка...",
     "currency": "₼",
     "brandName": "Amoria"
+  },
+  "reviews": {
+    "title": "Отзывы покупателей",
+    "count": "{{count}} отзывов",
+    "loading": "Загрузка отзывов...",
+    "writeTitle": "Напишите отзыв",
+    "writeHint": "После доставки вы можете поставить оценку от 1 до 5 звёзд и оставить комментарий.",
+    "placeholder": "Поделитесь мнением о товаре...",
+    "submit": "Отправить отзыв",
+    "submitting": "Отправка...",
+    "submitError": "Не удалось отправить отзыв",
+    "thankYou": "Спасибо за ваш отзыв!",
+    "loginToReview": "Войдите, чтобы оставить отзыв:",
+    "alreadyReviewed": "Вы уже оставили отзыв на этот товар.",
+    "needDelivered": "Отзыв доступен только после доставки заказа.",
+    "empty": "Пока нет отзывов — будьте первым.",
+    "writeFor": "Отзыв на {{name}}"
   }
 }

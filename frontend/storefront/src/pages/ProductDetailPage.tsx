@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Star, ShoppingCart, Heart, Minus, Plus } from 'lucide-react';
 import { getProductBySlug } from '../services/catalog';
@@ -7,12 +7,14 @@ import type { Product } from '../types';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addToCart } from '../store/cartSlice';
 import { useWishlistActions } from '../hooks/useWishlistActions';
-import { FloralDecor } from '../components/ui/FloralDecor';
+import ProductReviews from '../components/products/ProductReviews';
 
 export default function ProductDetailPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const reviewsRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
   const { toggleFavorite } = useWishlistActions();
@@ -33,20 +35,24 @@ export default function ProductDetailPage() {
     });
   }, [slug]);
 
+  useEffect(() => {
+    if (searchParams.get('review') === '1' && !loading && product) {
+      reviewsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [searchParams, loading, product]);
+
   if (loading) {
     return (
-      <div className="relative min-h-[40vh] flex items-center justify-center">
-        <FloralDecor variant="page" />
-        <p className="relative text-white/60">{t('product.loading')}</p>
+      <div className="min-h-[40vh] flex items-center justify-center">
+        <p className="text-white/60">{t('product.loading')}</p>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="relative min-h-[40vh] flex items-center justify-center">
-        <FloralDecor variant="page" />
-        <p className="relative text-white/60">{t('product.notFound')}</p>
+      <div className="min-h-[40vh] flex items-center justify-center">
+        <p className="text-white/60">{t('product.notFound')}</p>
       </div>
     );
   }
@@ -75,11 +81,9 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="relative">
-      <FloralDecor variant="page" />
-      <div className="relative max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-12">
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="grid lg:grid-cols-2 gap-12">
         <div className="card-elegant p-8 flex items-center justify-center relative overflow-hidden">
-          <FloralDecor variant="corner" className="top-4 right-4" />
           <img
             src={product.primaryImageUrl}
             alt={product.name}
@@ -91,16 +95,16 @@ export default function ProductDetailPage() {
           <div>
             <p className="text-mint-400 text-sm mb-2 tracking-wide uppercase">{product.brandName}</p>
             <h1 className="font-serif text-4xl mb-2">{product.name}</h1>
-            {product.averageRating && (
-              <div className="flex items-center gap-1 text-mint-400">
+            {product.reviewCount != null && product.reviewCount > 0 && product.averageRating != null && (
+              <div className="flex items-center gap-1 text-gold-400">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     size={16}
-                    className={i < Math.round(product.averageRating!) ? 'fill-mint-400' : ''}
+                    className={i < Math.round(product.averageRating!) ? 'fill-gold-400 text-gold-400' : 'text-white/20'}
                   />
                 ))}
-                <span className="text-white/50 text-sm ml-2">{product.averageRating}</span>
+                <span className="text-white/50 text-sm ml-2">{product.averageRating.toFixed(1)}</span>
               </div>
             )}
           </div>
@@ -157,6 +161,24 @@ export default function ProductDetailPage() {
             </button>
           </div>
         </div>
+      </div>
+
+      <div ref={reviewsRef}>
+        <ProductReviews
+          productId={product.id}
+          productSlug={product.slug}
+          onRatingUpdate={(averageRating, reviewCount) =>
+            setProduct((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    averageRating: averageRating ?? undefined,
+                    reviewCount,
+                  }
+                : prev
+            )
+          }
+        />
       </div>
     </div>
   );

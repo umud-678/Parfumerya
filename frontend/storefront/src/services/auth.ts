@@ -33,10 +33,30 @@ export async function login(email: string, password: string): Promise<User> {
   };
 }
 
-export async function register(fullName: string, email: string, password: string): Promise<User> {
-  const auth = await apiFetch<AuthResponse>('/auth/register', {
+export async function sendRegisterOtp(
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string
+): Promise<{ email: string; expiresInSec: number }> {
+  return apiFetch<{ email: string; expiresInSec: number }>('/auth/register/send-otp', {
     method: 'POST',
-    body: JSON.stringify({ fullName, email, password }),
+    body: JSON.stringify({ firstName, lastName, email, password }),
+  });
+}
+
+export async function resendRegisterOtp(email: string): Promise<{ email: string; expiresInSec: number }> {
+  return apiFetch<{ email: string; expiresInSec: number }>('/auth/register/resend-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+/** OTP axınından sonra avtomatik daxil olur */
+export async function verifyRegisterOtp(email: string, otp: string): Promise<User> {
+  const auth = await apiFetch<AuthResponse>('/auth/register/verify-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp }),
   });
   setToken(auth.accessToken);
   return {

@@ -533,6 +533,11 @@ function OrderCard({
       {!compact && order.shippingAddress && (
         <p className="text-white/40 text-xs mb-3">
           {t('account.shippingAddress')}: {order.shippingAddress}, {order.shippingCity}
+          {order.deliveryType && (
+            <span className="block text-mint-400/70 mt-0.5">
+              {order.deliveryType === 'express' ? t('checkout.deliveryExpress') : t('checkout.deliveryStandard')}
+            </span>
+          )}
         </p>
       )}
 
@@ -564,6 +569,22 @@ function OrderCard({
           statusHistory={order.statusHistory}
           locale={locale}
         />
+      )}
+
+      {!compact && order.status === 'Delivered' && (
+        <div className="mt-4 pt-3 border-t border-white/5 flex flex-wrap gap-2">
+          {order.items
+            .filter((item) => item.productSlug)
+            .map((item, i) => (
+              <Link
+                key={`${item.productSlug}-${i}`}
+                to={`/product/${item.productSlug}?review=1`}
+                className="text-xs px-3 py-1.5 rounded-full border border-gold-400/30 text-gold-300 hover:bg-gold-400/10 transition-colors"
+              >
+                ★ {t('reviews.writeFor', { name: item.productName })}
+              </Link>
+            ))}
+        </div>
       )}
     </div>
   );

@@ -33,10 +33,14 @@ export interface Order {
   shippingPhone: string;
   shippingAddress: string;
   shippingCity: string;
+  shippingRegion?: string;
+  deliveryType?: 'express' | 'standard';
   createdAt: string;
   updatedAt?: string;
   statusHistory?: OrderStatusHistoryEntry[];
   items: Array<{
+    productId?: string;
+    productSlug?: string;
     productName: string;
     quantity: number;
     unitPrice: number;
@@ -52,12 +56,14 @@ export interface CreateOrderInput {
   shippingAddress: string;
   shippingCity: string;
   shippingRegion?: string;
+  deliveryType?: 'express' | 'standard';
   couponCode?: string;
   notes?: string;
 }
 
 function mapCartItemsForApi(items: CartItem[]) {
   return items.map((i) => ({
+    productId: i.productId,
     productVariantId: i.variantId,
     productName: i.name,
     sku: i.variantId,
@@ -89,6 +95,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
       shippingAddress: input.shippingAddress,
       shippingCity: input.shippingCity,
       shippingRegion: input.shippingRegion,
+      deliveryType: input.deliveryType ?? 'express',
       couponCode: input.couponCode,
       notes: input.notes,
       items: mapCartItemsForApi(input.items),

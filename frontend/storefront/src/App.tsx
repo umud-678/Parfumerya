@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { useDocumentLanguage } from './hooks/useDocumentLanguage';
@@ -7,6 +7,7 @@ import CustomerNotificationToasts from './components/CustomerNotificationToasts'
 import WishlistSync from './components/WishlistSync';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import { ContentWithFloral, floralThemeForPath } from './components/ui/FloralDecor';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductDetailPage from './pages/ProductDetailPage';
@@ -32,11 +33,24 @@ function I18nShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function MainWithFloral({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  if (pathname === '/') return <>{children}</>;
+  const theme = floralThemeForPath(pathname);
+  return (
+    <ContentWithFloral className="min-h-full" theme={theme}>
+      {children}
+    </ContentWithFloral>
+  );
+}
+
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="page-bg min-h-screen flex flex-col">
+    <div className="page-bg min-h-screen flex flex-col relative">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 relative z-10">
+        <MainWithFloral>{children}</MainWithFloral>
+      </main>
       <Footer />
     </div>
   );

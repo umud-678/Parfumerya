@@ -1,18 +1,25 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Shield } from 'lucide-react';
 import { useAppDispatch } from '../store/hooks';
 import { store } from '../store/store';
 import { setUser } from '../store/authSlice';
 import { login } from '../services/auth';
 import { syncWishlistAfterAuth } from '../services/wishlist';
-import { FloralDecor } from '../components/ui/FloralDecor';
-
+import { useSiteSettings } from '../hooks/useSiteSettings';
 import { ADMIN_URL } from '../config/env';
+
+function FlowerIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+      <path d="M10 2 C11.5 6, 14 5.5, 14.5 8.5 C12.5 9, 12.5 11.5, 10 11 C7.5 11.5, 7.5 9, 5.5 8.5 C6 5.5, 8.5 6, 10 2Z" />
+    </svg>
+  );
+}
 
 export default function LoginPage() {
   const { t } = useTranslation();
+  const { siteName } = useSiteSettings();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -38,14 +45,27 @@ export default function LoginPage() {
     }
   };
 
+  const openAdminLogin = () => {
+    window.open(`${ADMIN_URL}/login`, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="relative min-h-[70vh] flex items-center justify-center px-6">
-      <FloralDecor variant="page" />
       <div className="card-elegant p-10 w-full max-w-md relative">
-        <div className="text-center mb-8">
-          <span className="text-2xl text-mint-400/40">❀</span>
-          <h1 className="font-serif text-3xl text-mint-400 mt-2">{t('auth.login')}</h1>
-        </div>
+        <button
+          type="button"
+          onClick={openAdminLogin}
+          aria-label={t('auth.adminPanel')}
+          className="w-full flex flex-col items-center gap-2 mb-8 group cursor-pointer"
+        >
+          <FlowerIcon className="w-5 h-5 text-accent/50 group-hover:text-accent transition-colors" />
+          <span className="font-serif text-3xl text-accent group-hover:text-white transition-colors">
+            {siteName || t('common.brandName')}
+          </span>
+        </button>
+
+        <h1 className="font-serif text-2xl text-center text-white/90 mb-6">{t('auth.login')}</h1>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
@@ -68,22 +88,11 @@ export default function LoginPage() {
             {loading ? t('auth.loggingIn') : t('auth.login')}
           </button>
         </form>
+
         <p className="text-center text-white/50 text-sm mt-6">
           {t('auth.noAccount')}{' '}
           <Link to="/register" className="text-mint-400 hover:underline">{t('auth.register')}</Link>
         </p>
-        <div className="relative my-8">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-plum-700/40" /></div>
-          <div className="relative flex justify-center text-xs uppercase tracking-wider">
-            <span className="bg-plum-800/80 px-3 text-white/40">{t('auth.or')}</span>
-          </div>
-        </div>
-        <a
-          href={`${ADMIN_URL}/login`}
-          className="flex items-center justify-center gap-2 w-full border border-mint-400/30 text-mint-400 font-medium py-3 rounded-full hover:bg-mint-400/10 transition-colors"
-        >
-          <Shield size={18} /> {t('auth.adminPanel')}
-        </a>
       </div>
     </div>
   );

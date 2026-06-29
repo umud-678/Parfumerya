@@ -15,7 +15,9 @@ function mapProduct(p: Record<string, unknown>): Product {
     primaryImageUrl: String(p.primaryImageUrl ?? ''),
     secondaryImageUrl: p.secondaryImageUrl as string | undefined,
     minPrice: price,
-    averageRating: Number(p.averageRating ?? 0) || undefined,
+    averageRating:
+      p.averageRating != null ? Number(p.averageRating) : undefined,
+    reviewCount: Number(p.reviewCount ?? 0) || 0,
     isFeatured: Boolean(p.isFeatured),
     isNew: Boolean(p.isNew),
     variants: (p.variants as Product['variants']) ?? [{

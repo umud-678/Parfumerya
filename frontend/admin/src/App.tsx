@@ -11,13 +11,11 @@ import UsersPage from './pages/UsersPage';
 import ReviewsPage from './pages/ReviewsPage';
 import ReportsPage from './pages/ReportsPage';
 import CouponsPage from './pages/CouponsPage';
-import ShippingPage from './pages/ShippingPage';
 import PaymentsPage from './pages/PaymentsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import HeroVideoPage from './pages/HeroVideoPage';
 import StockPage from './pages/StockPage';
 import WishlistAdminPage from './pages/WishlistAdminPage';
-import EmailPage from './pages/EmailPage';
 import SettingsPage from './pages/SettingsPage';
 import SecurityPage from './pages/SecurityPage';
 
@@ -38,14 +36,12 @@ export default function App() {
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/coupons" element={<CouponsPage />} />
           <Route path="/campaigns" element={<CouponsPage />} />
-          <Route path="/shipping" element={<ShippingPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/hero-video" element={<HeroVideoPage />} />
           <Route path="/banners" element={<Navigate to="/hero-video" replace />} />
           <Route path="/stock" element={<StockPage />} />
           <Route path="/wishlist" element={<WishlistAdminPage />} />
-          <Route path="/email" element={<EmailPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/security" element={<SecurityPage />} />
         </Route>

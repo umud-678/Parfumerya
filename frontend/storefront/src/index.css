@@ -16,6 +16,12 @@
   --color-mint-400: #a7f3d0;
   --color-mint-500: #8fd4b8;
   --color-rose-soft: #c97a9a;
+  --color-gold-200: #FFF4D6;
+  --color-gold-300: #F0D78C;
+  --color-gold-400: #E4C04A;
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #C9A227;
+  --color-gold-700: #9A7B0A;
   --font-serif: "Playfair Display", Georgia, serif;
   --font-sans: "DM Sans", system-ui, sans-serif;
 }
@@ -41,6 +47,90 @@
 @layer utilities {
   .page-bg {
     background: linear-gradient(165deg, #1a0f17 0%, #2d1b28 45%, #1a0f17 100%);
+  }
+
+  .gold-petal-glow {
+    filter:
+      drop-shadow(0 0 6px rgba(255, 248, 240, 0.2))
+      drop-shadow(0 0 14px rgba(228, 192, 74, 0.15));
+  }
+
+  .floral-side-beam {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 248, 240, 0.04) 40%,
+      rgba(228, 192, 74, 0.06) 70%,
+      transparent
+    );
+    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+  }
+
+  .floral-petal {
+    position: absolute;
+    width: 8px;
+    height: 14px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: linear-gradient(145deg, #ffffff 0%, #f5e6c8 45%, #e4c04a 100%);
+    opacity: 0.35;
+    animation: petal-drift ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(255, 248, 240, 0.25);
+  }
+
+  .floral-petal-sm {
+    width: 5px;
+    height: 9px;
+    opacity: 0.28;
+  }
+
+  .floral-theme-crimson .floral-side-beam {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 232, 232, 0.05) 40%,
+      rgba(232, 86, 86, 0.08) 70%,
+      transparent
+    );
+  }
+
+  .floral-theme-crimson .floral-petal {
+    background: linear-gradient(145deg, #fff0f0 0%, #ffb4b4 45%, #c0392b 100%);
+    box-shadow: 0 0 8px rgba(255, 180, 180, 0.3);
+  }
+
+  .floral-theme-amber .floral-side-beam {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 249, 230, 0.05) 40%,
+      rgba(255, 193, 7, 0.08) 70%,
+      transparent
+    );
+  }
+
+  .floral-theme-amber .floral-petal {
+    background: linear-gradient(145deg, #fffde7 0%, #ffe082 45%, #e4a020 100%);
+    box-shadow: 0 0 8px rgba(255, 224, 130, 0.35);
+  }
+
+  .floral-theme-rose .floral-side-beam {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 240, 240, 0.05) 40%,
+      rgba(228, 192, 74, 0.07) 55%,
+      rgba(232, 86, 86, 0.06) 75%,
+      transparent
+    );
+  }
+
+  .floral-theme-rose .floral-petal {
+    background: linear-gradient(145deg, #fff8f8 0%, #f5c4c4 40%, #e4c04a 100%);
+    box-shadow: 0 0 8px rgba(245, 196, 196, 0.3);
+  }
+
+  .floral-shimmer {
+    animation: floral-shimmer 6s ease-in-out infinite;
   }
 
   .glow-ring {
@@ -213,4 +303,37 @@
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+@keyframes gold-shimmer {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes floral-shimmer {
+  0%, 100% { opacity: 0.65; transform: translateY(0); }
+  50% { opacity: 0.95; transform: translateY(-3px); }
+}
+
+@keyframes petal-drift {
+  0%, 100% {
+    transform: translateY(0) rotate(-8deg) scale(1);
+    opacity: 0.2;
+  }
+  25% {
+    transform: translateY(12px) rotate(6deg) scale(0.95);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(24px) rotate(-4deg) scale(1);
+    opacity: 0.32;
+  }
+  75% {
+    transform: translateY(10px) rotate(10deg) scale(0.9);
+    opacity: 0.38;
+  }
+}
+
+.animate-gold-shimmer {
+  animation: gold-shimmer 5s ease-in-out infinite;
 }

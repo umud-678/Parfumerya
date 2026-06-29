@@ -6,26 +6,40 @@ import { PageShell } from '../components/ui/FloralDecor';
 import { getProducts } from '../services/catalog';
 import type { Product } from '../types';
 
+const DEBOUNCE_MS = 250;
+
 export default function ShopPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const [search, setSearch] = useState('');
+  const urlSearch = searchParams.get('search') ?? '';
+  const [searchInput, setSearchInput] = useState(urlSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(urlSearch);
   const [sortBy, setSortBy] = useState<'name' | 'price' | 'price-desc'>('name');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const categoryFilter = searchParams.get('category');
 
   useEffect(() => {
+    setSearchInput(urlSearch);
+    setDebouncedSearch(urlSearch);
+  }, [urlSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchInput.trim()), DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
     setLoading(true);
     getProducts({
       categorySlug: categoryFilter ?? undefined,
-      search: search || undefined,
+      search: debouncedSearch || undefined,
       sort: sortBy,
     })
       .then((r) => setProducts(r.items))
       .catch(() => setProducts([]))
       .finally(() => setLoading(false));
-  }, [categoryFilter, search, sortBy]);
+  }, [categoryFilter, debouncedSearch, sortBy]);
 
   return (
     <PageShell title={t('shop.title')}>
@@ -33,8 +47,8 @@ export default function ShopPage() {
         <input
           type="search"
           placeholder={t('shop.search')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="bg-plum-800/80 border border-plum-700 rounded-full px-5 py-3 text-sm outline-none focus:border-emerald-400/40 flex-1 min-w-[200px] transition-colors duration-300"
         />
         <select

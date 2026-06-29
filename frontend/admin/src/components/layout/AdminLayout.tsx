@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, FolderTree, Tag, ShoppingBag, Users,
-  MessageSquare, BarChart3, Percent, Truck, CreditCard, Bell,
-  Settings, Shield, Warehouse, Heart, Mail, LogOut, Store, Film,
+  MessageSquare, BarChart3, Percent, CreditCard, Bell,
+  Settings, Shield, Warehouse, Heart, LogOut, Store, Film,
 } from 'lucide-react';
 import { getUnreadCount } from '../../services/orders';
 import { getSettings } from '../../services/settings';
@@ -20,13 +20,11 @@ const menuItems = [
   { to: '/reviews', icon: MessageSquare, label: 'Rəylər' },
   { to: '/reports', icon: BarChart3, label: 'Hesabatlar' },
   { to: '/coupons', icon: Percent, label: 'Kampaniyalar' },
-  { to: '/shipping', icon: Truck, label: 'Çatdırılma' },
   { to: '/payments', icon: CreditCard, label: 'Ödəniş' },
   { to: '/notifications', icon: Bell, label: 'Bildirişlər', badge: true },
   { to: '/hero-video', icon: Film, label: 'Ana səhifə videosu' },
   { to: '/stock', icon: Warehouse, label: 'Stok' },
   { to: '/wishlist', icon: Heart, label: 'Sevimlilər' },
-  { to: '/email', icon: Mail, label: 'E-poçt / SMS' },
   { to: '/settings', icon: Settings, label: 'Ayarlar' },
   { to: '/security', icon: Shield, label: 'Təhlükəsizlik' },
 ];

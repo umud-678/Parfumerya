@@ -10,7 +10,10 @@
     "favorites": "Favoritlər",
     "account": "Hesab",
     "login": "Daxil ol",
-    "register": "Qeydiyyat"
+    "register": "Qeydiyyat",
+    "searchLoading": "Axtarılır...",
+    "searchNoResults": "Məhsul tapılmadı",
+    "searchAllResults": "Hamısını göstər ({{count}})"
   },
   "hero": {
     "title": "Seçilmiş",
@@ -20,7 +23,8 @@
     "perfumes": "Ətir",
     "customers": "Müştəri",
     "shopNow": "İNDİ AL",
-    "discover": "Kəşf et"
+    "discover": "Kəşf et",
+    "empty": "Hero məzmunu hələ təyin edilməyib."
   },
   "home": {
     "categoriesTitle": "Kolleksiyalarımız",
@@ -58,6 +62,8 @@
     "empty": "Səbətiniz boşdur",
     "startShopping": "Alış-verişə başla",
     "total": "Ümumi",
+    "subtotal": "Ara cəm",
+    "shippingAtCheckout": "Çatdırılma ödənişi sifariş zamanı seçilir",
     "checkout": "Sifarişi tamamla"
   },
   "checkout": {
@@ -91,7 +97,16 @@
     "couponInvalid": "Endirim kodu etibarsızdır",
     "promoLabel": "Endirim",
     "defaultCity": "Bakı",
-    "defaultRegion": "Bakı"
+    "defaultRegion": "Bakı",
+    "deliveryChoose": "Çatdırılma növünü seçin",
+    "deliveryExpress": "Ekspress çatdırılma",
+    "deliveryExpressDesc": "24 saat ərzində",
+    "deliveryStandard": "Sadə çatdırılma",
+    "deliveryStandardDesc": "Yalnız metrolara",
+    "deliveryInfoTitle": "Çatdırılma seçimləri",
+    "deliveryTo": "Çatdırılma ünvanı",
+    "addressRequired": "Ad, telefon və ünvan mütləqdir",
+    "back": "Geri"
   },
   "auth": {
     "login": "Daxil ol",
@@ -99,7 +114,25 @@
     "email": "E-poçt",
     "password": "Şifrə",
     "fullName": "Ad Soyad",
-    "passwordHint": "Şifrə (minimum 8 simvol)",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "passwordHint": "Şifrə",
+    "confirmPassword": "Şifrəni təkrarla",
+    "passwordRules": "Minimum 8 simvol, ən azı 1 böyük hərf (A-Z).",
+    "passwordMin": "Şifrə minimum 8 simvol olmalıdır",
+    "passwordUppercase": "Şifrədə ən azı bir böyük hərf olmalıdır",
+    "passwordMismatch": "Şifrələr uyğun gəlmir",
+    "continueWithOtp": "OTP kodu göndər",
+    "sendingOtp": "Kod göndərilir...",
+    "otpStepHint": "E-poçtunuza göndərilən 6 rəqəmli kodu daxil edin",
+    "otpPlaceholder": "000000",
+    "otpSent": "Təsdiq kodu {{email}} ünvanına göndərildi",
+    "otpResent": "Yeni kod göndərildi",
+    "verifyAndRegister": "Təsdiqlə və qeydiyyatdan keç",
+    "verifyingOtp": "Yoxlanılır...",
+    "resendOtp": "Kodu yenidən göndər",
+    "resendIn": "Yenidən {{sec}}s",
+    "backToForm": "← Geri",
     "loggingIn": "Giriş edilir...",
     "registering": "Qeydiyyat edilir...",
     "noAccount": "Hesabınız yoxdur?",
@@ -186,14 +219,16 @@
   },
   "about": {
     "title": "Haqqımızda",
-    "text": "Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik."
+    "text": "Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik.",
+    "empty": "Haqqımızda mətni hələ əlavə edilməyib."
   },
   "contact": {
     "title": "Əlaqə",
     "email": "E-poçt",
     "phone": "Telefon",
     "address": "Ünvan",
-    "addressValue": "Bakı, Azərbaycan"
+    "addressValue": "Bakı, Azərbaycan",
+    "empty": "Əlaqə məlumatları hələ əlavə edilməyib."
   },
   "footer": {
     "desc": "Premium ətir və kosmetika mağazası. Seçilmiş brendlər, unikal qoxular.",
@@ -206,5 +241,22 @@
     "loading": "Yüklənir...",
     "currency": "₼",
     "brandName": "Amoria"
+  },
+  "reviews": {
+    "title": "Müştəri rəyləri",
+    "count": "{{count}} rəy",
+    "loading": "Rəylər yüklənir...",
+    "writeTitle": "Rəyinizi yazın",
+    "writeHint": "Sifarişiniz çatdırıldıqdan sonra 1–5 ulduz və şərh yaza bilərsiniz.",
+    "placeholder": "Məhsul haqqında fikrinizi yazın...",
+    "submit": "Rəyi göndər",
+    "submitting": "Göndərilir...",
+    "submitError": "Rəy göndərilmədi",
+    "thankYou": "Rəyiniz üçün təşəkkür edirik!",
+    "loginToReview": "Rəy yazmaq üçün daxil olun:",
+    "alreadyReviewed": "Bu məhsula artıq rəy vermisiniz.",
+    "needDelivered": "Rəy yalnız çatdırılmış sifarişlər üçün mümkündür.",
+    "empty": "Hələ rəy yoxdur — ilk rəyi siz yazın.",
+    "writeFor": "{{name}} üçün rəy yaz"
   }
 }

@@ -187,25 +187,31 @@ export default function UsersPage() {
                         : '—'}
                     </td>
                     <td className="py-3 px-2 text-right whitespace-nowrap">
-                      <button
-                        disabled={busy}
-                        onClick={() => handleBlockToggle(user)}
-                        className={`mr-3 text-xs disabled:opacity-50 ${
-                          user.isBlocked
-                            ? 'text-mint-400 hover:text-mint-300'
-                            : 'text-amber-400 hover:text-amber-300'
-                        }`}
-                      >
-                        {user.isBlocked ? 'Blokdan çıxart' : 'Blok et'}
-                      </button>
-                      <button
-                        disabled={busy}
-                        onClick={() => setDeleteTarget(user)}
-                        className="inline-flex items-center gap-1 text-xs text-white/40 hover:text-red-400 disabled:opacity-50"
-                      >
-                        <Trash2 size={12} />
-                        Sil
-                      </button>
+                      {isAdmin ? (
+                        <span className="text-white/30 text-xs">—</span>
+                      ) : (
+                        <>
+                          <button
+                            disabled={busy}
+                            onClick={() => handleBlockToggle(user)}
+                            className={`mr-3 text-xs disabled:opacity-50 ${
+                              user.isBlocked
+                                ? 'text-mint-400 hover:text-mint-300'
+                                : 'text-amber-400 hover:text-amber-300'
+                            }`}
+                          >
+                            {user.isBlocked ? 'Blokdan çıxart' : 'Blok et'}
+                          </button>
+                          <button
+                            disabled={busy}
+                            onClick={() => setDeleteTarget(user)}
+                            className="inline-flex items-center gap-1 text-xs text-white/40 hover:text-red-400 disabled:opacity-50"
+                          >
+                            <Trash2 size={12} />
+                            Sil
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 );

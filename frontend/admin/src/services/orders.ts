@@ -24,6 +24,8 @@ export interface Order {
   shippingPhone: string;
   shippingAddress: string;
   shippingCity: string;
+  shippingRegion?: string;
+  deliveryType?: 'express' | 'standard';
   createdAt: string;
   items: Array<{ productName: string; quantity: number; unitPrice: number; totalPrice: number }>;
 }

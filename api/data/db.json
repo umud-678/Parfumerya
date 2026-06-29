@@ -8,7 +8,8 @@
       "roles": [
         "SuperAdmin"
       ],
-      "token": "7edc4d84-a102-4a56-a50b-914433d7026f"
+      "token": "70a2c9ab-c294-4e1a-9605-84aa741aa66c",
+      "isBlocked": false
     },
     {
       "id": "admin-default",
@@ -17,7 +18,8 @@
       "fullName": "Super Admin",
       "roles": [
         "SuperAdmin"
-      ]
+      ],
+      "isBlocked": false
     },
     {
       "id": "4db85c82-1a6a-4a89-bf12-bb4d737eb80d",
@@ -27,7 +29,8 @@
       "roles": [
         "Customer"
       ],
-      "token": "5457dc39-5afd-41df-b9f7-91de6cd6fa37"
+      "token": "5457dc39-5afd-41df-b9f7-91de6cd6fa37",
+      "isBlocked": false
     }
   ],
   "categories": [
@@ -73,34 +76,6 @@
   ],
   "products": [
     {
-      "id": "b9805280-5c52-49ce-af61-18ca32eeaa1a",
-      "createdAt": "2026-06-28T06:58:51.686Z",
-      "name": "dior Savas",
-      "slug": "dior-savas",
-      "description": "en güzel etirlerden biridir",
-      "categoryId": "cat-men",
-      "categoryName": "Kişi ətirləri",
-      "brandId": "brand-dior",
-      "brandName": "Dior",
-      "primaryImageUrl": "/uploads/products/1782629931635-af984132.heic",
-      "price": 45,
-      "stock": 3,
-      "sku": "54265425364",
-      "volumeMl": 50,
-      "isFeatured": false,
-      "isNew": true,
-      "minPrice": 45,
-      "variants": [
-        {
-          "id": "b9805280-5c52-49ce-af61-18ca32eeaa1a-v",
-          "sku": "54265425364",
-          "volumeMl": 50,
-          "price": 45,
-          "stockQuantity": 3
-        }
-      ]
-    },
-    {
       "id": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
       "name": "Citrus Zest",
       "slug": "citrus-zest",
@@ -115,8 +90,7 @@
       "minPrice": 90,
       "sku": "CITR-50",
       "volumeMl": 50,
-      "stock": 20,
-      "averageRating": 4.595273940572893,
+      "stock": 5,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -124,9 +98,11 @@
           "sku": "citrus-zest-50",
           "volumeMl": 50,
           "price": 90,
-          "stockQuantity": 20
+          "stockQuantity": 5
         }
-      ]
+      ],
+      "averageRating": 2,
+      "reviewCount": 1
     },
     {
       "id": "110ad7dc-8a76-4f50-bea7-9e9cd85048ee",
@@ -142,8 +118,7 @@
       "minPrice": 65,
       "sku": "OCEA-50",
       "volumeMl": 50,
-      "stock": 20,
-      "averageRating": 4.767937086567418,
+      "stock": 27,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -151,7 +126,7 @@
           "sku": "ocean-breeze-50",
           "volumeMl": 50,
           "price": 65,
-          "stockQuantity": 20
+          "stockQuantity": 27
         }
       ]
     },
@@ -171,7 +146,6 @@
       "sku": "GOLD-50",
       "volumeMl": 50,
       "stock": 20,
-      "averageRating": 4.7358919778061095,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -199,7 +173,6 @@
       "sku": "SILK-50",
       "volumeMl": 50,
       "stock": 20,
-      "averageRating": 4.671195429751422,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -258,6 +231,110 @@
   ],
   "orders": [
     {
+      "id": "45f453b3-7c5d-40e6-aa45-2323b288680d",
+      "orderNumber": "ORD-20260629-7732",
+      "userId": "admin-umud",
+      "userEmail": "umud9832@gmail.com",
+      "status": "Delivered",
+      "paymentStatus": "OnDelivery",
+      "paymentMethod": "cash_on_delivery",
+      "subTotal": 90,
+      "shippingFee": 5,
+      "discountAmount": 0,
+      "totalAmount": 95,
+      "couponCode": null,
+      "shippingFullName": "Umud Admin",
+      "shippingPhone": "sas",
+      "shippingAddress": "sas",
+      "shippingCity": "Bakı",
+      "shippingRegion": "Bakı",
+      "deliveryType": "express",
+      "items": [
+        {
+          "productId": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
+          "productVariantId": "f4fe087d-1aad-4e5d-a3bc-a39cbfc95bd2",
+          "productName": "Citrus Zest",
+          "sku": "f4fe087d-1aad-4e5d-a3bc-a39cbfc95bd2",
+          "volumeMl": 50,
+          "quantity": 1,
+          "unitPrice": 90,
+          "categorySlug": "kisi-etirleri",
+          "productSlug": "citrus-zest",
+          "totalPrice": 90
+        }
+      ],
+      "createdAt": "2026-06-29T19:53:59.990Z",
+      "statusHistory": [
+        {
+          "status": "Pending",
+          "previousStatus": null,
+          "at": "2026-06-29T19:53:59.990Z",
+          "note": "Sifariş qəbul edildi"
+        },
+        {
+          "status": "Shipped",
+          "previousStatus": "Pending",
+          "at": "2026-06-29T19:55:37.557Z",
+          "note": "Status: Göndərildi"
+        },
+        {
+          "status": "Delivered",
+          "previousStatus": "Shipped",
+          "at": "2026-06-29T19:57:13.940Z",
+          "note": "Status: Çatdırıldı"
+        }
+      ],
+      "updatedAt": "2026-06-29T19:57:13.940Z"
+    },
+    {
+      "id": "da0ad70a-5c96-49fa-9eb8-1ad3654ffb0d",
+      "orderNumber": "ORD-20260629-7878",
+      "userId": "4db85c82-1a6a-4a89-bf12-bb4d737eb80d",
+      "userEmail": "umudmh@code.edu.az",
+      "status": "Delivered",
+      "paymentStatus": "OnDelivery",
+      "paymentMethod": "cash_on_delivery",
+      "subTotal": 110,
+      "shippingFee": 0,
+      "discountAmount": 0,
+      "totalAmount": 110,
+      "couponCode": null,
+      "shippingFullName": "Umud huseynov",
+      "shippingPhone": "994706780001",
+      "shippingAddress": "insaatcilar metrosu",
+      "shippingCity": "Bakı",
+      "shippingRegion": "Bakı",
+      "items": [
+        {
+          "productId": "c6d0cd87-0b3c-48bb-a355-f7b80edbab82",
+          "productVariantId": "2594ba41-4cbc-42d3-afda-b468188b50ce",
+          "productName": "Silk Petals",
+          "sku": "2594ba41-4cbc-42d3-afda-b468188b50ce",
+          "volumeMl": 50,
+          "quantity": 2,
+          "unitPrice": 55,
+          "categorySlug": "kosmetika",
+          "totalPrice": 110
+        }
+      ],
+      "createdAt": "2026-06-29T19:49:54.688Z",
+      "statusHistory": [
+        {
+          "status": "Pending",
+          "previousStatus": null,
+          "at": "2026-06-29T19:49:54.688Z",
+          "note": "Sifariş qəbul edildi"
+        },
+        {
+          "status": "Delivered",
+          "previousStatus": "Pending",
+          "at": "2026-06-29T19:51:45.961Z",
+          "note": "Status: Çatdırıldı"
+        }
+      ],
+      "updatedAt": "2026-06-29T19:51:45.961Z"
+    },
+    {
       "id": "5087542b-bc10-4568-834d-4daa85b4be1e",
       "orderNumber": "ORD-20260628-4947",
       "userId": "4db85c82-1a6a-4a89-bf12-bb4d737eb80d",
@@ -283,11 +360,21 @@
           "quantity": 1,
           "unitPrice": 100,
           "categorySlug": "qadin-etirleri",
-          "totalPrice": 100
+          "totalPrice": 100,
+          "productId": "fbf340b4-007e-4a96-9b40-b1a9e5c3915a",
+          "productSlug": "golden-amber"
         }
       ],
       "createdAt": "2026-06-28T06:55:36.759Z",
-      "updatedAt": "2026-06-28T07:02:11.071Z"
+      "updatedAt": "2026-06-28T07:02:11.071Z",
+      "statusHistory": [
+        {
+          "status": "Cancelled",
+          "previousStatus": null,
+          "at": "2026-06-28T06:55:36.759Z",
+          "note": "Sifariş qəbul edildi"
+        }
+      ]
     },
     {
       "id": "fcdefb14-08d5-4e4f-910c-f062abf981bd",
@@ -315,11 +402,21 @@
           "quantity": 1,
           "unitPrice": 90,
           "categorySlug": "kisi-etirleri",
-          "totalPrice": 90
+          "totalPrice": 90,
+          "productId": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
+          "productSlug": "citrus-zest"
         }
       ],
       "createdAt": "2026-06-27T19:29:01.711Z",
-      "updatedAt": "2026-06-27T19:29:20.685Z"
+      "updatedAt": "2026-06-27T19:29:20.685Z",
+      "statusHistory": [
+        {
+          "status": "Shipped",
+          "previousStatus": null,
+          "at": "2026-06-27T19:29:01.711Z",
+          "note": "Sifariş qəbul edildi"
+        }
+      ]
     },
     {
       "id": "3389d50e-0d28-4ac3-a418-ec516cee2d7a",
@@ -349,7 +446,15 @@
           "totalPrice": 25
         }
       ],
-      "createdAt": "2026-06-27T19:26:05.450Z"
+      "createdAt": "2026-06-27T19:26:05.450Z",
+      "statusHistory": [
+        {
+          "status": "Pending",
+          "previousStatus": null,
+          "at": "2026-06-27T19:26:05.450Z",
+          "note": "Sifariş qəbul edildi"
+        }
+      ]
     },
     {
       "id": "f6fdc512-1ea6-4915-b88e-d277cf12649d",
@@ -377,14 +482,42 @@
           "quantity": 1,
           "unitPrice": 90,
           "categorySlug": "kisi-etirleri",
-          "totalPrice": 90
+          "totalPrice": 90,
+          "productId": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
+          "productSlug": "citrus-zest"
         }
       ],
       "createdAt": "2026-06-27T18:13:10.976Z",
-      "updatedAt": "2026-06-27T19:08:59.036Z"
+      "updatedAt": "2026-06-27T19:08:59.036Z",
+      "statusHistory": [
+        {
+          "status": "Cancelled",
+          "previousStatus": null,
+          "at": "2026-06-27T18:13:10.976Z",
+          "note": "Sifariş qəbul edildi"
+        }
+      ]
     }
   ],
   "notifications": [
+    {
+      "id": "0c9eaf5a-b43c-40ad-b855-7d154ea16b54",
+      "type": "NewOrder",
+      "title": "Yeni sifariş",
+      "message": "#ORD-20260629-7732 — Umud Admin — sas, Bakı — Ekspress çatdırılma — ₼ 95.00",
+      "referenceId": "45f453b3-7c5d-40e6-aa45-2323b288680d",
+      "isRead": true,
+      "createdAt": "2026-06-29T19:53:59.990Z"
+    },
+    {
+      "id": "f6efdc14-3a62-4d69-9f53-fe4998502c96",
+      "type": "NewOrder",
+      "title": "Yeni sifariş",
+      "message": "#ORD-20260629-7878 — Umud huseynov — ₼ 110.00",
+      "referenceId": "da0ad70a-5c96-49fa-9eb8-1ad3654ffb0d",
+      "isRead": true,
+      "createdAt": "2026-06-29T19:49:54.688Z"
+    },
     {
       "id": "401b805d-540f-46a0-8740-97d9f021fd16",
       "type": "NewOrder",
@@ -400,7 +533,7 @@
       "title": "Yeni sifariş",
       "message": "#ORD-20260627-8227 — Umud huseynov — ₼ 95.00",
       "referenceId": "fcdefb14-08d5-4e4f-910c-f062abf981bd",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-06-27T19:29:01.711Z"
     },
     {
@@ -409,7 +542,7 @@
       "title": "Yeni sifariş",
       "message": "#ORD-20260627-4183 — Test — ₼ 30.00",
       "referenceId": "3389d50e-0d28-4ac3-a418-ec516cee2d7a",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-06-27T19:26:05.450Z"
     },
     {
@@ -453,7 +586,7 @@
     }
   ],
   "settings": {
-    "siteName": "enil3169",
+    "siteName": "Amoria",
     "siteTagline": "Premium parfumeriya və kosmetika mağazası",
     "email": "info@parfumerya.az",
     "phone": "+994 12 345 67 89",
@@ -480,6 +613,72 @@
       }
     ],
     "shippingFee": 5,
-    "freeShippingThreshold": 100
-  }
+    "freeShippingThreshold": 100,
+    "aboutTextAz": "Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik.",
+    "aboutTextEn": "Parfumerya — premium fragrance and cosmetics in Azerbaijan. Original products from Dior, Chanel, Tom Ford and other selected brands.",
+    "aboutTextRu": "Parfumerya — премиальная парфюмерия и косметика в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов.",
+    "paymentMethods": [
+      {
+        "id": "cod",
+        "code": "cash_on_delivery",
+        "name": "Çatdırılma zamanı nağd",
+        "active": true
+      }
+    ]
+  },
+  "wishlistFavorites": [],
+  "customerNotifications": [
+    {
+      "id": "28f207e8-857e-41a7-9004-4f3a5be47fd8",
+      "userId": "admin-umud",
+      "type": "OrderStatus",
+      "title": "Sifariş statusu yeniləndi",
+      "message": "ORD-20260629-7732 sifarişiniz: Göndərildi → Çatdırıldı",
+      "orderId": "45f453b3-7c5d-40e6-aa45-2323b288680d",
+      "orderNumber": "ORD-20260629-7732",
+      "status": "Delivered",
+      "previousStatus": "Shipped",
+      "isRead": true,
+      "createdAt": "2026-06-29T19:57:13.941Z"
+    },
+    {
+      "id": "21b778d8-b149-4b85-8198-bccf087784df",
+      "userId": "admin-umud",
+      "type": "OrderStatus",
+      "title": "Sifariş statusu yeniləndi",
+      "message": "ORD-20260629-7732 sifarişiniz: Gözləyir → Göndərildi",
+      "orderId": "45f453b3-7c5d-40e6-aa45-2323b288680d",
+      "orderNumber": "ORD-20260629-7732",
+      "status": "Shipped",
+      "previousStatus": "Pending",
+      "isRead": true,
+      "createdAt": "2026-06-29T19:55:37.558Z"
+    },
+    {
+      "id": "836ba60b-1642-44cd-8e0e-41e3788c52d8",
+      "userId": "4db85c82-1a6a-4a89-bf12-bb4d737eb80d",
+      "type": "OrderStatus",
+      "title": "Sifariş statusu yeniləndi",
+      "message": "ORD-20260629-7878 sifarişiniz: Gözləyir → Çatdırıldı",
+      "orderId": "da0ad70a-5c96-49fa-9eb8-1ad3654ffb0d",
+      "orderNumber": "ORD-20260629-7878",
+      "status": "Delivered",
+      "previousStatus": "Pending",
+      "isRead": false,
+      "createdAt": "2026-06-29T19:51:45.962Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "28ee2d8b-1175-493d-92d5-3c0356fa29d1",
+      "productId": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
+      "productName": "Citrus Zest",
+      "productSlug": "citrus-zest",
+      "userId": "admin-umud",
+      "userName": "Umud Admin",
+      "rating": 2,
+      "comment": "cox pisdir berbaddir. mahsul",
+      "createdAt": "2026-06-29T19:57:51.244Z"
+    }
+  ]
 }

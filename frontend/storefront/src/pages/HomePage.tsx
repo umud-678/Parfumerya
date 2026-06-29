@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Hero from '../components/home/Hero';
 import ProductGrid from '../components/products/ProductGrid';
-import { HomeBotanicalSides } from '../components/ui/FloralDecor';
+import { ContentWithFloral } from '../components/ui/FloralDecor';
 import { getProducts } from '../services/catalog';
 import { useTranslation } from 'react-i18next';
 import type { Product } from '../types';
@@ -19,16 +19,15 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative">
-      <HomeBotanicalSides />
-      <div className="relative z-10">
-        <Hero />
+    <>
+      <Hero />
+      <ContentWithFloral className="min-h-[50vh]" theme="crimson">
         <ProductGrid
           products={products}
           title={t('home.productsTitle')}
           loading={loading}
         />
-      </div>
-    </div>
+      </ContentWithFloral>
+    </>
   );
 }

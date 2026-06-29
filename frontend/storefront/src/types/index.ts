@@ -21,6 +21,7 @@ export interface Product {
   minPrice: number;
   maxPrice?: number;
   averageRating?: number;
+  reviewCount?: number;
   isFeatured?: boolean;
   isNew?: boolean;
   variants?: ProductVariant[];

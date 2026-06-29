@@ -11,19 +11,19 @@ export function formatOrderStatus(status: string): string {
 }
 
 export function formatUserRole(roles: string[]): string {
-  if (roles.includes('SuperAdmin')) return 'Baş admin';
   if (roles.includes('Admin')) return 'Admin';
   return 'Müştəri';
 }
 
 export function isAdminRole(roles: string[]): boolean {
-  return roles.some((r) => r === 'SuperAdmin' || r === 'Admin');
+  return roles.includes('Admin');
 }
 
 export function formatPaymentMethod(code: string): string {
   const map: Record<string, string> = {
     card: 'Bank kartı',
     cash: 'Nağd',
+    cash_on_delivery: 'Çatdırılma zamanı nağd',
   };
   return map[code] ?? code;
 }

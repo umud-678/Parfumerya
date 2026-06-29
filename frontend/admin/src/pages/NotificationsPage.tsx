@@ -58,7 +58,7 @@ export default function NotificationsPage() {
         <p className="text-white/40">Yüklənir...</p>
       ) : items.length === 0 ? (
         <div className="card-admin text-center text-white/40 py-10">
-          Hələ bildiriş yoxdur. Müştəri sifariş verdikdə burada görünəcək.
+          Hələ bildiriş yoxdur. Müştəri sifariş verdikdə və ya məhsulu favoritə əlavə etdikdə burada görünəcək.
         </div>
       ) : (
         <div className="space-y-3">

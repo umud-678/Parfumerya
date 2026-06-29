@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Tag } from 'lucide-react';
+import { Tag, Truck, Zap } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { clearCart } from '../store/cartSlice';
 import { syncAuthToken, getToken } from '../services/api';
 import { createOrder, validateCoupon, type Order } from '../services/orders';
-import { getSettings } from '../services/settings';
+import { getDeliveryFee, type DeliveryType } from '../constants/delivery';
 import { PageShell } from '../components/ui/FloralDecor';
 
 export default function CheckoutPage() {
@@ -26,8 +26,7 @@ export default function CheckoutPage() {
   const [couponApplied, setCouponApplied] = useState(!!cartState.couponCode);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [shippingFee, setShippingFee] = useState(5);
-  const [freeShippingThreshold, setFreeShippingThreshold] = useState(100);
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>('express');
   const [form, setForm] = useState({
     fullName: user?.fullName ?? '',
     phone: user?.phone ?? '',
@@ -44,17 +43,8 @@ export default function CheckoutPage() {
     }));
   }, [t, i18n.language]);
 
-  useEffect(() => {
-    getSettings()
-      .then((s) => {
-        setShippingFee(s.shippingFee ?? 5);
-        setFreeShippingThreshold(s.freeShippingThreshold ?? 100);
-      })
-      .catch(() => {});
-  }, []);
-
   const subTotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const shipping = subTotal >= freeShippingThreshold ? 0 : shippingFee;
+  const shipping = getDeliveryFee(deliveryType);
   const total = Math.max(0, subTotal + shipping - discountAmount);
 
   const fieldLabels: Record<keyof typeof form, string> = {
@@ -100,6 +90,20 @@ export default function CheckoutPage() {
     }
   };
 
+  const canContinue =
+    form.fullName.trim().length > 0 &&
+    form.phone.trim().length > 0 &&
+    form.address.trim().length > 2;
+
+  const handleContinue = () => {
+    if (!canContinue) {
+      setError(t('checkout.addressRequired'));
+      return;
+    }
+    setError('');
+    setStep(2);
+  };
+
   const handleConfirmOrder = async () => {
     syncAuthToken(user?.accessToken);
     if (!getToken()) {
@@ -117,6 +121,7 @@ export default function CheckoutPage() {
         shippingAddress: form.address,
         shippingCity: form.city,
         shippingRegion: form.region,
+        deliveryType,
         couponCode: couponApplied ? couponCode.trim().toUpperCase() : undefined,
       });
       dispatch(clearCart());
@@ -134,6 +139,11 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
+
+  const deliveryOptions: { type: DeliveryType; icon: typeof Zap; titleKey: string; descKey: string; fee: number }[] = [
+    { type: 'express', icon: Zap, titleKey: 'checkout.deliveryExpress', descKey: 'checkout.deliveryExpressDesc', fee: 5 },
+    { type: 'standard', icon: Truck, titleKey: 'checkout.deliveryStandard', descKey: 'checkout.deliveryStandardDesc', fee: 2 },
+  ];
 
   if (confirmed && orderResult) {
     return (
@@ -184,6 +194,38 @@ export default function CheckoutPage() {
             {step === 1 && (
               <div className="space-y-4">
                 <h2 className="font-serif text-xl mb-4 text-mint-400/90">{t('checkout.stepAddress')}</h2>
+
+                <div className="space-y-3 mb-2">
+                  <p className="text-white/50 text-sm">{t('checkout.deliveryChoose')}</p>
+                  {deliveryOptions.map(({ type, icon: Icon, titleKey, descKey, fee }) => (
+                    <label
+                      key={type}
+                      className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-colors ${
+                        deliveryType === type
+                          ? 'border-mint-400/50 bg-mint-400/8'
+                          : 'border-plum-700 hover:border-plum-600'
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="deliveryType"
+                        value={type}
+                        checked={deliveryType === type}
+                        onChange={() => setDeliveryType(type)}
+                        className="mt-1 accent-mint-400"
+                      />
+                      <Icon size={18} className="text-mint-400 shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-white/90">{t(titleKey)}</p>
+                        <p className="text-xs text-white/45 mt-0.5">{t(descKey)}</p>
+                      </div>
+                      <span className="text-mint-400 text-sm font-semibold shrink-0">
+                        {t('common.currency')} {fee}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
                 {(Object.keys(form) as (keyof typeof form)[]).map((field) => (
                   <input
                     key={field}
@@ -193,8 +235,9 @@ export default function CheckoutPage() {
                     className="w-full bg-plum-900/50 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none focus:border-mint-400/50"
                   />
                 ))}
+                {error && <p className="text-red-400 text-sm">{error}</p>}
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={handleContinue}
                   className="w-full btn-primary py-3 mt-4"
                 >
                   {t('checkout.continue')}
@@ -205,12 +248,35 @@ export default function CheckoutPage() {
             {step === 2 && (
               <div className="space-y-4">
                 <h2 className="font-serif text-xl mb-4 text-mint-400/90">{t('checkout.stepSummary')}</h2>
+
+                <div className="text-sm p-3 rounded-xl bg-plum-900/40 border border-plum-700/80 space-y-1">
+                  <p className="text-white/50 text-xs uppercase tracking-wide">{t('checkout.deliveryTo')}</p>
+                  <p className="text-white/85">{form.fullName} · {form.phone}</p>
+                  <p className="text-white/70">{form.address}, {form.city}{form.region ? `, ${form.region}` : ''}</p>
+                  <p className="text-mint-400/90 text-xs pt-1">
+                    {deliveryType === 'express' ? t('checkout.deliveryExpress') : t('checkout.deliveryStandard')}
+                  </p>
+                </div>
+
                 {items.map((item) => (
                   <div key={item.variantId} className="flex justify-between text-sm">
                     <span>{item.name} × {item.quantity}</span>
                     <span className="text-mint-400">{t('common.currency')} {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
+
+                <div className="border-t border-plum-700 pt-4 space-y-2 text-sm">
+                  <div className="flex justify-between"><span>{t('checkout.products')}</span><span>{t('common.currency')} {subTotal.toFixed(2)}</span></div>
+                  <div className="flex justify-between"><span>{t('checkout.shipping')}</span><span>{t('common.currency')} {shipping.toFixed(2)}</span></div>
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-mint-400">
+                      <span>{t('checkout.discount')}</span><span>-{t('common.currency')} {discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-mint-400">
+                    <span>{t('checkout.total')}</span><span>{t('common.currency')} {total.toFixed(2)}</span>
+                  </div>
+                </div>
 
                 <div className="border-t border-plum-700 pt-4">
                   <label className="text-white/50 text-sm flex items-center gap-2 mb-2">
@@ -242,41 +308,43 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-                <div className="border-t border-plum-700 pt-4 space-y-2 text-sm">
-                  <div className="flex justify-between"><span>{t('checkout.products')}</span><span>{t('common.currency')} {subTotal.toFixed(2)}</span></div>
-                  <div className="flex justify-between"><span>{t('checkout.shipping')}</span><span>{t('common.currency')} {shipping.toFixed(2)}</span></div>
-                  {discountAmount > 0 && (
-                    <div className="flex justify-between text-mint-400">
-                      <span>{t('checkout.discount')}</span><span>-{t('common.currency')} {discountAmount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between font-bold text-mint-400">
-                    <span>{t('checkout.total')}</span><span>{t('common.currency')} {total.toFixed(2)}</span>
-                  </div>
-                </div>
-                <p className="text-white/50 text-sm mt-4 p-3 rounded-xl bg-plum-900/40 border border-plum-700/80">
+                <p className="text-white/50 text-sm p-3 rounded-xl bg-plum-900/40 border border-plum-700/80">
                   {t('checkout.paymentOnDeliveryNote')}
                 </p>
                 {error && <p className="text-red-400 text-sm">{error}</p>}
-                <button
-                  onClick={handleConfirmOrder}
-                  disabled={loading}
-                  className="w-full btn-primary py-3 mt-4 disabled:opacity-60"
-                >
-                  {loading ? t('checkout.creating') : t('checkout.confirmOrder')}
-                </button>
+                <div className="flex gap-3 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="px-4 py-3 rounded-xl border border-plum-600 text-white/70 text-sm hover:border-mint-400/30"
+                  >
+                    {t('checkout.back')}
+                  </button>
+                  <button
+                    onClick={handleConfirmOrder}
+                    disabled={loading}
+                    className="flex-1 btn-primary py-3 disabled:opacity-60"
+                  >
+                    {loading ? t('checkout.creating') : t('checkout.confirmOrder')}
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
-          <div className="card-elegant p-8 h-fit">
-            <h3 className="font-serif text-lg mb-4">{t('checkout.orderSummary')}</h3>
+          <div className="card-elegant p-8 h-fit space-y-4">
+            <h3 className="font-serif text-lg">{t('checkout.orderSummary')}</h3>
             <p className="text-3xl font-bold text-mint-400">{t('common.currency')} {total.toFixed(2)}</p>
-            <p className="text-white/40 text-sm mt-2">{t('checkout.productsCount', { count: items.length })}</p>
+            <p className="text-white/40 text-sm">{t('checkout.productsCount', { count: items.length })}</p>
             {couponApplied && (
-              <p className="text-mint-400 text-xs mt-2">{t('checkout.promoLabel')}: {couponCode}</p>
+              <p className="text-mint-400 text-xs">{t('checkout.promoLabel')}: {couponCode}</p>
             )}
-            <p className="text-white/40 text-xs mt-4 pt-4 border-t border-plum-700">
+            <div className="text-xs text-white/45 space-y-2 pt-4 border-t border-plum-700">
+              <p className="text-mint-400/80 font-medium">{t('checkout.deliveryInfoTitle')}</p>
+              <p>⚡ {t('checkout.deliveryExpress')} — {t('common.currency')} 5</p>
+              <p>🚇 {t('checkout.deliveryStandard')} — {t('common.currency')} 2</p>
+            </div>
+            <p className="text-white/40 text-xs pt-2 border-t border-plum-700">
               {t('checkout.paymentOnDeliveryNote')}
             </p>
           </div>

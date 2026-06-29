@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import multer from 'multer';
+import { requestRegistrationOtp, verifyRegistrationOtp, cleanupExpiredOtps } from './lib/registrationOtp.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
@@ -110,16 +111,7 @@ function defaultDb() {
         email: 'umud9832@gmail.com',
         password: '12345678',
         fullName: 'Umud Admin',
-        roles: ['SuperAdmin'],
-        isBlocked: false,
-        createdAt: '2026-01-01T00:00:00.000Z',
-      },
-      {
-        id: 'admin-default',
-        email: 'admin@parfumerya.az',
-        password: 'Admin123!',
-        fullName: 'Super Admin',
-        roles: ['SuperAdmin'],
+        roles: ['Admin'],
         isBlocked: false,
         createdAt: '2026-01-01T00:00:00.000Z',
       },
@@ -203,9 +195,47 @@ function defaultDb() {
       ],
       shippingFee: 5,
       freeShippingThreshold: 100,
+      aboutTextAz: 'Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik.',
+      aboutTextEn: 'Parfumerya — premium fragrance and cosmetics in Azerbaijan. Original products from Dior, Chanel, Tom Ford and other selected brands.',
+      aboutTextRu: 'Parfumerya — премиальная парфюмерия и косметика в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов.',
+      paymentMethods: [
+        { id: 'cod', code: 'cash_on_delivery', name: 'Çatdırılma zamanı nağd', active: true },
+      ],
     },
     wishlistFavorites: [],
+    reviews: [],
+    registrationOtps: [],
   };
+}
+
+function getProductFavoriteCount(db, productId) {
+  return (db.wishlistFavorites ?? []).filter((f) => f.productId === productId).length;
+}
+
+const FAVORITE_NOTIFY_MILESTONES = [1, 5, 10, 20, 50, 100];
+
+function maybeNotifyFavoriteMilestone(db, productId, productName) {
+  const count = getProductFavoriteCount(db, productId);
+  if (!FAVORITE_NOTIFY_MILESTONES.includes(count)) return;
+
+  const dedupeKey = `WishlistFavorite:${productId}:${count}`;
+  const already = (db.notifications ?? []).some(
+    (n) => n.type === 'WishlistFavorite' && n.referenceId === dedupeKey
+  );
+  if (already) return;
+
+  if (!db.notifications) db.notifications = [];
+  db.notifications.unshift({
+    id: crypto.randomUUID(),
+    type: 'WishlistFavorite',
+    title: 'Məhsul favoritlərdə',
+    message: `"${productName}" məhsulunu artıq ${count} müştəri favoritə əlavə edib.`,
+    referenceId: dedupeKey,
+    productId,
+    favoriteCount: count,
+    isRead: false,
+    createdAt: new Date().toISOString(),
+  });
 }
 
 function aggregateWishlistStats(db) {
@@ -276,10 +306,155 @@ function seedProducts() {
     sku: `${p.slug.toUpperCase().slice(0, 4)}-50`,
     volumeMl: 50,
     stock: 20,
-    averageRating: 4.5 + Math.random() * 0.4,
     createdAt: new Date().toISOString(),
     variants: [{ id: crypto.randomUUID(), sku: `${p.slug}-50`, volumeMl: 50, price: p.price, stockQuantity: 20 }],
   }));
+}
+
+function findProductByVariantId(db, variantId) {
+  if (!variantId) return null;
+  return (
+    db.products.find((p) =>
+      p.variants?.some((v) => v.id === variantId || v.sku === variantId)
+    ) ?? null
+  );
+}
+
+function getProductStock(product) {
+  if (!product) return 0;
+  if (product.stock != null) return Math.max(0, Number(product.stock) || 0);
+  const v = product.variants?.[0];
+  return Math.max(0, Number(v?.stockQuantity ?? 0) || 0);
+}
+
+function setProductStock(product, quantity) {
+  const qty = Math.max(0, Math.floor(Number(quantity) || 0));
+  product.stock = qty;
+  if (product.variants?.length) {
+    for (const v of product.variants) {
+      v.stockQuantity = qty;
+    }
+  }
+}
+
+function findProductBySku(db, sku) {
+  if (!sku) return null;
+  const normalized = String(sku).trim().toUpperCase();
+  return (
+    db.products.find(
+      (p) =>
+        (p.sku || '').toUpperCase() === normalized ||
+        p.variants?.some((v) => (v.sku || '').toUpperCase() === normalized)
+    ) ?? null
+  );
+}
+
+function resolveOrderItemProduct(db, item) {
+  if (item.productId) {
+    const p = db.products.find((x) => x.id === item.productId);
+    if (p) return { productId: p.id, productSlug: p.slug, productName: p.name };
+  }
+  const variantId = item.productVariantId ?? item.variantId;
+  const p = findProductByVariantId(db, variantId);
+  if (p) return { productId: p.id, productSlug: p.slug, productName: p.name };
+  return { productId: null, productSlug: null, productName: item.productName ?? '' };
+}
+
+function userDeliveredProductIds(db, userId) {
+  const ids = new Set();
+  for (const order of db.orders ?? []) {
+    if (order.userId !== userId || order.status !== 'Delivered') continue;
+    for (const item of order.items ?? []) {
+      const { productId } = resolveOrderItemProduct(db, item);
+      if (productId) ids.add(productId);
+    }
+  }
+  return ids;
+}
+
+function productReviewStats(db, productId) {
+  const reviews = (db.reviews ?? []).filter((r) => r.productId === productId);
+  if (!reviews.length) {
+    return { averageRating: null, reviewCount: 0 };
+  }
+  const sum = reviews.reduce((s, r) => s + r.rating, 0);
+  return {
+    averageRating: Math.round((sum / reviews.length) * 10) / 10,
+    reviewCount: reviews.length,
+  };
+}
+
+function enrichProduct(db, product) {
+  const stats = productReviewStats(db, product.id);
+  const { averageRating: _stored, reviewCount: _rc, ...rest } = product;
+  return { ...rest, ...stats };
+}
+
+function recalcProductRating(db, productId) {
+  const product = db.products.find((p) => p.id === productId);
+  if (!product) return;
+  const stats = productReviewStats(db, productId);
+  if (stats.reviewCount === 0) {
+    delete product.averageRating;
+    delete product.reviewCount;
+    return;
+  }
+  product.averageRating = stats.averageRating;
+  product.reviewCount = stats.reviewCount;
+}
+
+function syncAllProductRatings(db) {
+  let changed = false;
+  for (const product of db.products ?? []) {
+    const stats = productReviewStats(db, product.id);
+    const nextRating = stats.averageRating;
+    const nextCount = stats.reviewCount;
+    if (product.averageRating !== nextRating || product.reviewCount !== nextCount) {
+      if (nextRating == null) {
+        delete product.averageRating;
+        delete product.reviewCount;
+      } else {
+        product.averageRating = nextRating;
+        product.reviewCount = nextCount;
+      }
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+function isAdminUser(user) {
+  return user?.roles?.includes('Admin');
+}
+
+function normalizeSingleAdminRoles(db) {
+  let changed = false;
+  const users = db.users ?? [];
+  const primaryAdmin =
+    users.find((u) => u.id === 'admin-umud') ??
+    users.find((u) => u.roles?.some((r) => r === 'Admin' || r === 'SuperAdmin'));
+
+  for (const user of users) {
+    const isPrimary = primaryAdmin && user.id === primaryAdmin.id;
+    if (isPrimary) {
+      if (!user.roles?.includes('Admin') || user.roles.includes('SuperAdmin') || user.roles.length !== 1) {
+        user.roles = ['Admin'];
+        changed = true;
+      }
+      continue;
+    }
+    if (user.roles?.some((r) => r === 'Admin' || r === 'SuperAdmin')) {
+      user.roles = ['Customer'];
+      changed = true;
+      continue;
+    }
+    if (!user.roles?.length || user.roles.includes('SuperAdmin')) {
+      user.roles = ['Customer'];
+      changed = true;
+    }
+  }
+
+  return changed;
 }
 
 function ensureSeedData(db) {
@@ -304,6 +479,14 @@ function ensureSeedData(db) {
   if (!db.settings) {
     db.settings = defaultDb().settings;
     changed = true;
+  } else {
+    const defaults = defaultDb().settings;
+    for (const key of Object.keys(defaults)) {
+      if (db.settings[key] === undefined) {
+        db.settings[key] = defaults[key];
+        changed = true;
+      }
+    }
   }
   if (!db.wishlistFavorites) {
     db.wishlistFavorites = [];
@@ -311,6 +494,10 @@ function ensureSeedData(db) {
   }
   if (!db.customerNotifications) {
     db.customerNotifications = [];
+    changed = true;
+  }
+  if (!db.reviews) {
+    db.reviews = [];
     changed = true;
   }
   for (const order of db.orders ?? []) {
@@ -322,6 +509,16 @@ function ensureSeedData(db) {
         note: 'Sifariş qəbul edildi',
       }];
       changed = true;
+    }
+    for (const item of order.items ?? []) {
+      if (!item.productId) {
+        const resolved = resolveOrderItemProduct(db, item);
+        if (resolved.productId) {
+          item.productId = resolved.productId;
+          item.productSlug = resolved.productSlug;
+          changed = true;
+        }
+      }
     }
   }
   for (const user of db.users ?? []) {
@@ -339,6 +536,19 @@ function ensureSeedData(db) {
       coupon.applicableCategorySlug = '';
       changed = true;
     }
+  }
+  if (syncAllProductRatings(db)) {
+    changed = true;
+  }
+  if (normalizeSingleAdminRoles(db)) {
+    changed = true;
+  }
+  if (!db.registrationOtps) {
+    db.registrationOtps = [];
+    changed = true;
+  }
+  if (cleanupExpiredOtps(db)) {
+    changed = true;
   }
   if (changed) writeDb(db);
   return db;
@@ -403,8 +613,8 @@ function ok(res, data, message) {
   return res.json({ success: true, data, message });
 }
 
-function fail(res, status, message) {
-  return res.status(status).json({ success: false, message });
+function fail(res, status, message, extra) {
+  return res.status(status).json({ success: false, message, ...(extra ?? {}) });
 }
 
 function authMiddleware(req, res, next) {
@@ -428,7 +638,7 @@ function requireAuth(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  if (!req.user?.roles?.some((r) => r === 'Admin' || r === 'SuperAdmin')) {
+  if (!isAdminUser(req.user)) {
     return fail(res, 403, 'Admin icazəsi tələb olunur');
   }
   next();
@@ -445,10 +655,6 @@ function sanitizeUser(user) {
     createdAt: user.createdAt ?? null,
     updatedAt: user.updatedAt ?? null,
   };
-}
-
-function isSuperAdmin(user) {
-  return user.roles?.some((r) => r === 'SuperAdmin');
 }
 
 const ORDER_STATUSES = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
@@ -489,7 +695,7 @@ app.get('/api/health', (_req, res) => {
   ok(res, {
     ok: true,
     version: 2,
-    features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage'],
+    features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage', 'register-otp'],
   });
 });
 
@@ -514,42 +720,59 @@ app.post('/api/auth/login', (req, res) => {
   }, 'Giriş uğurlu');
 });
 
-app.post('/api/auth/register', (req, res) => {
-  const { fullName, email, password, phone } = req.body ?? {};
+app.post('/api/auth/register/send-otp', async (req, res) => {
   const db = readDb();
-  if (db.users.some((u) => u.email === email)) {
-    return fail(res, 400, 'Bu email artıq qeydiyyatdadır');
+  const siteName = db.settings?.siteName ?? 'Amoria';
+  const result = await requestRegistrationOtp(db, req.body, siteName);
+  if (!result.ok) {
+    return fail(res, result.status ?? 400, result.message, result.retryAfterSec ? { retryAfterSec: result.retryAfterSec } : undefined);
   }
-  const user = {
-    id: crypto.randomUUID(),
-    email,
-    password,
-    fullName,
-    phone,
-    roles: ['Customer'],
-    isBlocked: false,
-    createdAt: new Date().toISOString(),
-    token: crypto.randomUUID(),
-  };
-  db.users.push(user);
-  db.notifications.unshift({
-    id: crypto.randomUUID(),
-    type: 'NewUser',
-    title: 'Yeni istifadəçi',
-    message: `${email} qeydiyyatdan keçdi`,
-    isRead: false,
-    createdAt: new Date().toISOString(),
-  });
   writeDb(db);
-  ok(res, {
-    accessToken: user.token,
-    refreshToken: crypto.randomUUID(),
-    userId: user.id,
-    email: user.email,
-    fullName: user.fullName,
-    phone: user.phone ?? '',
-    roles: user.roles,
-  });
+  const { devOtp, ...data } = result;
+  ok(res, data, result.message);
+  if (devOtp && process.env.NODE_ENV !== 'production') {
+    console.log(`[register-otp] dev kod ${req.body?.email}: ${devOtp}`);
+  }
+});
+
+app.post('/api/auth/register/verify-otp', (req, res) => {
+  const db = readDb();
+  const result = verifyRegistrationOtp(db, req.body);
+  if (!result.ok) {
+    writeDb(db);
+    return fail(res, result.status ?? 400, result.message);
+  }
+  writeDb(db);
+  ok(res, result.auth, 'Qeydiyyat uğurla tamamlandı');
+});
+
+app.post('/api/auth/register/resend-otp', async (req, res) => {
+  const db = readDb();
+  const email = String(req.body?.email ?? '').trim().toLowerCase();
+  const pending = (db.registrationOtps ?? []).find((e) => e.email === email);
+  if (!pending) {
+    return fail(res, 400, 'Aktiv OTP sorğusu tapılmadı. Qeydiyyat formunu yenidən doldurun');
+  }
+  const result = await requestRegistrationOtp(
+    db,
+    {
+      firstName: pending.firstName,
+      lastName: pending.lastName,
+      fullName: pending.fullName,
+      email: pending.email,
+      password: pending.password,
+    },
+    db.settings?.siteName ?? 'Amoria'
+  );
+  if (!result.ok) {
+    return fail(res, result.status ?? 400, result.message, result.retryAfterSec ? { retryAfterSec: result.retryAfterSec } : undefined);
+  }
+  writeDb(db);
+  ok(res, { email: result.email, expiresInSec: result.expiresInSec }, result.message);
+});
+
+app.post('/api/auth/register', (req, res) => {
+  fail(res, 400, 'Qeydiyyat üçün OTP təsdiqi tələb olunur');
 });
 
 // ─── Settings ───────────────────────────────────────────────────────────────
@@ -583,6 +806,7 @@ app.patch('/api/users/:id/block', requireAuth, requireAdmin, (req, res) => {
   const user = db.users.find((u) => u.id === req.params.id);
   if (!user) return fail(res, 404, 'İstifadəçi tapılmadı');
   if (user.id === req.user.id) return fail(res, 400, 'Öz hesabınızı blok edə bilməzsiniz');
+  if (isAdminUser(user)) return fail(res, 400, 'Admin hesabı blok edilə bilməz');
   if (user.isBlocked) return ok(res, sanitizeUser(user), 'İstifadəçi artıq bloklanıb');
 
   user.isBlocked = true;
@@ -611,13 +835,7 @@ app.delete('/api/users/:id', requireAuth, requireAdmin, (req, res) => {
 
   const user = db.users[idx];
   if (user.id === req.user.id) return fail(res, 400, 'Öz hesabınızı silə bilməzsiniz');
-
-  if (isSuperAdmin(user)) {
-    const superAdminCount = db.users.filter((u) => isSuperAdmin(u)).length;
-    if (superAdminCount <= 1) {
-      return fail(res, 400, 'Son SuperAdmin hesabı silinə bilməz');
-    }
-  }
+  if (isAdminUser(user)) return fail(res, 400, 'Admin hesabı silinə bilməz');
 
   db.wishlistFavorites = (db.wishlistFavorites ?? []).filter((f) => f.userId !== user.id);
   db.users.splice(idx, 1);
@@ -626,6 +844,27 @@ app.delete('/api/users/:id', requireAuth, requireAdmin, (req, res) => {
 });
 
 // ─── User Profile ───────────────────────────────────────────────────────────
+app.patch('/api/users/password', requireAuth, (req, res) => {
+  const db = readDb();
+  const user = db.users.find((u) => u.id === req.user.id);
+  if (!user) return fail(res, 404, 'İstifadəçi tapılmadı');
+
+  const { currentPassword, newPassword } = req.body ?? {};
+  if (!currentPassword || !newPassword) {
+    return fail(res, 400, 'Cari və yeni şifrə vacibdir');
+  }
+  if (String(newPassword).length < 8) {
+    return fail(res, 400, 'Yeni şifrə ən azı 8 simvol olmalıdır');
+  }
+  if (user.password !== currentPassword) {
+    return fail(res, 400, 'Cari şifrə səhvdir');
+  }
+  user.password = newPassword;
+  user.updatedAt = new Date().toISOString();
+  writeDb(db);
+  ok(res, null, 'Şifrə yeniləndi');
+});
+
 app.get('/api/users/me', requireAuth, (req, res) => {
   const db = readDb();
   const user = db.users.find((u) => u.id === req.user.id);
@@ -673,20 +912,88 @@ app.get('/api/products', (req, res) => {
   const totalCount = filtered.length;
   const offset = Math.max(0, parseInt(req.query.offset, 10) || 0);
   const limit = req.query.limit ? Math.max(1, parseInt(req.query.limit, 10)) : totalCount;
-  const items = filtered.slice(offset, offset + limit);
+  const items = filtered.slice(offset, offset + limit).map((p) => enrichProduct(db, p));
   ok(res, { items, totalCount, offset, limit });
+});
+
+app.patch('/api/products/:id/stock', requireAuth, requireAdmin, (req, res) => {
+  const db = readDb();
+  const product = db.products.find((p) => p.id === req.params.id);
+  if (!product) return fail(res, 404, 'Məhsul tapılmadı');
+
+  const addRaw = req.body?.add;
+  const subtractRaw = req.body?.subtract;
+  const setRaw = req.body?.set;
+  const hasAdd = addRaw != null && addRaw !== '';
+  const hasSubtract = subtractRaw != null && subtractRaw !== '';
+  const hasSet = setRaw != null && setRaw !== '';
+
+  if (hasAdd) {
+    const add = Number(addRaw);
+    if (!Number.isFinite(add) || add <= 0) return fail(res, 400, 'add müsbət ədəd olmalıdır');
+    setProductStock(product, getProductStock(product) + add);
+  } else if (hasSubtract) {
+    const subtract = Number(subtractRaw);
+    if (!Number.isFinite(subtract) || subtract <= 0) return fail(res, 400, 'subtract müsbət ədəd olmalıdır');
+    setProductStock(product, getProductStock(product) - subtract);
+  } else if (hasSet) {
+    const set = Number(setRaw);
+    if (!Number.isFinite(set) || set < 0) return fail(res, 400, 'set 0 və ya daha böyük olmalıdır');
+    setProductStock(product, set);
+  } else {
+    return fail(res, 400, 'add, subtract və ya set göndərin');
+  }
+
+  writeDb(db);
+  ok(res, { id: product.id, stock: getProductStock(product) }, 'Stok yeniləndi');
 });
 
 app.get('/api/products/:slug', (req, res) => {
   const db = readDb();
   const product = db.products.find((p) => p.slug === req.params.slug);
   if (!product) return fail(res, 404, 'Məhsul tapılmadı');
-  ok(res, product);
+  ok(res, enrichProduct(db, product));
 });
 
 app.post('/api/products', requireAuth, requireAdmin, (req, res) => {
   const db = readDb();
-  const product = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), ...req.body };
+  const body = req.body ?? {};
+  const sku = (body.sku || body.variants?.[0]?.sku || '').trim();
+  const slug = body.slug?.trim() || (body.name ? slugify(body.name) : '');
+  const incomingStock = Math.max(0, Number(body.stock ?? body.variants?.[0]?.stockQuantity ?? 0) || 0);
+
+  let existing = findProductBySku(db, sku);
+  if (!existing && slug) {
+    existing = db.products.find((p) => p.slug === slug) ?? null;
+  }
+
+  if (existing && incomingStock > 0) {
+    const nextStock = getProductStock(existing) + incomingStock;
+    setProductStock(existing, nextStock);
+    writeDb(db);
+    return ok(res, existing.id, 'Stok mövcud məhsula əlavə edildi');
+  }
+
+  const product = {
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    ...body,
+    slug: slug || slugify(body.name || 'mehsul'),
+    stock: incomingStock,
+  };
+  if (product.variants?.length) {
+    for (const v of product.variants) {
+      v.stockQuantity = incomingStock;
+    }
+  } else if (sku) {
+    product.variants = [{
+      id: crypto.randomUUID(),
+      sku,
+      volumeMl: Number(body.volumeMl ?? 50),
+      price: Number(body.price ?? body.minPrice ?? 0),
+      stockQuantity: incomingStock,
+    }];
+  }
   db.products.unshift(product);
   writeDb(db);
   ok(res, product.id, 'Məhsul yaradıldı');
@@ -783,6 +1090,31 @@ app.delete('/api/categories/:id', requireAuth, requireAdmin, (req, res) => {
 });
 
 app.get('/api/brands', (_req, res) => ok(res, readDb().brands));
+
+app.post('/api/brands', requireAuth, requireAdmin, (req, res) => {
+  const db = readDb();
+  const name = String(req.body?.name ?? '').trim();
+  if (!name) return fail(res, 400, 'Brend adı vacibdir');
+  const slug = slugify(name);
+  if (db.brands.some((b) => b.slug === slug)) {
+    return fail(res, 400, 'Bu brend artıq mövcuddur');
+  }
+  const brand = { id: crypto.randomUUID(), name, slug };
+  db.brands.push(brand);
+  writeDb(db);
+  ok(res, brand, 'Brend yaradıldı');
+});
+
+app.delete('/api/brands/:id', requireAuth, requireAdmin, (req, res) => {
+  const db = readDb();
+  const idx = db.brands.findIndex((b) => b.id === req.params.id);
+  if (idx === -1) return fail(res, 404, 'Brend tapılmadı');
+  const inUse = db.products.some((p) => p.brandId === req.params.id);
+  if (inUse) return fail(res, 400, 'Bu brend məhsullarda istifadə olunur');
+  db.brands.splice(idx, 1);
+  writeDb(db);
+  ok(res, null, 'Brend silindi');
+});
 
 // ─── Hero / Banners ───────────────────────────────────────────────────────────
 app.get('/api/hero', (_req, res) => {
@@ -963,7 +1295,7 @@ app.post('/api/coupons/validate', (req, res) => {
 // ─── Orders ─────────────────────────────────────────────────────────────────
 app.get('/api/orders', requireAuth, (req, res) => {
   const db = readDb();
-  const isAdmin = req.user.roles.some((r) => r === 'Admin' || r === 'SuperAdmin');
+  const isAdmin = isAdminUser(req.user);
   const orders = isAdmin
     ? db.orders
     : db.orders.filter((o) => o.userId === req.user.id);
@@ -979,26 +1311,32 @@ app.post('/api/orders', requireAuth, (req, res) => {
   const db = readDb();
   const {
     items, shippingFullName, shippingPhone, shippingAddress,
-    shippingCity, shippingRegion, couponCode, notes,
+    shippingCity, shippingRegion, couponCode, notes, deliveryType,
   } = req.body ?? {};
 
   if (!items?.length) return fail(res, 400, 'Səbət boşdur');
+  if (!shippingFullName?.trim() || !shippingPhone?.trim() || !shippingAddress?.trim()) {
+    return fail(res, 400, 'Çatdırılma məlumatları tam doldurulmalıdır');
+  }
+
+  const DELIVERY_FEES = { express: 5, standard: 2 };
+  const resolvedDelivery = deliveryType === 'standard' ? 'standard' : 'express';
+  const shippingFee = DELIVERY_FEES[resolvedDelivery];
 
   let subTotal = 0;
   const orderItems = items.map((item) => {
     const total = item.unitPrice * item.quantity;
     subTotal += total;
+    const resolved = resolveOrderItemProduct(db, item);
     return {
       ...item,
+      productId: item.productId ?? resolved.productId,
+      productSlug: item.productSlug ?? resolved.productSlug,
       categorySlug: item.categorySlug ?? '',
       totalPrice: total,
     };
   });
 
-  const dbSettings = db.settings ?? defaultDb().settings;
-  const shippingThreshold = dbSettings.freeShippingThreshold ?? 100;
-  const shippingFeeDefault = dbSettings.shippingFee ?? 5;
-  const shippingFee = subTotal >= shippingThreshold ? 0 : shippingFeeDefault;
   let discountAmount = 0;
   let appliedCoupon = null;
 
@@ -1018,6 +1356,21 @@ app.post('/api/orders', requireAuth, (req, res) => {
   }
 
   const totalAmount = Math.max(0, subTotal + shippingFee - discountAmount);
+
+  for (const item of orderItems) {
+    if (!item.productId) continue;
+    const product = db.products.find((p) => p.id === item.productId);
+    if (!product) continue;
+    const available = getProductStock(product);
+    if (available < item.quantity) {
+      return fail(
+        res,
+        400,
+        `${item.productName || product.name} üçün kifayət qədər stok yoxdur (qalan: ${available})`
+      );
+    }
+  }
+
   const order = {
     id: crypto.randomUUID(),
     orderNumber: `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -1031,11 +1384,12 @@ app.post('/api/orders', requireAuth, (req, res) => {
     discountAmount,
     totalAmount,
     couponCode: appliedCoupon,
-    shippingFullName,
-    shippingPhone,
-    shippingAddress,
-    shippingCity,
-    shippingRegion,
+    shippingFullName: shippingFullName.trim(),
+    shippingPhone: shippingPhone.trim(),
+    shippingAddress: shippingAddress.trim(),
+    shippingCity: shippingCity?.trim() || 'Bakı',
+    shippingRegion: shippingRegion?.trim() || '',
+    deliveryType: resolvedDelivery,
     notes,
     items: orderItems,
     createdAt: new Date().toISOString(),
@@ -1048,11 +1402,19 @@ app.post('/api/orders', requireAuth, (req, res) => {
   };
 
   db.orders.unshift(order);
+
+  for (const item of orderItems) {
+    if (!item.productId) continue;
+    const product = db.products.find((p) => p.id === item.productId);
+    if (!product) continue;
+    setProductStock(product, getProductStock(product) - item.quantity);
+  }
+
   db.notifications.unshift({
     id: crypto.randomUUID(),
     type: 'NewOrder',
     title: 'Yeni sifariş',
-    message: `#${order.orderNumber} — ${shippingFullName} — ₼ ${totalAmount.toFixed(2)}${appliedCoupon ? ` (${appliedCoupon} -${discountAmount.toFixed(2)}₼)` : ''}`,
+    message: `#${order.orderNumber} — ${shippingFullName} — ${shippingAddress.trim()}, ${shippingCity?.trim() || 'Bakı'} — ${resolvedDelivery === 'express' ? 'Ekspress' : 'Sadə'} çatdırılma — ₼ ${totalAmount.toFixed(2)}${appliedCoupon ? ` (${appliedCoupon} -${discountAmount.toFixed(2)}₼)` : ''}`,
     referenceId: order.id,
     isRead: false,
     createdAt: new Date().toISOString(),
@@ -1185,6 +1547,7 @@ app.post('/api/wishlist/toggle', requireAuth, (req, res) => {
     categorySlug: db.products.find((p) => p.id === productId)?.categorySlug ?? '',
     addedAt: new Date().toISOString(),
   });
+  maybeNotifyFavoriteMilestone(db, productId, snap.productName);
   writeDb(db);
   ok(res, { favorited: true, message: 'Favoritlərə əlavə edildi' });
 });
@@ -1230,6 +1593,7 @@ app.post('/api/wishlist/sync', requireAuth, (req, res) => {
       categorySlug: item.categorySlug ?? '',
       addedAt: new Date().toISOString(),
     });
+    maybeNotifyFavoriteMilestone(db, item.id, snap.productName);
     existing.add(item.id);
   }
   writeDb(db);
@@ -1275,17 +1639,164 @@ app.patch('/api/notifications/read-all', requireAuth, requireAdmin, (_req, res) 
   ok(res, null);
 });
 
-// ─── Dashboard ──────────────────────────────────────────────────────────────
+// ─── Reviews ────────────────────────────────────────────────────────────────
+app.get('/api/products/:slug/reviews', (req, res) => {
+  const db = readDb();
+  const product = db.products.find((p) => p.slug === req.params.slug);
+  if (!product) return fail(res, 404, 'Məhsul tapılmadı');
+
+  const reviews = (db.reviews ?? [])
+    .filter((r) => r.productId === product.id)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const stats = productReviewStats(db, product.id);
+
+  ok(res, {
+    reviews,
+    averageRating: stats.averageRating,
+    count: stats.reviewCount,
+  });
+});
+
+app.get('/api/products/:slug/review-eligibility', requireAuth, (req, res) => {
+  const db = readDb();
+  const product = db.products.find((p) => p.slug === req.params.slug);
+  if (!product) return fail(res, 404, 'Məhsul tapılmadı');
+
+  const delivered = userDeliveredProductIds(db, req.user.id);
+  const alreadyReviewed = (db.reviews ?? []).some(
+    (r) => r.userId === req.user.id && r.productId === product.id
+  );
+
+  ok(res, {
+    canReview: delivered.has(product.id) && !alreadyReviewed,
+    alreadyReviewed,
+    hasDelivered: delivered.has(product.id),
+  });
+});
+
+app.get('/api/reviews/my-eligible', requireAuth, (req, res) => {
+  const db = readDb();
+  const delivered = userDeliveredProductIds(db, req.user.id);
+  const reviewed = new Set(
+    (db.reviews ?? []).filter((r) => r.userId === req.user.id).map((r) => r.productId)
+  );
+
+  const items = [];
+  for (const productId of delivered) {
+    if (reviewed.has(productId)) continue;
+    const p = db.products.find((x) => x.id === productId);
+    if (p) {
+      items.push({ productId: p.id, productName: p.name, productSlug: p.slug });
+    }
+  }
+  ok(res, items);
+});
+
+app.post('/api/reviews', requireAuth, (req, res) => {
+  const db = readDb();
+  const { productId, rating, comment } = req.body ?? {};
+  const stars = Number(rating);
+
+  if (!productId || !Number.isInteger(stars) || stars < 1 || stars > 5) {
+    return fail(res, 400, 'Qiymətləndirmə 1–5 ulduz olmalıdır');
+  }
+  if (!comment?.trim()) return fail(res, 400, 'Rəy mətni vacibdir');
+
+  const product = db.products.find((p) => p.id === productId);
+  if (!product) return fail(res, 404, 'Məhsul tapılmadı');
+
+  if (!db.reviews) db.reviews = [];
+  if (db.reviews.some((r) => r.userId === req.user.id && r.productId === productId)) {
+    return fail(res, 400, 'Bu məhsula artıq rəy yazmısınız');
+  }
+
+  const delivered = userDeliveredProductIds(db, req.user.id);
+  if (!delivered.has(productId)) {
+    return fail(res, 403, 'Yalnız təhvil aldığınız məhsullara rəy yaza bilərsiniz');
+  }
+
+  const review = {
+    id: crypto.randomUUID(),
+    productId,
+    productName: product.name,
+    productSlug: product.slug,
+    userId: req.user.id,
+    userName: req.user.fullName || req.user.email,
+    rating: stars,
+    comment: comment.trim(),
+    createdAt: new Date().toISOString(),
+  };
+
+  db.reviews.unshift(review);
+  recalcProductRating(db, productId);
+  writeDb(db);
+  ok(res, review, 'Rəy əlavə edildi');
+});
+
+app.get('/api/reviews', requireAuth, requireAdmin, (_req, res) => {
+  const db = readDb();
+  const reviews = [...(db.reviews ?? [])].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+  ok(res, reviews);
+});
+
+app.delete('/api/reviews/:id', requireAuth, requireAdmin, (req, res) => {
+  const db = readDb();
+  const idx = (db.reviews ?? []).findIndex((r) => r.id === req.params.id);
+  if (idx === -1) return fail(res, 404, 'Rəy tapılmadı');
+
+  const [removed] = db.reviews.splice(idx, 1);
+  recalcProductRating(db, removed.productId);
+  writeDb(db);
+  ok(res, null, 'Rəy silindi');
+});
+
+// ─── Dashboard & Reports ────────────────────────────────────────────────────
+function revenueOrders(orders) {
+  return orders.filter((o) => o.status !== 'Cancelled');
+}
+
+app.get('/api/reports/summary', requireAuth, requireAdmin, (_req, res) => {
+  const db = readDb();
+  const orders = revenueOrders(db.orders ?? []);
+  const today = new Date().toISOString().slice(0, 10);
+  const month = today.slice(0, 7);
+
+  const dailyChart = [];
+  for (let i = 29; i >= 0; i -= 1) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const revenue = orders
+      .filter((o) => o.createdAt.startsWith(key))
+      .reduce((s, o) => s + o.totalAmount, 0);
+    dailyChart.push({ date: key, revenue: Math.round(revenue * 100) / 100 });
+  }
+
+  ok(res, {
+    dailyRevenue: orders
+      .filter((o) => o.createdAt.startsWith(today))
+      .reduce((s, o) => s + o.totalAmount, 0),
+    monthlyRevenue: orders
+      .filter((o) => o.createdAt.startsWith(month))
+      .reduce((s, o) => s + o.totalAmount, 0),
+    totalSales: orders.reduce((s, o) => s + o.totalAmount, 0),
+    dailyChart,
+  });
+});
+
 app.get('/api/dashboard/stats', requireAuth, requireAdmin, (req, res) => {
   const db = readDb();
   const today = new Date().toISOString().slice(0, 10);
   const month = today.slice(0, 7);
-  const completed = db.orders.filter((o) => o.paymentStatus === 'Completed');
+  const orders = revenueOrders(db.orders ?? []);
 
   ok(res, {
-    totalSales: completed.reduce((s, o) => s + o.totalAmount, 0),
-    dailyRevenue: completed.filter((o) => o.createdAt.startsWith(today)).reduce((s, o) => s + o.totalAmount, 0),
-    monthlyRevenue: completed.filter((o) => o.createdAt.startsWith(month)).reduce((s, o) => s + o.totalAmount, 0),
+    totalSales: orders.reduce((s, o) => s + o.totalAmount, 0),
+    dailyRevenue: orders.filter((o) => o.createdAt.startsWith(today)).reduce((s, o) => s + o.totalAmount, 0),
+    monthlyRevenue: orders.filter((o) => o.createdAt.startsWith(month)).reduce((s, o) => s + o.totalAmount, 0),
     totalOrders: db.orders.length,
     pendingOrders: db.orders.filter((o) => o.status === 'Pending').length,
     unreadNotifications: db.notifications.filter((n) => !n.isRead).length,
@@ -1294,4 +1805,11 @@ app.get('/api/dashboard/stats', requireAuth, requireAdmin, (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Parfumerya API → port ${PORT}`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\nPort ${PORT} artıq məşğuldur (köhnə API prosesi işləyir).`);
+    console.error('Həll: frontend qovluğunda `npm run stop` işlədin, sonra yenidən `npm run dev`.\n');
+    process.exit(1);
+  }
+  throw err;
 });

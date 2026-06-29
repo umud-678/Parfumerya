@@ -6,28 +6,26 @@ import { useSiteSettings } from '../../hooks/useSiteSettings';
 import type { Category } from '../../types';
 
 export default function Footer() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { settings, siteName } = useSiteSettings();
   const [categories, setCategories] = useState<Category[]>([]);
-  const lang = i18n.language?.split('-')[0] ?? 'az';
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => setCategories([]));
   }, []);
 
-  const footerDesc =
-    lang === 'az'
-      ? settings?.footerDescription || settings?.siteTagline || t('footer.desc')
-      : t('footer.desc');
+  const footerDesc = settings?.footerDescription || settings?.siteTagline || '';
 
   return (
     <footer className="border-t border-white/5 mt-8">
       <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8">
         <div>
           <h3 className="font-serif text-xl mb-4 text-accent">{siteName}</h3>
-          <p className="text-white/50 text-sm leading-relaxed">
-            {footerDesc}
-          </p>
+          {footerDesc ? (
+            <p className="text-white/50 text-sm leading-relaxed">
+              {footerDesc}
+            </p>
+          ) : null}
           {settings?.socialLinks?.length ? (
             <div className="flex flex-wrap gap-3 mt-4">
               {settings.socialLinks.map((link) => (

@@ -159,23 +159,34 @@ export default function SettingsPage() {
             className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+
+        <div className="space-y-3 pt-2 border-t border-plum-700/30">
+          <h3 className="text-white/70 text-sm font-medium">Haqqımızda mətni</h3>
           <div>
-            <label className="text-white/40 text-sm">Çatdırılma haqqı (₼)</label>
-            <input
-              type="number"
-              value={form.shippingFee}
-              onChange={(e) => setForm({ ...form, shippingFee: Number(e.target.value) })}
-              className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none"
+            <label className="text-white/40 text-sm">Azərbaycan dili</label>
+            <textarea
+              value={form.aboutTextAz ?? ''}
+              onChange={(e) => setForm({ ...form, aboutTextAz: e.target.value })}
+              rows={3}
+              className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none resize-none"
             />
           </div>
           <div>
-            <label className="text-white/40 text-sm">Pulsuz çatdırılma həddi (₼)</label>
-            <input
-              type="number"
-              value={form.freeShippingThreshold}
-              onChange={(e) => setForm({ ...form, freeShippingThreshold: Number(e.target.value) })}
-              className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none"
+            <label className="text-white/40 text-sm">English</label>
+            <textarea
+              value={form.aboutTextEn ?? ''}
+              onChange={(e) => setForm({ ...form, aboutTextEn: e.target.value })}
+              rows={3}
+              className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none resize-none"
+            />
+          </div>
+          <div>
+            <label className="text-white/40 text-sm">Русский</label>
+            <textarea
+              value={form.aboutTextRu ?? ''}
+              onChange={(e) => setForm({ ...form, aboutTextRu: e.target.value })}
+              rows={3}
+              className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none resize-none"
             />
           </div>
         </div>

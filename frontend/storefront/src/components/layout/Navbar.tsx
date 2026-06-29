@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Search, ShoppingCart, ChevronDown, User } from 'lucide-react';
+import { ShoppingCart, ChevronDown, User } from 'lucide-react';
+import NavbarSearch from './NavbarSearch';
 import { useUnreadNotificationCount } from '../CustomerNotificationToasts';
 import { useAppSelector } from '../../store/hooks';
 import { useSiteSettings } from '../../hooks/useSiteSettings';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
-import { FloralDecor } from '../ui/FloralDecor';
 import { getCategories } from '../../services/catalog';
 import type { Category } from '../../types';
 
@@ -49,7 +49,6 @@ export default function Navbar() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [catOpen, setCatOpen] = useState(false);
   const catMenuRef = useRef<HTMLDivElement>(null);
-  const [searchFocused, setSearchFocused] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
 
@@ -81,8 +80,6 @@ export default function Navbar() {
   const centerLinks = [
     { to: '/', label: t('nav.home'), end: true },
     { to: '/shop', label: t('nav.shop') },
-    { to: '/about', label: t('nav.about') },
-    { to: '/contact', label: t('nav.contact') },
   ];
 
   const isCategoryActive = (slug: string) => location.pathname === `/category/${slug}`;
@@ -95,10 +92,8 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={`sticky top-0 z-50 navbar-shell ${scrolled ? 'navbar-shell-scrolled' : ''}`}
     >
-      <FloralDecor variant="navbar" />
-
       <div className="relative max-w-7xl mx-auto px-6 py-3.5 lg:py-4">
-        <div className="hidden lg:grid lg:grid-cols-[160px_1fr_auto] items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6">
           <Link to="/" className="group flex items-center gap-2 shrink-0">
             <motion.span
               whileHover={{ rotate: 12, scale: 1.1 }}
@@ -112,8 +107,8 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <nav className="flex items-center justify-center gap-7 xl:gap-9">
-            {centerLinks.slice(0, 2).map((link) => (
+          <nav className="flex flex-1 items-center justify-center gap-7 xl:gap-9 min-w-0">
+            {centerLinks.map((link) => (
               <NavLinkItem key={link.to} to={link.to} label={link.label} end={link.end} />
             ))}
 
@@ -183,36 +178,20 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-
-            {centerLinks.slice(2).map((link) => (
-              <NavLinkItem key={link.to} to={link.to} label={link.label} />
-            ))}
           </nav>
 
-          <div className="flex items-center justify-end gap-2.5">
+          <div className="flex items-center justify-end gap-2.5 shrink-0 ml-auto">
             <LanguageSwitcher />
-            <motion.div
-              animate={searchFocused ? { scale: 1.02 } : { scale: 1 }}
-              className={`search-pill transition-all duration-300 ${searchFocused ? 'search-pill-focus' : ''}`}
-            >
-              <Search size={15} className="text-white/40 shrink-0" />
-              <input
-                type="search"
-                placeholder={t('nav.search')}
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-                className="bg-transparent border-none outline-none text-sm text-white placeholder:text-white/35 w-24 xl:w-28"
-              />
-            </motion.div>
+            <NavbarSearch className="w-36 xl:w-44" />
             <motion.button
               type="button"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate('/cart')}
-              className="cart-pill"
+              aria-label={t('nav.cart')}
+              className="relative cart-pill p-2.5"
             >
               <ShoppingCart size={17} />
-              <span className="hidden xl:inline">{t('nav.cart')}</span>
               <AnimatePresence mode="popLayout">
                 {cartCount > 0 && (
                   <motion.span
@@ -220,7 +199,7 @@ export default function Navbar() {
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.5, opacity: 0 }}
-                    className="bg-accent text-plum-950 text-[10px] font-bold rounded-full px-1.5 min-w-[1.1rem]"
+                    className="absolute -top-1 -right-1 bg-accent text-plum-950 text-[10px] font-bold rounded-full px-1.5 min-w-[1.1rem] h-[1.1rem] flex items-center justify-center"
                   >
                     {cartCount}
                   </motion.span>
@@ -234,10 +213,10 @@ export default function Navbar() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate('/account')}
-                className="relative flex items-center gap-1.5 rounded-full border border-accent/30 text-accent px-3 py-2 text-sm hover:bg-accent/10 transition-colors"
+                aria-label={t('nav.account')}
+                className="relative p-2.5 rounded-full border border-accent/30 text-accent hover:bg-accent/10 transition-colors"
               >
                 <User size={16} />
-                <span className="max-w-[80px] truncate hidden xl:inline">{user.fullName.split(' ')[0]}</span>
                 {unreadNotifications > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[1rem] h-4 px-1 flex items-center justify-center">
                     {unreadNotifications > 9 ? '9+' : unreadNotifications}
@@ -271,16 +250,22 @@ export default function Navbar() {
             <FlowerIcon className="w-3.5 h-3.5 text-accent/50" />
             <span className="font-serif text-xl text-white">{siteName}</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2 shrink-0 ml-auto">
             <LanguageSwitcher />
-            {!user && (
-              <Link
-                to="/register"
-                className="text-xs font-semibold bg-accent text-plum-950 px-3 py-1.5 rounded-full"
-              >
-                {t('nav.register')}
-              </Link>
-            )}
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/cart')}
+              aria-label={t('nav.cart')}
+              className="relative cart-pill p-2"
+            >
+              <ShoppingCart size={16} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent text-plum-950 text-[9px] font-bold rounded-full min-w-[1rem] h-4 px-1 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </motion.button>
             {user ? (
               <button
                 type="button"
@@ -294,21 +279,25 @@ export default function Navbar() {
                 )}
               </button>
             ) : (
-              <Link to="/login" className="text-xs text-white/60 hover:text-accent px-2">
-                {t('nav.login')}
-              </Link>
+              <>
+                <Link to="/login" className="text-xs text-white/60 hover:text-accent px-1.5">
+                  {t('nav.login')}
+                </Link>
+                <Link
+                  to="/register"
+                  className="text-xs font-semibold bg-accent text-plum-950 px-3 py-1.5 rounded-full"
+                >
+                  {t('nav.register')}
+                </Link>
+              </>
             )}
-            <motion.button
-              type="button"
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/cart')}
-              className="cart-pill py-1.5 px-3 text-xs"
-            >
-              <ShoppingCart size={16} />
-              {cartCount > 0 && <span className="text-accent font-semibold">{cartCount}</span>}
-            </motion.button>
           </div>
         </div>
+      </div>
+
+      {/* Mobile search */}
+      <div className="lg:hidden px-4 pb-2">
+        <NavbarSearch wide />
       </div>
 
       {/* Mobile nav strip with floral hint */}

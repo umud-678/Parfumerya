@@ -3,6 +3,12 @@ import { getOrders, updateOrderStatus, type Order } from '../services/orders';
 
 import { ORDER_STATUS_OPTIONS } from '../utils/azLabels';
 
+function deliveryLabel(type?: string) {
+  if (type === 'standard') return 'Sadə (metro) — 2 ₼';
+  if (type === 'express') return 'Ekspress (24 saat) — 5 ₼';
+  return '—';
+}
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,12 +59,14 @@ export default function OrdersPage() {
         ) : orders.length === 0 ? (
           <p className="text-white/40 text-center py-10">Hələ sifariş yoxdur.</p>
         ) : (
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[960px]">
             <thead>
               <tr className="text-white/40 border-b border-plum-700/30">
                 <th className="text-left py-3 px-2">Sifariş №</th>
                 <th className="text-left py-3 px-2">Müştəri</th>
                 <th className="text-left py-3 px-2">Telefon</th>
+                <th className="text-left py-3 px-2 min-w-[200px]">Ünvan</th>
+                <th className="text-left py-3 px-2">Çatdırılma</th>
                 <th className="text-left py-3 px-2">Məbləğ</th>
                 <th className="text-left py-3 px-2">Endirim kodu</th>
                 <th className="text-left py-3 px-2">Vəziyyət</th>
@@ -67,11 +75,20 @@ export default function OrdersPage() {
             </thead>
             <tbody>
               {orders.map((o) => (
-                <tr key={o.id} className="border-b border-plum-700/20 hover:bg-plum-800/30">
-                  <td className="py-3 px-2 text-mint-400">{o.orderNumber}</td>
-                  <td className="py-3 px-2">{o.shippingFullName}</td>
-                  <td className="py-3 px-2 text-white/60">{o.shippingPhone}</td>
-                  <td className="py-3 px-2">
+                <tr key={o.id} className="border-b border-plum-700/20 hover:bg-plum-800/30 align-top">
+                  <td className="py-3 px-2 text-mint-400 whitespace-nowrap">{o.orderNumber}</td>
+                  <td className="py-3 px-2 whitespace-nowrap">{o.shippingFullName}</td>
+                  <td className="py-3 px-2 text-white/60 whitespace-nowrap">{o.shippingPhone}</td>
+                  <td className="py-3 px-2 text-white/75 max-w-[280px]">
+                    <p>{o.shippingAddress}</p>
+                    <p className="text-white/40 text-xs mt-0.5">
+                      {[o.shippingCity, o.shippingRegion].filter(Boolean).join(', ')}
+                    </p>
+                  </td>
+                  <td className="py-3 px-2 text-white/60 text-xs whitespace-nowrap">
+                    {deliveryLabel(o.deliveryType)}
+                  </td>
+                  <td className="py-3 px-2 whitespace-nowrap">
                     ₼ {o.totalAmount.toFixed(2)}
                     {o.discountAmount > 0 && (
                       <span className="block text-xs text-mint-400">
@@ -91,7 +108,7 @@ export default function OrdersPage() {
                       ))}
                     </select>
                   </td>
-                  <td className="py-3 px-2 text-white/40">
+                  <td className="py-3 px-2 text-white/40 whitespace-nowrap">
                     {new Date(o.createdAt).toLocaleDateString('az-AZ')}
                   </td>
                 </tr>

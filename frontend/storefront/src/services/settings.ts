@@ -7,6 +7,13 @@ export interface SocialLink {
   url: string;
 }
 
+export interface PaymentMethod {
+  id: string;
+  code: string;
+  name: string;
+  active: boolean;
+}
+
 export interface SiteSettings {
   siteName: string;
   siteTagline?: string;
@@ -17,26 +24,20 @@ export interface SiteSettings {
   socialLinks: SocialLink[];
   shippingFee: number;
   freeShippingThreshold: number;
+  aboutTextAz?: string;
+  aboutTextEn?: string;
+  aboutTextRu?: string;
+  paymentMethods?: PaymentMethod[];
 }
-
-const DEFAULT_SETTINGS: SiteSettings = {
-  siteName: 'Amoria',
-  siteTagline: 'Premium parfumeriya və kosmetika mağazası',
-  email: 'info@parfumerya.az',
-  phone: '+994 12 345 67 89',
-  address: 'Bakı, Azərbaycan',
-  footerDescription: '',
-  socialLinks: [],
-  shippingFee: 5,
-  freeShippingThreshold: 100,
-};
 
 export async function getSettings(): Promise<SiteSettings> {
-  try {
-    return await apiFetch<SiteSettings>('/settings');
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
+  return apiFetch<SiteSettings>('/settings');
 }
 
-export { DEFAULT_SETTINGS };
+export function getAboutText(settings: SiteSettings | null, lang: string): string {
+  if (!settings) return '';
+  const code = lang.split('-')[0];
+  if (code === 'en') return settings.aboutTextEn ?? settings.aboutTextAz ?? '';
+  if (code === 'ru') return settings.aboutTextRu ?? settings.aboutTextAz ?? '';
+  return settings.aboutTextAz ?? '';
+}

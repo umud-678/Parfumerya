@@ -1,29 +1,81 @@
+import { useCallback, useEffect, useState } from 'react';
+import { deleteReview, getReviews, type AdminReview } from '../services/reviews';
+
 export default function ReviewsPage() {
-  const reviews = [
-    { product: 'Gül Ətri', user: 'Leyla M.', rating: 5, comment: 'Əla qoxu!', approved: false },
-    { product: 'Sitron Təravəti', user: 'Rəşad K.', rating: 4, comment: 'Yaxşıdır', approved: true },
-  ];
+  const [reviews, setReviews] = useState<AdminReview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    getReviews()
+      .then(setReviews)
+      .catch(() => setReviews([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Bu rəyi silmək istədiyinizə əminsiniz?')) return;
+    setDeletingId(id);
+    try {
+      await deleteReview(id);
+      setReviews((prev) => prev.filter((r) => r.id !== id));
+    } catch {
+      alert('Rəy silinmədi');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <h1 className="font-serif text-3xl text-mint-400">Rəylər</h1>
-      <div className="space-y-4">
-        {reviews.map((r, i) => (
-          <div key={i} className="card-admin">
-            <div className="flex justify-between mb-2">
-              <p className="font-medium">{r.product}</p>
-              <span className="text-mint-400">{'★'.repeat(r.rating)}</span>
-            </div>
-            <p className="text-white/60 text-sm mb-3">{r.comment}</p>
-            <p className="text-white/40 text-xs mb-3">{r.user}</p>
-            <div className="flex gap-2">
-              {!r.approved && <button className="text-xs bg-mint-400 text-plum-900 px-3 py-1 rounded-full">Təsdiqlə</button>}
-              <button className="text-xs border border-plum-700 px-3 py-1 rounded-full">Gizlət</button>
-              <button className="text-xs text-red-400/70 hover:text-red-400">Sil</button>
-            </div>
-          </div>
-        ))}
+      <div>
+        <h1 className="font-serif text-3xl text-mint-400">Müştəri rəyləri</h1>
+        <p className="text-white/45 text-sm mt-1">
+          Yalnız silmək mümkündür — rəy mətni və ulduz dəyişdirilə bilməz.
+        </p>
       </div>
+
+      {loading ? (
+        <p className="text-white/40">Yüklənir...</p>
+      ) : reviews.length === 0 ? (
+        <p className="text-white/40">Hələ rəy yoxdur.</p>
+      ) : (
+        <div className="space-y-4">
+          {reviews.map((r) => (
+            <div key={r.id} className="card-admin">
+              <div className="flex flex-wrap justify-between gap-2 mb-2">
+                <div>
+                  <p className="font-medium">{r.productName}</p>
+                  <p className="text-white/40 text-xs mt-0.5">{r.productSlug}</p>
+                </div>
+                <span className="text-gold-400 text-sm tracking-wider">
+                  {'★'.repeat(r.rating)}
+                  <span className="text-white/25">{'★'.repeat(5 - r.rating)}</span>
+                </span>
+              </div>
+              <p className="text-white/65 text-sm mb-3 leading-relaxed">{r.comment}</p>
+              <div className="flex flex-wrap justify-between items-center gap-2">
+                <p className="text-white/40 text-xs">
+                  {r.userName} · {new Date(r.createdAt).toLocaleString('az-AZ')}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(r.id)}
+                  disabled={deletingId === r.id}
+                  className="text-xs text-red-400/80 hover:text-red-400 disabled:opacity-50"
+                >
+                  {deletingId === r.id ? 'Silinir...' : 'Sil'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

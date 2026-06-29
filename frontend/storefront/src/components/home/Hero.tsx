@@ -7,9 +7,6 @@ import type { HeroSlide } from '../../types';
 import { resolveMediaUrl, withCacheBust } from '../../utils/media';
 import { getLocalizedHeroContent } from '../../utils/localizedHero';
 import { HeroSkeleton } from '../ui/Skeleton';
-import { FloralDecor } from '../ui/FloralDecor';
-
-const FALLBACK_VIDEO = '/videos/hero.mp4';
 
 export default function Hero() {
   const { t, i18n } = useTranslation();
@@ -29,30 +26,46 @@ export default function Hero() {
   }, []);
 
   const videoSrc = useMemo(() => {
-    const raw = resolveMediaUrl(hero?.videoUrl || FALLBACK_VIDEO);
-    return withCacheBust(raw, hero?.updatedAt);
+    if (!hero?.videoUrl) return null;
+    const raw = resolveMediaUrl(hero.videoUrl);
+    return withCacheBust(raw, hero.updatedAt);
   }, [hero?.videoUrl, hero?.updatedAt]);
 
   if (loading) return <HeroSkeleton />;
 
+  if (!hero) {
+    return (
+      <section className="relative w-full h-[40vh] min-h-[240px] flex items-center justify-center bg-plum-950/80">
+        <p className="text-white/40 text-sm">{t('hero.empty')}</p>
+      </section>
+    );
+  }
+
   return (
     <section className="relative w-full h-[80vh] min-h-[480px] max-h-[900px] overflow-hidden">
-      <video
-        key={videoSrc}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        className="hero-video absolute inset-0 w-full h-full"
-        src={videoSrc}
-        aria-label={t('hero.titleHighlight')}
-      >
-        <track kind="captions" />
-      </video>
+      {videoSrc ? (
+        <video
+          key={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="hero-video absolute inset-0 w-full h-full"
+          src={videoSrc}
+          aria-label={content.titleHighlight}
+        >
+          <track kind="captions" />
+        </video>
+      ) : hero.posterUrl || hero.imageUrl ? (
+        <img
+          src={resolveMediaUrl(hero.posterUrl || hero.imageUrl)}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : null}
 
       <div className="absolute inset-0 bg-black/40" aria-hidden />
-      <FloralDecor variant="hero" />
 
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
         <motion.div

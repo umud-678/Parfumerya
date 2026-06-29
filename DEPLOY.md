@@ -96,9 +96,18 @@ VITE_API_URL=https://SIZIN-API.onrender.com/api
 ```
 Sonra **Redeploy** edin.
 
-### Root Directory səhvdir
-Repo root-dan deploy etsəniz, `vercel.json` avtomatik storefront build edir.
-Admin üçün **ayrı layihə** yaradın: Root = `frontend/admin`.
+### Root Directory səhvdir / ENOENT package.json
+**Root Directory** mütləq düzgün qovluq olmalıdır — əlavə `frontend/storefront` prefix YOX!
+
+| Layihə | Root Directory |
+|--------|----------------|
+| Storefront | `frontend/storefront` |
+| Admin | `frontend/admin` |
+
+Vercel → Settings → General → **Root Directory** yoxlayın.
+Kök `vercel.json` silinib — yalnız alt qovluqdakı `vercel.json` işləyir.
+
+Settings → Build → **Install Command** boş və ya `npm install` olmalıdır (override etməyin).
 
 ### Sayt açılır, məlumat yoxdur
 `VITE_API_URL` localhost qalıb və ya Render API yuxarı deyil (pulsuz planda 15 dəq idle-dan sonra oyana bilər).

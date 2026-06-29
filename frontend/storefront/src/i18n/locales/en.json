@@ -10,7 +10,10 @@
     "favorites": "Wishlist",
     "account": "Account",
     "login": "Sign In",
-    "register": "Register"
+    "register": "Register",
+    "searchLoading": "Searching...",
+    "searchNoResults": "No products found",
+    "searchAllResults": "View all ({{count}})"
   },
   "hero": {
     "title": "Fall in love with Our Signature",
@@ -20,7 +23,8 @@
     "perfumes": "Perfumes",
     "customers": "Customers",
     "shopNow": "SHOP NOW",
-    "discover": "Discover"
+    "discover": "Discover",
+    "empty": "Hero content has not been configured yet."
   },
   "home": {
     "categoriesTitle": "Our Collections",
@@ -58,6 +62,8 @@
     "empty": "Your cart is empty",
     "startShopping": "Start shopping",
     "total": "Total",
+    "subtotal": "Subtotal",
+    "shippingAtCheckout": "Delivery fee selected at checkout",
     "checkout": "Checkout"
   },
   "checkout": {
@@ -91,7 +97,16 @@
     "couponInvalid": "Invalid promo code",
     "promoLabel": "Promo",
     "defaultCity": "Baku",
-    "defaultRegion": "Baku"
+    "defaultRegion": "Baku",
+    "deliveryChoose": "Choose delivery type",
+    "deliveryExpress": "Express delivery",
+    "deliveryExpressDesc": "Within 24 hours",
+    "deliveryStandard": "Standard delivery",
+    "deliveryStandardDesc": "Metro areas only",
+    "deliveryInfoTitle": "Delivery options",
+    "deliveryTo": "Delivery address",
+    "addressRequired": "Name, phone and address are required",
+    "back": "Back"
   },
   "auth": {
     "login": "Sign In",
@@ -99,7 +114,25 @@
     "email": "Email",
     "password": "Password",
     "fullName": "Full name",
-    "passwordHint": "Password (min 8 characters)",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "passwordHint": "Password",
+    "confirmPassword": "Confirm password",
+    "passwordRules": "Minimum 8 characters, at least 1 uppercase letter (A-Z).",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordUppercase": "Password must include at least one uppercase letter",
+    "passwordMismatch": "Passwords do not match",
+    "continueWithOtp": "Send verification code",
+    "sendingOtp": "Sending code...",
+    "otpStepHint": "Enter the 6-digit code sent to your email",
+    "otpPlaceholder": "000000",
+    "otpSent": "Verification code sent to {{email}}",
+    "otpResent": "A new code has been sent",
+    "verifyAndRegister": "Verify & complete registration",
+    "verifyingOtp": "Verifying...",
+    "resendOtp": "Resend code",
+    "resendIn": "Resend in {{sec}}s",
+    "backToForm": "← Back",
     "loggingIn": "Signing in...",
     "registering": "Registering...",
     "noAccount": "Don't have an account?",
@@ -184,14 +217,16 @@
   },
   "about": {
     "title": "About Us",
-    "text": "Parfumerya is a premium fragrance and cosmetics experience in Azerbaijan. We offer original products from Dior, Chanel, Tom Ford and other selected brands."
+    "text": "Parfumerya is a premium fragrance and cosmetics experience in Azerbaijan. We offer original products from Dior, Chanel, Tom Ford and other selected brands.",
+    "empty": "About page content has not been added yet."
   },
   "contact": {
     "title": "Contact",
     "email": "Email",
     "phone": "Phone",
     "address": "Address",
-    "addressValue": "Baku, Azerbaijan"
+    "addressValue": "Baku, Azerbaijan",
+    "empty": "Contact details have not been added yet."
   },
   "footer": {
     "desc": "Premium fragrance and cosmetics store. Selected brands, unique scents.",
@@ -204,5 +239,22 @@
     "loading": "Loading...",
     "currency": "₼",
     "brandName": "Amoria"
+  },
+  "reviews": {
+    "title": "Customer reviews",
+    "count": "{{count}} reviews",
+    "loading": "Loading reviews...",
+    "writeTitle": "Write your review",
+    "writeHint": "After delivery you can leave a 1–5 star rating and comment.",
+    "placeholder": "Share your thoughts about this product...",
+    "submit": "Submit review",
+    "submitting": "Submitting...",
+    "submitError": "Could not submit review",
+    "thankYou": "Thank you for your review!",
+    "loginToReview": "Sign in to leave a review:",
+    "alreadyReviewed": "You have already reviewed this product.",
+    "needDelivered": "Reviews are only available after your order is delivered.",
+    "empty": "No reviews yet — be the first to review.",
+    "writeFor": "Review {{name}}"
   }
 }

@@ -212,6 +212,9 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
                 onChange={(e) => setForm({ ...form, stock: e.target.value })}
                 className="w-full mt-1 bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 outline-none"
               />
+              <p className="text-white/35 text-xs mt-1">
+                Eyni məhsul kodu varsa, stok mövcud anbara əlavə olunur.
+              </p>
             </div>
 
             <div>

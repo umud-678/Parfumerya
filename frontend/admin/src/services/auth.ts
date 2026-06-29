@@ -23,11 +23,27 @@ export async function loginAdmin(email: string, password: string): Promise<AuthR
   }
 
   const auth = payload.data as AuthResponse;
-  const isAdmin = auth.roles.some((role) => role === 'Admin' || role === 'SuperAdmin');
+  const isAdmin = auth.roles.includes('Admin');
 
   if (!isAdmin) {
     throw new Error('Bu hesabın admin panelinə giriş icazəsi yoxdur');
   }
 
   return auth;
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  const token = localStorage.getItem('admin_token');
+  const response = await fetch(`${API_URL}/users/password`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+  const payload = await response.json();
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.message ?? 'Şifrə yenilənmədi');
+  }
 }
