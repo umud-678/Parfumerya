@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm install --prefix frontend/storefront",
+  "buildCommand": "npm run build --prefix frontend/storefront",
+  "outputDirectory": "frontend/storefront/dist",
+  "framework": "vite",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

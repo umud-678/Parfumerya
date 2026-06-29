@@ -89,8 +89,16 @@ Hər iki Vercel URL-i hazır olandan sonra Render-də `CORS_ORIGINS`-i yeniləyi
 
 ## Tez-tez xətalar
 
-### Build uğursuz — `VITE_API_URL`
-Vercel → Project → **Settings → Environment Variables** — API URL `https://` ilə başlamalıdır.
+### Build uğursuz — `VITE_API_URL` / prebuild
+Vercel → Project → **Settings → Environment Variables** əlavə edin:
+```
+VITE_API_URL=https://SIZIN-API.onrender.com/api
+```
+Sonra **Redeploy** edin.
+
+### Root Directory səhvdir
+Repo root-dan deploy etsəniz, `vercel.json` avtomatik storefront build edir.
+Admin üçün **ayrı layihə** yaradın: Root = `frontend/admin`.
 
 ### Sayt açılır, məlumat yoxdur
 `VITE_API_URL` localhost qalıb və ya Render API yuxarı deyil (pulsuz planda 15 dəq idle-dan sonra oyana bilər).
