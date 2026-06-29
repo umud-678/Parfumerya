@@ -59,6 +59,15 @@ npm run dev
 - Storefront: http://localhost:3000
 - Admin: http://localhost:3001
 
+## Canlıya çıxarma (Vercel + Render)
+
+Tam addım-addım təlimat: **[DEPLOY.md](./DEPLOY.md)**
+
+Qısa:
+- **API** → Render.com (`api/` qovluğu, `render.yaml`)
+- **Storefront** → Vercel, Root: `frontend/storefront`
+- **Admin** → Vercel, Root: `frontend/admin` (ayrı layihə)
+
 ## Modullar
 
 ### Admin Panel (18 modul)

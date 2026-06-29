@@ -49,8 +49,13 @@ const upload = multer({
   },
 });
 
+const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean)
+  : defaultOrigins;
+
 const app = express();
-app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3001'], credentials: true }));
+app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json({ limit: '15mb' }));
 app.use('/uploads', express.static(UPLOADS_ROOT));
 
@@ -185,7 +190,7 @@ function defaultDb() {
       },
     ],
     settings: {
-      siteName: 'Parfumerya',
+      siteName: 'Amoria',
       siteTagline: 'Premium parfumeriya və kosmetika mağazası',
       email: 'info@parfumerya.az',
       phone: '+994 12 345 67 89',
@@ -1287,6 +1292,6 @@ app.get('/api/dashboard/stats', requireAuth, requireAdmin, (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Parfumerya API → http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Parfumerya API → port ${PORT}`);
 });

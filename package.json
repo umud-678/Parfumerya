@@ -8,7 +8,10 @@
     "dev:api": "npm run dev --prefix api",
     "dev:backend": "dotnet run --project backend/src/Parfumerya.WebAPI",
     "stop": "node scripts/stop-dev.js",
-    "build": "npm run build --prefix frontend/storefront && npm run build --prefix frontend/admin"
+    "build": "npm run build:storefront && npm run build:admin",
+    "build:storefront": "npm run build --prefix frontend/storefront",
+    "build:admin": "npm run build --prefix frontend/admin",
+    "build:api": "npm install --prefix api"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
