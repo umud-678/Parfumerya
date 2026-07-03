@@ -6,6 +6,8 @@ services:
     name: amoria-api
     runtime: node
     rootDir: api
+    branch: main
+    autoDeploy: true
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
