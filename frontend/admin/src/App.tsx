@@ -23,31 +23,31 @@ export default function App() {
   return (
     <DeployConfigGuard>
       <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route element={<AdminLayout />}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/brands" element={<BrandsPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/users" element={<UsersPage />} />
-          <Route path="/reviews" element={<ReviewsPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/coupons" element={<CouponsPage />} />
-          <Route path="/campaigns" element={<CouponsPage />} />
-          <Route path="/payments" element={<PaymentsPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/hero-video" element={<HeroVideoPage />} />
-          <Route path="/banners" element={<Navigate to="/hero-video" replace />} />
-          <Route path="/stock" element={<StockPage />} />
-          <Route path="/wishlist" element={<WishlistAdminPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/security" element={<SecurityPage />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route element={<AdminLayout />}>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/brands" element={<BrandsPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/coupons" element={<CouponsPage />} />
+            <Route path="/campaigns" element={<CouponsPage />} />
+            <Route path="/payments" element={<PaymentsPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/hero-video" element={<HeroVideoPage />} />
+            <Route path="/banners" element={<Navigate to="/hero-video" replace />} />
+            <Route path="/stock" element={<StockPage />} />
+            <Route path="/wishlist" element={<WishlistAdminPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/security" element={<SecurityPage />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
     </DeployConfigGuard>
   );
 }
