@@ -6,7 +6,7 @@
       "password": "12345678",
       "fullName": "Umud Admin",
       "roles": [
-        "SuperAdmin"
+        "Admin"
       ],
       "token": "70a2c9ab-c294-4e1a-9605-84aa741aa66c",
       "isBlocked": false
@@ -17,7 +17,7 @@
       "password": "Admin123!",
       "fullName": "Super Admin",
       "roles": [
-        "SuperAdmin"
+        "Customer"
       ],
       "isBlocked": false
     },
@@ -680,5 +680,6 @@
       "comment": "cox pisdir berbaddir. mahsul",
       "createdAt": "2026-06-29T19:57:51.244Z"
     }
-  ]
+  ],
+  "registrationOtps": []
 }

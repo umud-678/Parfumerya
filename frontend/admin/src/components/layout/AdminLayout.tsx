@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Package, FolderTree, Tag, ShoppingBag, Users,
   MessageSquare, BarChart3, Percent, CreditCard, Bell,
@@ -48,10 +48,7 @@ export default function AdminLayout() {
     return () => clearInterval(interval);
   }, [token]);
 
-  if (!token) {
-    navigate('/login');
-    return null;
-  }
+  if (!token) return <Navigate to="/login" replace />;
 
   return (
     <div className="flex min-h-screen">
