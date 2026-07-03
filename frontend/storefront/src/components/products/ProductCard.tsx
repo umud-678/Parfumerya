@@ -70,36 +70,36 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{ duration: 0.55, delay: Math.min(index * 0.08, 0.4), ease: [0.22, 1, 0.36, 1] }}
     >
-      <div className="product-card block p-8 pb-6 group">
+      <div className="product-card block p-3 sm:p-6 lg:p-8 pb-4 sm:pb-6 group">
         <Link to={`/product/${product.slug}`} className="block">
-          <div className="aspect-[3/4] mb-8 flex items-center justify-center">
+          <div className="aspect-[3/4] mb-3 sm:mb-8 flex items-center justify-center">
             <img
               src={product.primaryImageUrl}
               alt={product.name}
-              className="max-h-full max-w-[85%] object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+              className="max-h-full max-w-[82%] sm:max-w-[85%] object-contain transition-transform duration-700 ease-out group-hover:scale-105"
             />
           </div>
         </Link>
 
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           <Link to={`/product/${product.slug}`}>
-            <h3 className="text-center text-white/90 text-[15px] font-normal tracking-wide hover:text-accent transition-colors">
+            <h3 className="text-center text-white/90 text-xs sm:text-[15px] font-normal tracking-wide hover:text-accent transition-colors line-clamp-2">
               {product.name}
             </h3>
           </Link>
 
-          <div className="flex items-center justify-center gap-3">
-            <p className="text-accent font-semibold text-xl">
+          <div className="flex flex-col items-center justify-center gap-2 sm:gap-3">
+            <p className="text-accent font-semibold text-base sm:text-xl">
               {t('common.currency')} {product.minPrice.toFixed(1)}
             </p>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={handleAddToCart}
                 disabled={!variant}
                 title={t('product.addToCart')}
                 aria-label={t('product.addToCart')}
-                className={`inline-flex items-center justify-center w-9 h-9 rounded-full border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                className={`touch-target inline-flex items-center justify-center w-10 h-10 sm:w-9 sm:h-9 rounded-full border transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
                   cartPulse
                     ? 'border-mint-400 bg-mint-400/20 text-mint-400 scale-110'
                     : 'border-white/15 text-white/60 hover:border-mint-400/50 hover:text-mint-400 hover:bg-mint-400/10'
@@ -112,7 +112,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                 onClick={handleToggleFavorite}
                 title={t('product.favorite')}
                 aria-label={t('product.favorite')}
-                className={`inline-flex items-center justify-center w-9 h-9 rounded-full border transition-all ${
+                className={`touch-target inline-flex items-center justify-center w-10 h-10 sm:w-9 sm:h-9 rounded-full border transition-all ${
                   isWishlisted
                     ? 'border-mint-400 bg-mint-400/15 text-mint-400'
                     : 'border-white/15 text-white/60 hover:border-mint-400/50 hover:text-mint-400 hover:bg-mint-400/10'

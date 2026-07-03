@@ -165,16 +165,16 @@ export default function AccountDashboard() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-14">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-accent/15 text-accent flex items-center justify-center ring-2 ring-accent/20">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-accent/15 text-accent flex items-center justify-center ring-2 ring-accent/20 shrink-0">
             <User size={26} />
           </div>
           <div>
             <p className="text-white/45 text-sm">{t('account.welcome')}</p>
-            <h1 className="font-serif text-2xl md:text-3xl text-white">{user.fullName}</h1>
+            <h1 className="font-serif text-xl sm:text-2xl md:text-3xl text-white break-words">{user.fullName}</h1>
           </div>
         </div>
         <button
@@ -188,14 +188,14 @@ export default function AccountDashboard() {
         </button>
       </div>
 
-      <div className="grid lg:grid-cols-[220px_1fr] gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-5 sm:gap-6 lg:gap-8">
         {/* Sidebar tabs */}
-        <nav className="flex lg:flex-col gap-2 overflow-x-auto scrollbar-hide pb-2 lg:pb-0">
+        <nav className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible scrollbar-hide pb-2 lg:pb-0 snap-x snap-mandatory lg:snap-none -mx-1 px-1">
           {tabs.map(({ id, label, icon: Icon, badge }) => (
             <button
               key={id}
               onClick={() => setTab(id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm whitespace-nowrap transition-all duration-300 ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm whitespace-nowrap transition-all duration-300 min-w-max lg:min-w-0 snap-start touch-target ${
                 tab === id
                   ? 'bg-accent/15 text-accent border border-accent/25'
                   : 'text-white/60 hover:text-white hover:bg-white/5 border border-transparent'
@@ -216,22 +216,22 @@ export default function AccountDashboard() {
         <div className="min-w-0">
           {tab === 'overview' && (
             <div className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {[
                   { label: t('account.stats.orders'), value: stats.total },
                   { label: t('account.stats.pending'), value: stats.pending },
                   { label: t('account.stats.delivered'), value: stats.delivered },
                   { label: t('account.stats.spent'), value: `${t('common.currency')} ${stats.totalSpent.toFixed(2)}` },
                 ].map((s) => (
-                  <div key={s.label} className="product-card p-5 text-center">
-                    <p className="text-2xl font-serif text-accent">{s.value}</p>
+                  <div key={s.label} className="product-card p-4 sm:p-5 text-center">
+                    <p className="text-xl sm:text-2xl font-serif text-accent break-words">{s.value}</p>
                     <p className="text-white/45 text-xs mt-1">{s.label}</p>
                   </div>
                 ))}
               </div>
 
               {notifications.length > 0 && (
-                <div className="product-card p-5">
+                <div className="product-card p-4 sm:p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="font-serif text-lg text-accent flex items-center gap-2">
                       <Bell size={18} />
@@ -283,10 +283,10 @@ export default function AccountDashboard() {
                 </div>
               )}
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
                 <button
                   onClick={() => setTab('cart')}
-                  className="product-card p-6 text-left hover:border-accent/20 transition-all group"
+                  className="product-card p-5 sm:p-6 text-left hover:border-accent/20 transition-all group"
                 >
                   <div className="flex items-center justify-between">
                     <ShoppingCart className="text-accent" size={22} />
@@ -301,7 +301,7 @@ export default function AccountDashboard() {
                 </button>
                 <button
                   onClick={() => setTab('wishlist')}
-                  className="product-card p-6 text-left hover:border-accent/20 transition-all group"
+                  className="product-card p-5 sm:p-6 text-left hover:border-accent/20 transition-all group"
                 >
                   <div className="flex items-center justify-between">
                     <Heart className="text-accent" size={22} />
@@ -324,7 +324,7 @@ export default function AccountDashboard() {
                       {t('account.viewAll')} →
                     </button>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {orders.slice(0, 2).map((order) => (
                       <OrderCard key={order.id} order={order} locale={locale} compact />
                     ))}
@@ -445,7 +445,7 @@ export default function AccountDashboard() {
           {tab === 'profile' && (
             <div className="space-y-5">
               <h2 className="font-serif text-2xl text-accent">{t('account.tabs.profile')}</h2>
-              <form onSubmit={handleProfileSave} className="product-card p-8 space-y-5">
+              <form onSubmit={handleProfileSave} className="product-card p-5 sm:p-8 space-y-5">
                 <div>
                   <label className="text-white/40 text-sm">{t('account.name')}</label>
                   <input
@@ -483,13 +483,13 @@ export default function AccountDashboard() {
                 >
                   {profileSaving ? t('account.saving') : t('account.saveProfile')}
                 </button>
-                <div className="pt-4 border-t border-white/5 grid grid-cols-2 gap-4 text-center">
+                <div className="pt-4 border-t border-white/5 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-center">
                   <div>
-                    <p className="text-2xl font-serif text-accent">{stats.total}</p>
+                    <p className="text-2xl font-serif text-accent break-words">{stats.total}</p>
                     <p className="text-white/40 text-xs">{t('account.stats.orders')}</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-serif text-accent">{t('common.currency')} {stats.totalSpent.toFixed(0)}</p>
+                    <p className="text-2xl font-serif text-accent break-words">{t('common.currency')} {stats.totalSpent.toFixed(0)}</p>
                     <p className="text-white/40 text-xs">{t('account.stats.spent')}</p>
                   </div>
                 </div>
@@ -515,8 +515,8 @@ function OrderCard({
   const statusClass = statusColors[order.status] ?? 'bg-plum-800 text-white/60 border-white/10';
 
   return (
-    <div className="product-card p-6">
-      <div className="flex flex-wrap justify-between items-start gap-3 mb-3">
+    <div className="product-card p-5 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start gap-3 mb-3">
         <div>
           <p className="font-medium text-accent">{order.orderNumber}</p>
           <p className="text-white/40 text-sm">
@@ -553,7 +553,7 @@ function OrderCard({
         )}
       </div>
 
-      <div className="flex justify-between items-center mt-3 pt-3 border-t border-white/5">
+      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3 mt-3 pt-3 border-t border-white/5">
         {order.discountAmount > 0 && (
           <span className="text-accent/70 text-xs">
             −{t('common.currency')} {order.discountAmount.toFixed(2)}

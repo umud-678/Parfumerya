@@ -18,7 +18,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-white/5 mt-8">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <div>
           <h3 className="font-serif text-xl mb-4 text-accent">{siteName}</h3>
           {footerDesc ? (
@@ -72,7 +72,7 @@ export default function Footer() {
           {settings?.address && <p className="text-sm text-white/50 mt-1">{settings.address}</p>}
         </div>
       </div>
-      <div className="text-center text-white/30 text-xs py-6 border-t border-white/5">
+      <div className="text-center text-white/30 text-xs py-5 sm:py-6 px-4 border-t border-white/5">
         © {new Date().getFullYear()} {siteName}. {t('footer.rights')}
       </div>
     </footer>

@@ -106,8 +106,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative min-h-[70vh] flex items-center justify-center px-6">
-      <div className="card-elegant p-10 w-full max-w-md relative">
+    <div className="relative min-h-[70vh] flex items-center justify-center px-4 sm:px-6 py-8 safe-bottom">
+      <div className="card-elegant p-6 sm:p-10 w-full max-w-md relative">
         <div className="text-center mb-8">
           <span className="text-2xl text-mint-400/40">✿</span>
           <h1 className="font-serif text-3xl text-mint-400 mt-2">{t('auth.register')}</h1>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
 
         {step === 'form' ? (
           <form onSubmit={handleSendOtp} className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 type="text"
                 placeholder={t('auth.firstName')}

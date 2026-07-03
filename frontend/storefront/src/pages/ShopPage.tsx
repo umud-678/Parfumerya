@@ -43,18 +43,18 @@ export default function ShopPage() {
 
   return (
     <PageShell title={t('shop.title')}>
-      <div className="flex flex-wrap gap-4 mb-10 max-w-3xl mx-auto">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-3xl mx-auto w-full">
         <input
           type="search"
           placeholder={t('shop.search')}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="bg-plum-800/80 border border-plum-700 rounded-full px-5 py-3 text-sm outline-none focus:border-emerald-400/40 flex-1 min-w-[200px] transition-colors duration-300"
+          className="bg-plum-800/80 border border-plum-700 rounded-full px-5 py-3 text-sm outline-none focus:border-emerald-400/40 flex-1 min-w-0 transition-colors duration-300 w-full input-touch"
         />
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as 'name' | 'price' | 'price-desc')}
-          className="bg-plum-800/80 border border-plum-700 rounded-full px-5 py-3 text-sm outline-none focus:border-emerald-400/40"
+          className="bg-plum-800/80 border border-plum-700 rounded-full px-5 py-3 text-sm outline-none focus:border-emerald-400/40 w-full sm:w-auto input-touch"
         >
           <option value="name">{t('shop.sortName')}</option>
           <option value="price">{t('shop.sortPrice')}</option>

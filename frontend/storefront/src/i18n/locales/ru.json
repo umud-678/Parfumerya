@@ -64,7 +64,9 @@
     "total": "Итого",
     "subtotal": "Подытог",
     "shippingAtCheckout": "Стоимость доставки выбирается при оформлении",
-    "checkout": "Оформить"
+    "checkout": "Оформить",
+    "quantity": "Количество",
+    "remove": "Удалить"
   },
   "checkout": {
     "title": "Оформление",

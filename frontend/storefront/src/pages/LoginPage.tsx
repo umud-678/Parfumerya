@@ -50,8 +50,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-[70vh] flex items-center justify-center px-6">
-      <div className="card-elegant p-10 w-full max-w-md relative">
+    <div className="relative min-h-[70vh] flex items-center justify-center px-4 sm:px-6 py-8 safe-bottom">
+      <div className="card-elegant p-6 sm:p-10 w-full max-w-md relative">
         <button
           type="button"
           onClick={openAdminLogin}

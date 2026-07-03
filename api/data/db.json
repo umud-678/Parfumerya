@@ -8,7 +8,7 @@
       "roles": [
         "Admin"
       ],
-      "token": "70a2c9ab-c294-4e1a-9605-84aa741aa66c",
+      "token": "b0f83889-eeef-48e5-a16e-4cb27d6b035c",
       "isBlocked": false
     },
     {
@@ -145,7 +145,7 @@
       "minPrice": 100,
       "sku": "GOLD-50",
       "volumeMl": 50,
-      "stock": 20,
+      "stock": 19,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -153,7 +153,7 @@
           "sku": "golden-amber-50",
           "volumeMl": 50,
           "price": 100,
-          "stockQuantity": 20
+          "stockQuantity": 19
         }
       ]
     },
@@ -172,7 +172,7 @@
       "minPrice": 55,
       "sku": "SILK-50",
       "volumeMl": 50,
-      "stock": 20,
+      "stock": 12,
       "createdAt": "2026-06-27T15:57:25.343Z",
       "variants": [
         {
@@ -180,7 +180,7 @@
           "sku": "silk-petals-50",
           "volumeMl": 50,
           "price": 55,
-          "stockQuantity": 20
+          "stockQuantity": 12
         }
       ]
     }
@@ -230,6 +230,61 @@
     }
   ],
   "orders": [
+    {
+      "id": "fa60031c-106c-43bb-af18-1d2d3e94369e",
+      "orderNumber": "ORD-20260703-9226",
+      "userId": "admin-umud",
+      "userEmail": "umud9832@gmail.com",
+      "status": "Pending",
+      "paymentStatus": "OnDelivery",
+      "paymentMethod": "cash_on_delivery",
+      "subTotal": 540,
+      "shippingFee": 2,
+      "discountAmount": 0,
+      "totalAmount": 542,
+      "couponCode": null,
+      "shippingFullName": "Umud Admin",
+      "shippingPhone": "706780001",
+      "shippingAddress": "2131",
+      "shippingCity": "Баку",
+      "shippingRegion": "Баку",
+      "deliveryType": "standard",
+      "items": [
+        {
+          "productId": "c6d0cd87-0b3c-48bb-a355-f7b80edbab82",
+          "productVariantId": "2594ba41-4cbc-42d3-afda-b468188b50ce",
+          "productName": "Silk Petals",
+          "sku": "2594ba41-4cbc-42d3-afda-b468188b50ce",
+          "volumeMl": 50,
+          "quantity": 8,
+          "unitPrice": 55,
+          "categorySlug": "kosmetika",
+          "productSlug": "silk-petals",
+          "totalPrice": 440
+        },
+        {
+          "productId": "fbf340b4-007e-4a96-9b40-b1a9e5c3915a",
+          "productVariantId": "b22b8c15-cec6-4b9e-8a2c-c139d58ba174",
+          "productName": "Golden Amber",
+          "sku": "b22b8c15-cec6-4b9e-8a2c-c139d58ba174",
+          "volumeMl": 50,
+          "quantity": 1,
+          "unitPrice": 100,
+          "categorySlug": "qadin-etirleri",
+          "productSlug": "golden-amber",
+          "totalPrice": 100
+        }
+      ],
+      "createdAt": "2026-07-03T12:20:51.404Z",
+      "statusHistory": [
+        {
+          "status": "Pending",
+          "previousStatus": null,
+          "at": "2026-07-03T12:20:51.404Z",
+          "note": "Sifariş qəbul edildi"
+        }
+      ]
+    },
     {
       "id": "45f453b3-7c5d-40e6-aa45-2323b288680d",
       "orderNumber": "ORD-20260629-7732",
@@ -500,6 +555,15 @@
     }
   ],
   "notifications": [
+    {
+      "id": "4ba0cabe-c01b-4eaa-8682-5fb6f72bd7a7",
+      "type": "NewOrder",
+      "title": "Yeni sifariş",
+      "message": "#ORD-20260703-9226 — Umud Admin — 2131, Баку — Sadə çatdırılma — ₼ 542.00",
+      "referenceId": "fa60031c-106c-43bb-af18-1d2d3e94369e",
+      "isRead": false,
+      "createdAt": "2026-07-03T12:20:51.404Z"
+    },
     {
       "id": "0c9eaf5a-b43c-40ad-b855-7d154ea16b54",
       "type": "NewOrder",

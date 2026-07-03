@@ -378,8 +378,8 @@ export function PageShell({
 
   return (
     <div className="relative min-h-[60vh]">
-      <div className="relative max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div className="text-center mb-10 md:mb-14">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+        <div className="text-center mb-6 sm:mb-10 md:mb-14">
           <div className="inline-flex items-center gap-2 mb-4">
             <svg className="w-4 h-4 text-gold-300/70" viewBox="0 0 20 20" fill="currentColor">
               <path d="M10 2 C11.5 6, 14 5.5, 14.5 8.5 C12.5 9, 12.5 11.5, 10 11 C7.5 11.5, 7.5 9, 5.5 8.5 C6 5.5, 8.5 6, 10 2Z" />
@@ -389,10 +389,10 @@ export function PageShell({
               <path d="M10 2 C11.5 6, 14 5.5, 14.5 8.5 C12.5 9, 12.5 11.5, 10 11 C7.5 11.5, 7.5 9, 5.5 8.5 C6 5.5, 8.5 6, 10 2Z" />
             </svg>
           </div>
-          <h1 className="font-serif text-4xl md:text-5xl bg-gradient-to-r from-white via-gold-200 to-gold-400 bg-clip-text text-transparent">
+          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl bg-gradient-to-r from-white via-gold-200 to-gold-400 bg-clip-text text-transparent px-2">
             {title}
           </h1>
-          {subtitle && <p className="text-white/50 mt-3 max-w-lg mx-auto">{subtitle}</p>}
+          {subtitle && <p className="text-white/50 mt-3 max-w-lg mx-auto text-sm sm:text-base px-2">{subtitle}</p>}
         </div>
         {children}
       </div>

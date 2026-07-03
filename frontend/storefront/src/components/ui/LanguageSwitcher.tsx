@@ -45,7 +45,7 @@ export default function LanguageSwitcher() {
         aria-haspopup="listbox"
         aria-label={current.title}
         onClick={() => setOpen((v) => !v)}
-        className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-all ${
+        className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-all touch-target min-h-[36px] ${
           open
             ? 'border-accent/40 text-accent bg-accent/10'
             : 'border-white/10 text-white/70 hover:border-accent/25 hover:text-accent'

@@ -64,7 +64,9 @@
     "total": "Ümumi",
     "subtotal": "Ara cəm",
     "shippingAtCheckout": "Çatdırılma ödənişi sifariş zamanı seçilir",
-    "checkout": "Sifarişi tamamla"
+    "checkout": "Sifarişi tamamla",
+    "quantity": "Miqdar",
+    "remove": "Sil"
   },
   "checkout": {
     "title": "Sifariş",

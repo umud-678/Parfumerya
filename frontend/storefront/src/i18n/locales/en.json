@@ -64,7 +64,9 @@
     "total": "Total",
     "subtotal": "Subtotal",
     "shippingAtCheckout": "Delivery fee selected at checkout",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "quantity": "Quantity",
+    "remove": "Remove"
   },
   "checkout": {
     "title": "Checkout",

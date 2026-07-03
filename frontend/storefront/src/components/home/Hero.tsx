@@ -35,14 +35,14 @@ export default function Hero() {
 
   if (!hero) {
     return (
-      <section className="relative w-full h-[40vh] min-h-[240px] flex items-center justify-center bg-plum-950/80">
+      <section className="relative w-full h-[34vh] sm:h-[40vh] min-h-[220px] sm:min-h-[240px] flex items-center justify-center bg-plum-950/80 px-4">
         <p className="text-white/40 text-sm">{t('hero.empty')}</p>
       </section>
     );
   }
 
   return (
-    <section className="relative w-full h-[80vh] min-h-[480px] max-h-[900px] overflow-hidden">
+    <section className="relative w-full h-[58vh] sm:h-[72vh] lg:h-[80vh] min-h-[320px] sm:min-h-[440px] lg:min-h-[480px] max-h-[900px] overflow-hidden">
       {videoSrc ? (
         <video
           key={videoSrc}
@@ -67,28 +67,28 @@ export default function Hero() {
 
       <div className="absolute inset-0 bg-black/40" aria-hidden />
 
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 sm:px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-3xl space-y-6"
+          className="max-w-3xl space-y-4 sm:space-y-6"
         >
-          <h1 className="font-serif text-[2.25rem] leading-[1.12] text-white sm:text-5xl md:text-6xl lg:text-[3.75rem] drop-shadow-lg">
+          <h1 className="font-serif text-[1.65rem] leading-[1.1] text-white sm:text-4xl md:text-6xl lg:text-[3.75rem] drop-shadow-lg px-1">
             {content.title}{' '}
             <span className="text-accent italic">{content.titleHighlight}</span>
             {content.titleEnd ? ` ${content.titleEnd}` : ''}
           </h1>
 
-          <p className="mx-auto max-w-xl text-[15px] font-light leading-relaxed text-white/85 sm:text-base drop-shadow-md">
+          <p className="mx-auto max-w-xl text-sm sm:text-[15px] font-light leading-relaxed text-white/85 sm:text-base drop-shadow-md px-1 sm:px-0">
             {content.subtitle}
           </p>
 
           {(content.stat1Value || content.stat2Value) && (
-            <div className="flex flex-wrap items-center justify-center gap-10 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 pt-2">
               {content.stat1Value && (
                 <div className="text-center">
-                  <p className="font-serif text-2xl text-white md:text-3xl">{content.stat1Value}</p>
+                  <p className="font-serif text-xl sm:text-2xl text-white md:text-3xl">{content.stat1Value}</p>
                   <p className="mt-0.5 text-sm text-white/60">{content.stat1Label}</p>
                 </div>
               )}
@@ -97,17 +97,17 @@ export default function Hero() {
               )}
               {content.stat2Value && (
                 <div className="text-center">
-                  <p className="font-serif text-2xl text-white md:text-3xl">{content.stat2Value}</p>
+                  <p className="font-serif text-xl sm:text-2xl text-white md:text-3xl">{content.stat2Value}</p>
                   <p className="mt-0.5 text-sm text-white/60">{content.stat2Label}</p>
                 </div>
               )}
             </div>
           )}
 
-          <div className="pt-4">
+          <div className="pt-3 sm:pt-4">
             <Link
               to={content.ctaLink}
-              className="btn-primary inline-flex min-w-[160px] items-center justify-center px-8 py-3.5 text-sm font-medium tracking-wide shadow-lg"
+              className="btn-primary inline-flex min-w-[150px] sm:min-w-[160px] items-center justify-center px-6 sm:px-8 py-3 text-sm font-medium tracking-wide shadow-lg"
             >
               {content.ctaText}
             </Link>

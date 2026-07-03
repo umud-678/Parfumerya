@@ -43,7 +43,7 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[40vh] flex items-center justify-center">
+      <div className="min-h-[40vh] flex items-center justify-center px-4">
         <p className="text-white/60">{t('product.loading')}</p>
       </div>
     );
@@ -51,7 +51,7 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="min-h-[40vh] flex items-center justify-center">
+      <div className="min-h-[40vh] flex items-center justify-center px-4">
         <p className="text-white/60">{t('product.notFound')}</p>
       </div>
     );
@@ -81,20 +81,20 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="grid lg:grid-cols-2 gap-12">
-        <div className="card-elegant p-8 flex items-center justify-center relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12 pb-28 lg:pb-12">
+      <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="card-elegant p-5 sm:p-8 flex items-center justify-center relative overflow-hidden">
           <img
             src={product.primaryImageUrl}
             alt={product.name}
-            className="max-h-[480px] object-contain relative z-10"
+            className="max-h-[320px] sm:max-h-[420px] lg:max-h-[480px] object-contain relative z-10"
           />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5 sm:space-y-6">
           <div>
             <p className="text-mint-400 text-sm mb-2 tracking-wide uppercase">{product.brandName}</p>
-            <h1 className="font-serif text-4xl mb-2">{product.name}</h1>
+            <h1 className="font-serif text-2xl sm:text-4xl mb-2">{product.name}</h1>
             {product.reviewCount != null && product.reviewCount > 0 && product.averageRating != null && (
               <div className="flex items-center gap-1 text-gold-400">
                 {[...Array(5)].map((_, i) => (
@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <p className="text-3xl font-semibold text-mint-400">
+          <p className="text-2xl sm:text-3xl font-semibold text-mint-400">
             {t('common.currency')} {product.minPrice.toFixed(2)}
           </p>
 
@@ -125,8 +125,8 @@ export default function ProductDetailPage() {
             {product.description || t('product.description')}
           </p>
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-plum-900/50 rounded-full px-4 py-2 border border-plum-700">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-3 bg-plum-900/50 rounded-full px-4 py-2 border border-plum-700 w-full sm:w-auto justify-between sm:justify-start">
               <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="hover:text-mint-400">
                 <Minus size={16} />
               </button>
@@ -137,10 +137,10 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 hidden lg:flex">
             <button
               onClick={handleAddToCart}
-              className="flex items-center gap-2 btn-primary px-8 py-3"
+              className="flex items-center justify-center gap-2 btn-primary px-6 sm:px-8 py-3 w-full sm:w-auto"
             >
               <ShoppingCart size={18} />
               {t('product.addToCart')}
@@ -150,7 +150,7 @@ export default function ProductDetailPage() {
                 if (!user) navigate('/login', { state: { from: `/product/${slug}` } });
                 else toggleFavorite(product);
               }}
-              className={`flex items-center gap-2 border rounded-full px-8 py-3 transition-colors ${
+              className={`flex items-center justify-center gap-2 border rounded-full px-6 sm:px-8 py-3 transition-colors w-full sm:w-auto ${
                 isWishlisted
                   ? 'border-mint-400 text-mint-400 bg-mint-400/10'
                   : 'border-white/20 hover:border-mint-400/50'
@@ -160,6 +160,35 @@ export default function ProductDetailPage() {
               {t('product.favorite')}
             </button>
           </div>
+        </div>
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden mobile-sticky-bar px-4 pt-3 safe-bottom">
+        <div className="max-w-7xl mx-auto flex items-center gap-3">
+          <p className="text-mint-400 font-bold text-lg shrink-0">
+            {t('common.currency')} {product.minPrice.toFixed(2)}
+          </p>
+          <button
+            onClick={() => {
+              if (!user) navigate('/login', { state: { from: `/product/${slug}` } });
+              else toggleFavorite(product);
+            }}
+            className={`touch-target p-3 rounded-full border shrink-0 ${
+              isWishlisted
+                ? 'border-mint-400 text-mint-400 bg-mint-400/10'
+                : 'border-white/20 text-white/70'
+            }`}
+            aria-label={t('product.favorite')}
+          >
+            <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
+          </button>
+          <button
+            onClick={handleAddToCart}
+            className="flex-1 btn-primary py-3 min-h-[44px] flex items-center justify-center gap-2"
+          >
+            <ShoppingCart size={18} />
+            {t('product.addToCart')}
+          </button>
         </div>
       </div>
 

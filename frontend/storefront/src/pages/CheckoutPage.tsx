@@ -149,7 +149,7 @@ export default function CheckoutPage() {
     return (
       <PageShell title={t('checkout.confirmed')}>
         <div className="max-w-lg mx-auto text-center">
-          <div className="card-elegant p-12">
+          <div className="card-elegant p-8 sm:p-12">
             <div className="w-16 h-16 rounded-full bg-mint-400/20 text-mint-400 flex items-center justify-center mx-auto mb-6 text-2xl">
               ✓
             </div>
@@ -179,8 +179,8 @@ export default function CheckoutPage() {
 
   return (
     <PageShell title={t('checkout.title')}>
-      <div className="max-w-4xl mx-auto">
-        <div className="flex gap-4 mb-10">
+      <div className="max-w-4xl mx-auto pb-24 lg:pb-0">
+        <div className="flex gap-3 sm:gap-4 mb-6 sm:mb-10">
           {[1, 2].map((s) => (
             <div
               key={s}
@@ -189,8 +189,8 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="card-elegant p-8">
+        <div className="grid lg:grid-cols-2 gap-5 sm:gap-8">
+          <div className="card-elegant p-5 sm:p-8 order-2 lg:order-1">
             {step === 1 && (
               <div className="space-y-4">
                 <h2 className="font-serif text-xl mb-4 text-mint-400/90">{t('checkout.stepAddress')}</h2>
@@ -232,13 +232,13 @@ export default function CheckoutPage() {
                     placeholder={fieldLabels[field]}
                     value={form[field]}
                     onChange={(e) => setForm({ ...form, [field]: e.target.value })}
-                    className="w-full bg-plum-900/50 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none focus:border-mint-400/50"
+                    className="w-full bg-plum-900/50 border border-plum-700 rounded-xl px-4 py-3 text-sm outline-none focus:border-mint-400/50 input-touch"
                   />
                 ))}
                 {error && <p className="text-red-400 text-sm">{error}</p>}
                 <button
                   onClick={handleContinue}
-                  className="w-full btn-primary py-3 mt-4"
+                  className="w-full btn-primary py-3 mt-4 hidden lg:flex"
                 >
                   {t('checkout.continue')}
                 </button>
@@ -282,7 +282,7 @@ export default function CheckoutPage() {
                   <label className="text-white/50 text-sm flex items-center gap-2 mb-2">
                     <Tag size={14} /> {t('checkout.promoCode')}
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       value={couponCode}
                       onChange={(e) => {
@@ -291,12 +291,12 @@ export default function CheckoutPage() {
                         setDiscountAmount(0);
                       }}
                       placeholder={t('checkout.promoPlaceholder')}
-                      className="flex-1 bg-plum-900/50 border border-plum-700 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-mint-400/50"
+                      className="flex-1 bg-plum-900/50 border border-plum-700 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-mint-400/50 input-touch"
                     />
                     <button
                       type="button"
                       onClick={handleApplyCoupon}
-                      className="px-4 py-2.5 rounded-xl border border-mint-400/40 text-mint-400 text-sm hover:bg-mint-400/10"
+                      className="px-4 py-2.5 rounded-xl border border-mint-400/40 text-mint-400 text-sm hover:bg-mint-400/10 min-h-[44px] sm:shrink-0"
                     >
                       {t('checkout.applyPromo')}
                     </button>
@@ -312,18 +312,18 @@ export default function CheckoutPage() {
                   {t('checkout.paymentOnDeliveryNote')}
                 </p>
                 {error && <p className="text-red-400 text-sm">{error}</p>}
-                <div className="flex gap-3 mt-4">
+                <div className="flex flex-col-reverse sm:flex-row gap-3 mt-4">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="px-4 py-3 rounded-xl border border-plum-600 text-white/70 text-sm hover:border-mint-400/30"
+                    className="px-4 py-3 rounded-xl border border-plum-600 text-white/70 text-sm hover:border-mint-400/30 min-h-[44px]"
                   >
                     {t('checkout.back')}
                   </button>
                   <button
                     onClick={handleConfirmOrder}
                     disabled={loading}
-                    className="flex-1 btn-primary py-3 disabled:opacity-60"
+                    className="flex-1 btn-primary py-3 disabled:opacity-60 min-h-[44px]"
                   >
                     {loading ? t('checkout.creating') : t('checkout.confirmOrder')}
                   </button>
@@ -332,9 +332,9 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          <div className="card-elegant p-8 h-fit space-y-4">
+          <div className="card-elegant p-5 sm:p-8 h-fit space-y-4 order-1 lg:order-2">
             <h3 className="font-serif text-lg">{t('checkout.orderSummary')}</h3>
-            <p className="text-3xl font-bold text-mint-400">{t('common.currency')} {total.toFixed(2)}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-mint-400">{t('common.currency')} {total.toFixed(2)}</p>
             <p className="text-white/40 text-sm">{t('checkout.productsCount', { count: items.length })}</p>
             {couponApplied && (
               <p className="text-mint-400 text-xs">{t('checkout.promoLabel')}: {couponCode}</p>
@@ -349,6 +349,23 @@ export default function CheckoutPage() {
             </p>
           </div>
         </div>
+
+        {step === 1 && (
+          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden mobile-sticky-bar px-4 pt-3 safe-bottom">
+            <div className="max-w-4xl mx-auto flex items-center gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-white/45 text-xs">{t('checkout.total')}</p>
+                <p className="text-mint-400 font-bold text-lg">{t('common.currency')} {total.toFixed(2)}</p>
+              </div>
+              <button
+                onClick={handleContinue}
+                className="btn-primary px-6 py-3 shrink-0 min-h-[44px]"
+              >
+                {t('checkout.continue')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </PageShell>
   );

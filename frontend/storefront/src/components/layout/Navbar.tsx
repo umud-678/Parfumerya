@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { ShoppingCart, ChevronDown, User } from 'lucide-react';
+import { ShoppingCart, ChevronDown, User, LogIn } from 'lucide-react';
 import NavbarSearch from './NavbarSearch';
 import { useUnreadNotificationCount } from '../CustomerNotificationToasts';
 import { useAppSelector } from '../../store/hooks';
@@ -90,9 +90,9 @@ export default function Navbar() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`sticky top-0 z-50 navbar-shell ${scrolled ? 'navbar-shell-scrolled' : ''}`}
+      className={`sticky top-0 z-50 navbar-shell safe-top ${scrolled ? 'navbar-shell-scrolled' : ''}`}
     >
-      <div className="relative max-w-7xl mx-auto px-6 py-3.5 lg:py-4">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-3.5 lg:py-4">
         <div className="hidden lg:flex items-center gap-6">
           <Link to="/" className="group flex items-center gap-2 shrink-0">
             <motion.span
@@ -245,21 +245,23 @@ export default function Navbar() {
         </div>
 
         {/* Mobile header */}
-        <div className="flex lg:hidden items-center justify-between gap-3 relative">
-          <Link to="/" className="flex items-center gap-1.5">
-            <FlowerIcon className="w-3.5 h-3.5 text-accent/50" />
-            <span className="font-serif text-xl text-white">{siteName}</span>
+        <div className="flex lg:hidden items-center justify-between gap-1.5 min-w-0">
+          <Link to="/" className="flex items-center gap-1.5 min-w-0 shrink">
+            <FlowerIcon className="w-3.5 h-3.5 text-accent/50 shrink-0" />
+            <span className="font-serif text-base sm:text-xl text-white truncate max-w-[8rem] sm:max-w-[11rem]">
+              {siteName}
+            </span>
           </Link>
-          <div className="flex items-center justify-end gap-2 shrink-0 ml-auto">
+          <div className="flex items-center justify-end gap-1 sm:gap-2 shrink-0">
             <LanguageSwitcher />
             <motion.button
               type="button"
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/cart')}
               aria-label={t('nav.cart')}
-              className="relative cart-pill p-2"
+              className="relative cart-pill touch-target p-2"
             >
-              <ShoppingCart size={16} />
+              <ShoppingCart size={17} />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-accent text-plum-950 text-[9px] font-bold rounded-full min-w-[1rem] h-4 px-1 flex items-center justify-center">
                   {cartCount}
@@ -270,22 +272,26 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => navigate('/account')}
-                className="relative p-1.5 rounded-full border border-accent/30 text-accent"
+                className="relative touch-target p-2 rounded-full border border-accent/30 text-accent"
                 aria-label={t('nav.account')}
               >
-                <User size={16} />
+                <User size={17} />
                 {unreadNotifications > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full" />
                 )}
               </button>
             ) : (
               <>
-                <Link to="/login" className="text-xs text-white/60 hover:text-accent px-1.5">
-                  {t('nav.login')}
+                <Link
+                  to="/login"
+                  aria-label={t('nav.login')}
+                  className="touch-target inline-flex items-center justify-center p-2 rounded-full border border-white/15 text-white/70 hover:text-accent hover:border-accent/30 transition-colors"
+                >
+                  <LogIn size={17} />
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs font-semibold bg-accent text-plum-950 px-3 py-1.5 rounded-full"
+                  className="text-xs font-semibold bg-accent text-plum-950 px-3 py-2 rounded-full min-h-[36px] inline-flex items-center whitespace-nowrap"
                 >
                   {t('nav.register')}
                 </Link>
@@ -296,16 +302,16 @@ export default function Navbar() {
       </div>
 
       {/* Mobile search */}
-      <div className="lg:hidden px-4 pb-2">
+      <div className="lg:hidden px-4 sm:px-6 pb-2">
         <NavbarSearch wide />
       </div>
 
       {/* Mobile nav strip with floral hint */}
-      <div className="lg:hidden mobile-nav-strip relative px-4 pb-3 pt-1">
+      <div className="lg:hidden mobile-nav-strip relative px-4 sm:px-6 pb-3 pt-1">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none">
           <FlowerIcon className="w-8 h-8 text-accent" />
         </div>
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pl-6">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pl-6 pr-2 pb-1 snap-x snap-mandatory">
           {[
             { to: '/', label: t('nav.home') },
             { to: '/shop', label: t('nav.shop') },
@@ -313,10 +319,10 @@ export default function Navbar() {
           ].map((item) => {
             const active = location.pathname === item.to;
             return (
-              <motion.div key={item.to + item.label} whileTap={{ scale: 0.96 }}>
+              <motion.div key={item.to + item.label} whileTap={{ scale: 0.96 }} className="snap-start shrink-0">
                 <Link
                   to={item.to}
-                  className={`shrink-0 block px-3.5 py-1.5 rounded-full text-xs border transition-all duration-300 ${
+                  className={`nav-pill block px-3.5 py-2 rounded-full text-xs border transition-all duration-300 ${
                     active
                       ? 'border-accent/35 text-accent bg-accent/10 shadow-[0_0_16px_rgba(167,243,208,0.12)]'
                       : 'border-white/10 text-white/55 hover:border-accent/20 hover:text-accent/80'

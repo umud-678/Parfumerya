@@ -128,10 +128,10 @@ export default function ProductReviews({
   };
 
   return (
-    <section className="mt-16 border-t border-white/10 pt-12">
+    <section className="mt-10 sm:mt-16 border-t border-white/10 pt-8 sm:pt-12">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
         <div>
-          <h2 className="font-serif text-2xl md:text-3xl text-gold-300">{t('reviews.title')}</h2>
+          <h2 className="font-serif text-xl sm:text-2xl md:text-3xl text-gold-300">{t('reviews.title')}</h2>
           {count > 0 && averageRating != null && (
             <div className="flex items-center gap-3 mt-2">
               <StarRow rating={Math.round(averageRating)} size={18} />

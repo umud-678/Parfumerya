@@ -43,7 +43,7 @@ export default function CategoryPage() {
         transition={{ duration: 0.35, ease: 'easeInOut' }}
       >
         <div className="relative border-b border-white/5">
-          <div className="max-w-7xl mx-auto px-6 py-12 md:py-14 text-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 md:py-14 text-center">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -56,7 +56,7 @@ export default function CategoryPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="font-serif text-4xl md:text-5xl text-accent"
+              className="font-serif text-3xl sm:text-4xl md:text-5xl text-accent"
             >
               {category?.name ?? slug?.replace(/-/g, ' ')}
             </motion.h1>
