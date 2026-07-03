@@ -7,6 +7,7 @@ import CustomerNotificationToasts from './components/CustomerNotificationToasts'
 import WishlistSync from './components/WishlistSync';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import ApiConnectionBanner from './components/ApiConnectionBanner';
 import { ContentWithFloral, floralThemeForPath } from './components/ui/FloralDecor';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
@@ -47,6 +48,7 @@ function MainWithFloral({ children }: { children: React.ReactNode }) {
 function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="page-bg min-h-screen flex flex-col relative">
+      <ApiConnectionBanner />
       <Navbar />
       <main className="flex-1 relative z-10">
         <MainWithFloral>{children}</MainWithFloral>

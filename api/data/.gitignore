@@ -1,2 +1,2 @@
-# API data (generated at runtime)
-api/data/db.json
+# Runtime DB backup only — db.json is tracked in git for initial seed on Render
+db.json.bak

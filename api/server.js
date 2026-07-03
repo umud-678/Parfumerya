@@ -79,7 +79,8 @@ app.use(
         cb(null, true);
         return;
       }
-      cb(new Error(`CORS blocked for origin: ${origin}`));
+      console.warn(`[cors] blocked origin: ${origin ?? '(none)'}`);
+      cb(null, false);
     },
     credentials: true,
   })
@@ -622,13 +623,70 @@ function filterProducts(products, query, categories) {
 }
 
 function readDb() {
-  if (!fs.existsSync(DB_PATH)) {
+  try {
+    if (!fs.existsSync(DB_PATH)) {
+      console.warn(`[db] ${DB_PATH} tapılmadı — defaultDb yaradılır`);
+      const db = defaultDb();
+      writeDb(db);
+      return ensureSeedData(db);
+    }
+    const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    return ensureSeedData(db);
+  } catch (err) {
+    console.error('[db] oxuma xətası, defaultDb bərpa edilir:', err);
     const db = defaultDb();
-    writeDb(db);
+    try {
+      writeDb(db);
+    } catch (writeErr) {
+      console.error('[db] yazma xətası:', writeErr);
+    }
     return ensureSeedData(db);
   }
-  const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-  return ensureSeedData(db);
+}
+
+function uploadFileExists(url) {
+  if (!url?.startsWith('/uploads/')) return false;
+  const relative = url.replace(/^\/uploads\//, '');
+  return fs.existsSync(path.join(UPLOADS_ROOT, relative));
+}
+
+function resolveHeroForDeploy(hero) {
+  if (!hero) return hero;
+  const fallback = defaultDb().heroes[0];
+  const resolved = { ...hero };
+  if (resolved.videoUrl?.startsWith('/uploads/') && !uploadFileExists(resolved.videoUrl)) {
+    resolved.videoUrl = fallback.videoUrl?.startsWith('http') ? fallback.videoUrl : null;
+  }
+  if (resolved.imageUrl?.startsWith('/uploads/') && !uploadFileExists(resolved.imageUrl)) {
+    resolved.imageUrl = fallback.imageUrl;
+  }
+  if (resolved.posterUrl?.startsWith('/uploads/') && !uploadFileExists(resolved.posterUrl)) {
+    resolved.posterUrl = fallback.posterUrl;
+  }
+  return resolved;
+}
+
+function bootRuntime() {
+  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+  fs.mkdirSync(UPLOADS_ROOT, { recursive: true });
+  for (const folder of ALLOWED_UPLOAD_FOLDERS) {
+    fs.mkdirSync(path.join(UPLOADS_ROOT, folder), { recursive: true });
+  }
+
+  const dbExists = fs.existsSync(DB_PATH);
+  console.log('[boot] Parfumerya API başladılır');
+  console.log(`[boot] NODE_ENV=${process.env.NODE_ENV ?? 'development'} PORT=${PORT}`);
+  console.log(`[boot] cwd=${process.cwd()}`);
+  console.log(`[boot] db=${DB_PATH} exists=${dbExists}`);
+  console.log(`[boot] uploads=${UPLOADS_ROOT}`);
+
+  try {
+    readDb();
+    console.log('[boot] db OK');
+  } catch (err) {
+    console.error('[boot] db init failed:', err);
+    process.exit(1);
+  }
 }
 
 function writeDb(db) {
@@ -718,10 +776,22 @@ function buildCustomerOrderNotification(order, newStatus, previousStatus) {
 
 app.use(authMiddleware);
 
+app.get('/', (_req, res) => {
+  ok(res, { service: 'parfumerya-api', health: '/api/health', version: 2 });
+});
+
 app.get('/api/health', (_req, res) => {
+  let dbOk = false;
+  try {
+    readDb();
+    dbOk = true;
+  } catch {
+    dbOk = false;
+  }
   ok(res, {
-    ok: true,
+    ok: dbOk,
     version: 2,
+    uptimeSec: Math.round(process.uptime()),
     features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage', 'register-otp'],
   });
 });
@@ -1157,7 +1227,7 @@ app.get('/api/hero/active', (_req, res) => {
   const hero = (db.heroes ?? [])
     .filter((h) => h.isActive !== false)
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))[0] ?? null;
-  ok(res, hero);
+  ok(res, resolveHeroForDeploy(hero));
 });
 
 app.get('/api/hero/manage', requireAuth, requireAdmin, (_req, res) => {
@@ -1829,6 +1899,17 @@ app.get('/api/dashboard/stats', requireAuth, requireAdmin, (req, res) => {
     unreadNotifications: db.notifications.filter((n) => !n.isRead).length,
   });
 });
+
+app.use((err, _req, res, next) => {
+  if (res.headersSent) {
+    next(err);
+    return;
+  }
+  console.error('[error]', err);
+  fail(res, err.status ?? 500, err.message ?? 'Server xətası');
+});
+
+bootRuntime();
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Parfumerya API → port ${PORT}`);

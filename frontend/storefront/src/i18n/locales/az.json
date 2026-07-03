@@ -244,6 +244,12 @@
     "currency": "₼",
     "brandName": "Amoria"
   },
+  "api": {
+    "unavailableTitle": "Backend API əlçatan deyil",
+    "unavailableHint": "Render-də API servisi yuxarı deyil və ya oyandırılır. Render dashboard-da amoria-api servisini yoxlayın, sonra yenidən cəhd edin.",
+    "retry": "Yenidən yoxla",
+    "retrying": "Yoxlanılır..."
+  },
   "reviews": {
     "title": "Müştəri rəyləri",
     "count": "{{count}} rəy",

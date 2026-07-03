@@ -242,6 +242,12 @@
     "currency": "₼",
     "brandName": "Amoria"
   },
+  "api": {
+    "unavailableTitle": "Backend API is unavailable",
+    "unavailableHint": "The API on Render is down or waking up. Check the amoria-api service in Render dashboard, then retry.",
+    "retry": "Retry",
+    "retrying": "Checking..."
+  },
   "reviews": {
     "title": "Customer reviews",
     "count": "{{count}} reviews",
