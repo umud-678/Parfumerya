@@ -1,12 +1,23 @@
 # Parfumerya — Premium E-Ticarət Platforması
 
-Azərbaycan bazarı üçün ətir və kosmetika e-ticarət sistemi. Clean Architecture (.NET 8) backend, React (TypeScript) frontend.
+Azərbaycan bazarı üçün ətir və kosmetika e-ticarət sistemi. React (TypeScript) frontend + Node.js (Express) API + **MongoDB**.
 
 ## Layihə Strukturu
 
 ```
 Parfumerya/
-├── backend/                    # .NET 8 Web API
+├── api/                        # ⭐ İşlək API (Node.js/Express + MongoDB) — Render-də deploy olunur
+│   ├── server.js               # Giriş nöqtəsi (boot + listen)
+│   ├── src/
+│   │   ├── config.js           # Port və yollar
+│   │   ├── app.js              # Express app (CORS, middleware, route-lar)
+│   │   ├── db/                 # readDb/writeDb, MongoDB store, default seed
+│   │   ├── routes/             # auth, products, orders, users, wishlist, ...
+│   │   ├── middleware/         # auth, upload (multer), error handler
+│   │   ├── helpers/            # biznes məntiqi (stok, kupon, rəy hesablamaları)
+│   │   └── lib/                # mailer, OTP, validasiya
+│   └── data/db.json            # MONGODB_URI olmayanda fallback fayl bazası
+├── backend/                    # .NET 8 Web API (skelet — hazırda istifadə olunmur)
 │   ├── Parfumerya.sln
 │   └── src/
 │       ├── Parfumerya.Domain/       # Entity-lər, Enum-lar
@@ -18,13 +29,31 @@ Parfumerya/
 │   └── admin/                  # Admin panel (port 3001)
 ```
 
+## Verilənlər bazası — MongoDB
+
+API `MONGODB_URI` environment variable-ı ilə MongoDB-yə qoşulur:
+
+- **URI var** → bütün məlumat MongoDB-də saxlanılır (kolleksiyalar: `users`, `products`, `orders`, `categories`, `brands`, `coupons`, `reviews`, ...). İlk işə düşəndə mövcud `db.json` məlumatı avtomatik Mongo-ya köçürülür.
+- **URI yoxdur** → köhnə qaydada `api/data/db.json` faylı ilə işləyir (lokal inkişaf üçün rahatdır).
+
+```bash
+# api/.env
+MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/parfumerya?retryWrites=true&w=majority
+```
+
+MongoDB Atlas-ın qurulması üçün: **[DEPLOY.md](./DEPLOY.md)** (bölmə 2).
+
+Test: `cd api && npm run test:mongo` — yaddaşda Mongo qaldırıb migrasiya + restart davamlılığını yoxlayır.
+
 ## Dizayn
 
 - **Rəng palitrası:** Tünd bənövşəyi/plum (`#2a1f2d`) + mint yaşıl accent (`#a8e6cf`)
 - **Fontlar:** Playfair Display (başlıqlar) + DM Sans (mətn)
 - Şəkildə göstərilən "Perf" landing dizaynına uyğun
 
-## Backend — Quraşdırma
+## Backend (.NET skeleti) — Quraşdırma
+
+> ⚠️ Bu bölmə istifadə olunmayan .NET skeletinə aiddir. İşlək API `api/` qovluğundadır (`npm run dev`).
 
 **Tələb:** .NET 8 SDK, SQL Server (və ya LocalDB)
 

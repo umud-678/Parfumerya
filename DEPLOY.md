@@ -22,16 +22,38 @@ git push origin main
 
 ---
 
-## 2. API — Render.com
+## 2. Verilənlər bazası — MongoDB Atlas (pulsuz)
+
+> **Niyə vacibdir:** Render-in pulsuz planında disk hər deploy-da sıfırlanır — `db.json` faylındakı bütün sifarişlər/istifadəçilər silinirdi. MongoDB ilə məlumat həmişəlik qalır.
+
+1. [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas/register) → qeydiyyatdan keç
+2. **Create a Cluster** → **M0 Free** → provayder/region fərq etmir → **Create**
+3. **Database Access** → **Add New Database User** → istifadəçi adı + şifrə yarat (şifrəni yadda saxla, xüsusi simvollardan qaçın)
+4. **Network Access** → **Add IP Address** → **Allow access from anywhere** (`0.0.0.0/0`) ⚠️ **Vacib!** (Render-in IP-ləri dəyişkəndir)
+5. **Clusters** → **Connect** → **Drivers** → connection string-i kopyala:
+   ```
+   mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/parfumerya?retryWrites=true&w=majority
+   ```
+   - `USER` və `PASSWORD`-u öz yaratdıqlarınla əvəz et
+   - `/parfumerya` — database adıdır, `/` ilə `?` arasına yaz
+
+Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə lazım deyil** — API ilk işə düşəndə kolleksiyaları özü yaradır və mövcud `db.json` məlumatını avtomatik köçürür.
+
+> Lokal test üçün: `api/.env` faylına `MONGODB_URI=...` yaz. Boş qalsa köhnə kimi `db.json` ilə işləyir.
+
+---
+
+## 3. API — Render.com
 
 1. [render.com](https://render.com) → **Sign Up** → GitHub ilə qoşul
 2. **New +** → **Blueprint** → bu repo-nu seç
 3. `render.yaml` avtomatik `amoria-api` servisini yaradacaq
 4. **Environment Variables** (Render dashboard):
    ```
+   MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/parfumerya?retryWrites=true&w=majority
    CORS_ORIGINS=https://SIZIN-STORE.vercel.app,https://SIZIN-ADMIN.vercel.app
    ```
-   (URL-ləri Vercel deploy-dan sonra yeniləyin)
+   (CORS URL-ləri Vercel deploy-dan sonra yeniləyin)
 5. **Deploy** — bitəndə API ünvanını götürün:
    ```
    https://amoria-api.onrender.com
@@ -40,7 +62,7 @@ git push origin main
 
 ---
 
-## 3. Müştəri saytı — Vercel
+## 4. Müştəri saytı — Vercel
 
 1. [vercel.com](https://vercel.com) → **Add New → Project**
 2. GitHub repo-nu import et
@@ -57,7 +79,7 @@ git push origin main
 
 ---
 
-## 4. Admin panel — Vercel (2-ci layihə)
+## 5. Admin panel — Vercel (2-ci layihə)
 
 1. Vercel-də yenidən **Add New → Project** → eyni repo
 2. **Root Directory:** `frontend/admin`
@@ -72,15 +94,15 @@ git push origin main
 
 ---
 
-## 5. CORS-u yenilə
+## 6. CORS-u yenilə
 
 Hər iki Vercel URL-i hazır olandan sonra Render-də `CORS_ORIGINS`-i yeniləyib API-ni **Manual Deploy** et.
 
 ---
 
-## 6. Yoxlama siyahısı
+## 7. Yoxlama siyahısı
 
-- [ ] `https://...onrender.com/api/health` → `{"success":true,...}`
+- [ ] `https://...onrender.com/api/health` → `{"success":true,...}` və içində `"storage":{"driver":"mongodb","connected":true,...}`
 - [ ] Storefront açılır, məhsullar görünür
 - [ ] Admin-ə daxil olmaq olur (`umud9832@gmail.com` / `12345678`)
 - [ ] Sifariş vermək olur
@@ -88,6 +110,12 @@ Hər iki Vercel URL-i hazır olandan sonra Render-də `CORS_ORIGINS`-i yeniləyi
 ---
 
 ## Tez-tez xətalar
+
+### API başlamır — `[boot] storage init failed`
+`MONGODB_URI` səhvdir və ya Atlas bağlantıya icazə vermir:
+- Atlas → **Network Access** → `0.0.0.0/0` əlavə olunub?
+- Şifrədə xüsusi simvol varsa URL-encode edin (məs. `@` → `%40`)
+- Connection string-də `/parfumerya` database adı var?
 
 ### Build uğursuz — `VITE_API_URL` / prebuild
 Vercel → Project → **Settings → Environment Variables** əlavə edin:

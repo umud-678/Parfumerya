@@ -1,0 +1,129 @@
+import crypto from 'crypto';
+
+export function defaultDb() {
+  return {
+    users: [
+      {
+        id: 'admin-umud',
+        email: 'umud9832@gmail.com',
+        password: '12345678',
+        fullName: 'Umud Admin',
+        roles: ['Admin'],
+        isBlocked: false,
+        createdAt: '2026-01-01T00:00:00.000Z',
+      },
+    ],
+    categories: [
+      { id: 'cat-women', name: 'Qadın ətirləri', slug: 'qadin-etirleri' },
+      { id: 'cat-men', name: 'Kişi ətirləri', slug: 'kisi-etirleri' },
+      { id: 'cat-cosmetic', name: 'Kosmetika', slug: 'kosmetika' },
+    ],
+    brands: [
+      { id: 'brand-dior', name: 'Dior', slug: 'dior' },
+      { id: 'brand-chanel', name: 'Chanel', slug: 'chanel' },
+      { id: 'brand-tomford', name: 'Tom Ford', slug: 'tom-ford' },
+    ],
+    products: [],
+    coupons: [
+      {
+        id: 'coupon-summer20',
+        code: 'SUMMER20',
+        discountType: 'percentage',
+        discountPercent: 20,
+        value: 20,
+        applicableCategorySlug: '',
+        startDate: '2026-01-01T00:00:00.000Z',
+        endDate: '2026-12-31T23:59:59.999Z',
+        usageLimit: 1000,
+        usedCount: 0,
+        minOrderAmount: 0,
+        isActive: true,
+      },
+      {
+        id: 'coupon-women15',
+        code: 'QADIN15',
+        discountType: 'percentage',
+        discountPercent: 15,
+        value: 15,
+        applicableCategorySlug: 'qadin-etirleri',
+        startDate: '2026-01-01T00:00:00.000Z',
+        endDate: '2026-12-31T23:59:59.999Z',
+        usageLimit: 500,
+        usedCount: 0,
+        minOrderAmount: 0,
+        isActive: true,
+      },
+    ],
+    orders: [],
+    notifications: [],
+    customerNotifications: [],
+    heroes: [
+      {
+        id: 'hero-main',
+        title: 'Fall in love with Our Signature',
+        titleHighlight: 'Perfumes',
+        titleEnd: '',
+        subtitle: 'Discover the perfect fragrance for you with our wide selection of perfumes.',
+        imageUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=900&h=1100&fit=crop',
+        videoUrl: '/videos/hero.mp4',
+        posterUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=1920&h=1080&fit=crop',
+        secondaryImageUrl: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=500&fit=crop',
+        ctaText: 'SHOP NOW!',
+        ctaLink: '/shop',
+        stat1Value: '90+',
+        stat1Label: 'Perfumes',
+        stat2Value: '15M+',
+        stat2Label: 'Customers',
+        isActive: true,
+        sortOrder: 0,
+      },
+    ],
+    settings: {
+      siteName: 'Amoria',
+      siteTagline: 'Premium parfumeriya və kosmetika mağazası',
+      email: 'info@parfumerya.az',
+      phone: '+994 12 345 67 89',
+      address: 'Bakı, Azərbaycan',
+      footerDescription: 'Geniş ətir kolleksiyamızla sizin üçün mükəmməl qoxunu kəşf edin.',
+      socialLinks: [
+        { id: 'social-ig', platform: 'instagram', label: 'Instagram', url: 'https://instagram.com/parfumerya' },
+        { id: 'social-fb', platform: 'facebook', label: 'Facebook', url: 'https://facebook.com/parfumerya' },
+        { id: 'social-wa', platform: 'whatsapp', label: 'WhatsApp', url: 'https://wa.me/994123456789' },
+      ],
+      shippingFee: 5,
+      freeShippingThreshold: 100,
+      aboutTextAz: 'Parfumerya — Azərbaycanda premium ətir və kosmetika təcrübəsi. Dior, Chanel, Tom Ford və digər seçilmiş brendlərin orijinal məhsullarını təqdim edirik.',
+      aboutTextEn: 'Parfumerya — premium fragrance and cosmetics in Azerbaijan. Original products from Dior, Chanel, Tom Ford and other selected brands.',
+      aboutTextRu: 'Parfumerya — премиальная парфюмерия и косметика в Азербайджане. Оригинальная продукция Dior, Chanel, Tom Ford и других брендов.',
+      paymentMethods: [
+        { id: 'cod', code: 'cash_on_delivery', name: 'Çatdırılma zamanı nağd', active: true },
+      ],
+    },
+    wishlistFavorites: [],
+    reviews: [],
+    registrationOtps: [],
+  };
+}
+
+export function seedProducts() {
+  const items = [
+    { name: 'Rosewood Bliss', slug: 'rosewood-bliss', brandName: 'Dior', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 50, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=500&h=600&fit=crop' },
+    { name: 'Citrus Zest', slug: 'citrus-zest', brandName: 'Chanel', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 90, isNew: true, primaryImageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop' },
+    { name: 'Woodland Walk', slug: 'woodland-walk', brandName: 'Tom Ford', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 70, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=600&fit=crop' },
+    { name: 'Velvet Noir', slug: 'velvet-noir', brandName: 'Dior', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 80, isNew: true, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&h=600&fit=crop' },
+    { name: 'Ocean Breeze', slug: 'ocean-breeze', brandName: 'Chanel', categoryId: 'cat-cosmetic', categorySlug: 'kosmetika', categoryName: 'Kosmetika', price: 65, primaryImageUrl: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop' },
+    { name: 'Golden Amber', slug: 'golden-amber', brandName: 'Tom Ford', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 100, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=600&fit=crop' },
+    { name: 'Midnight Oud', slug: 'midnight-oud', brandName: 'Tom Ford', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 120, isNew: true, primaryImageUrl: 'https://images.unsplash.com/photo-1592945403244-b31f0502c71c?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop' },
+    { name: 'Silk Petals', slug: 'silk-petals', brandName: 'Dior', categoryId: 'cat-cosmetic', categorySlug: 'kosmetika', categoryName: 'Kosmetika', price: 55, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop' },
+  ];
+  return items.map((p) => ({
+    id: crypto.randomUUID(),
+    ...p,
+    minPrice: p.price,
+    sku: `${p.slug.toUpperCase().slice(0, 4)}-50`,
+    volumeMl: 50,
+    stock: 20,
+    createdAt: new Date().toISOString(),
+    variants: [{ id: crypto.randomUUID(), sku: `${p.slug}-50`, volumeMl: 50, price: p.price, stockQuantity: 20 }],
+  }));
+}
