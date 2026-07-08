@@ -6,6 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "predev": "node ../scripts/stop-dev.js 5005",
     "dev": "node server.js",
     "start": "node server.js",
     "check": "node --check server.js",

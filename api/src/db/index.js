@@ -32,8 +32,20 @@ export function ensureSeedData(db) {
       changed = true;
     }
   }
+  if (!db.meta) {
+    db.meta = {};
+    changed = true;
+  }
+  // Demo məhsullar yalnız ilk quraşdırmada bir dəfə yaradılır —
+  // admin bütün məhsulları silsə, geri qayıtmır
   if (!db.products?.length) {
-    db.products = seedProducts();
+    if (!db.meta.demoProductsSeeded) {
+      db.products = seedProducts();
+      db.meta.demoProductsSeeded = true;
+      changed = true;
+    }
+  } else if (!db.meta.demoProductsSeeded) {
+    db.meta.demoProductsSeeded = true;
     changed = true;
   }
   if (!db.settings) {
@@ -98,6 +110,20 @@ export function ensureSeedData(db) {
     }
   }
   if (syncAllProductRatings(db)) {
+    changed = true;
+  }
+  // Zəmanət: bazada həmişə ən azı bir admin hesabı olsun
+  // (Admin girişi: umud9832@gmail.com / 12345678)
+  if (!db.users) db.users = [];
+  if (!db.users.some((u) => u.roles?.includes('Admin'))) {
+    const seedAdmin = defaultDb().users[0];
+    const existing = db.users.find((u) => u.email === seedAdmin.email);
+    if (existing) {
+      existing.roles = ['Admin'];
+      existing.isBlocked = false;
+    } else {
+      db.users.unshift(seedAdmin);
+    }
     changed = true;
   }
   if (normalizeSingleAdminRoles(db)) {
