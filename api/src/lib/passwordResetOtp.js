@@ -98,12 +98,17 @@ export async function requestPasswordResetOtp(db, body, siteName) {
   if (!db.passwordResetOtps) db.passwordResetOtps = [];
   db.passwordResetOtps.push(entry);
 
-  await sendPasswordResetEmail({
-    to: email,
-    fullName: user.fullName || user.email,
-    code,
-    siteName,
-  });
+  try {
+    await sendPasswordResetEmail({
+      to: email,
+      fullName: user.fullName || user.email,
+      code,
+      siteName,
+    });
+  } catch (err) {
+    removePending(db, email);
+    return { ok: false, status: 503, message: err.message || 'E-poçt göndərilmədi' };
+  }
 
   const devMode = process.env.NODE_ENV !== 'production' && !smtpConfigured();
 

@@ -4,12 +4,29 @@ const SMTP_HOST = process.env.SMTP_HOST?.trim();
 const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_USER = process.env.SMTP_USER?.trim();
 const SMTP_PASS = process.env.SMTP_PASS?.trim();
-const SMTP_FROM = process.env.SMTP_FROM?.trim() || SMTP_USER || 'noreply@parfumerya.az';
+const SMTP_FROM = process.env.SMTP_FROM?.trim();
 
 let transporter = null;
 
-function smtpConfigured() {
+export function smtpConfigured() {
   return Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS);
+}
+
+/** Gmail SMTP ilə göndərən ünvan hesabla eyni olmalıdır */
+function resolveFromAddress(siteName = 'Amoria') {
+  if (!SMTP_USER) return SMTP_FROM || 'noreply@parfumerya.az';
+
+  let displayName = siteName;
+  if (SMTP_FROM) {
+    const match = SMTP_FROM.match(/^(.+?)\s*<[^>]+>$/);
+    if (match?.[1]) {
+      displayName = match[1].trim().replace(/^["']|["']$/g, '');
+    } else if (!SMTP_FROM.includes('@')) {
+      displayName = SMTP_FROM;
+    }
+  }
+
+  return `${displayName} <${SMTP_USER}>`;
 }
 
 function getTransporter() {
@@ -19,10 +36,54 @@ function getTransporter() {
       host: SMTP_HOST,
       port: SMTP_PORT,
       secure: SMTP_PORT === 465,
+      requireTLS: SMTP_PORT === 587,
       auth: { user: SMTP_USER, pass: SMTP_PASS },
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 20000,
     });
   }
   return transporter;
+}
+
+export async function verifySmtpConnection() {
+  if (!smtpConfigured()) {
+    return { ok: false, reason: 'SMTP_HOST / SMTP_USER / SMTP_PASS təyin edilməyib' };
+  }
+  try {
+    await getTransporter().verify();
+    return { ok: true, from: resolveFromAddress() };
+  } catch (err) {
+    return { ok: false, reason: err.message };
+  }
+}
+
+async function deliverMail({ to, subject, text, html, siteName, logTag }) {
+  const transport = getTransporter();
+  if (!transport) {
+    const codeMatch = text.match(/\n(\d{6})\n/);
+    const code = codeMatch?.[1] ?? '------';
+    console.log(`\n📧 [DEV ${logTag}] SMTP konfiqurasiya olunmayıb — OTP konsola yazılır`);
+    console.log(`   Alıcı: ${to}`);
+    console.log(`   Kod: ${code}\n`);
+    return { sent: false, devLogged: true };
+  }
+
+  const from = resolveFromAddress(siteName);
+  try {
+    const info = await transport.sendMail({ from, to, subject, text, html });
+    console.log(`[mailer] ${logTag} göndərildi → ${to} (messageId=${info.messageId ?? 'n/a'})`);
+    return { sent: true, devLogged: false };
+  } catch (err) {
+    console.error(`[mailer] ${logTag} uğursuz → ${to}:`, err.message);
+    const hint =
+      err.message?.includes('Invalid login') || err.message?.includes('535')
+        ? 'Gmail App Password səhvdir və ya 2FA aktiv deyil'
+        : err.message?.includes('Mail command failed')
+          ? 'Göndərən ünvan Gmail hesabı ilə uyğun deyil'
+          : 'SMTP server cavab vermədi';
+    throw new Error(`E-poçt göndərilmədi: ${hint}`);
+  }
 }
 
 export async function sendOtpEmail({ to, fullName, code, siteName = 'Amoria' }) {
@@ -46,23 +107,7 @@ Kod 10 dəqiqə ərzində etibarlıdır. Bu kodu heç kimlə paylaşmayın.
       <p style="color:#666;font-size:14px">Kod 10 dəqiqə ərzində etibarlıdır.</p>
     </div>`;
 
-  const transport = getTransporter();
-  if (!transport) {
-    console.log('\n📧 [DEV OTP] SMTP konfiqurasiya olunmayıb — OTP konsola yazılır');
-    console.log(`   Alıcı: ${to}`);
-    console.log(`   Kod: ${code}\n`);
-    return { sent: false, devLogged: true };
-  }
-
-  await transport.sendMail({
-    from: SMTP_FROM,
-    to,
-    subject,
-    text,
-    html,
-  });
-
-  return { sent: true, devLogged: false };
+  return deliverMail({ to, subject, text, html, siteName, logTag: 'register-otp' });
 }
 
 export async function sendPasswordResetEmail({ to, fullName, code, siteName = 'Amoria' }) {
@@ -86,23 +131,5 @@ Kod 10 dəqiqə ərzində etibarlıdır. Bu kodu heç kimlə paylaşmayın.
       <p style="color:#666;font-size:14px">Kod 10 dəqiqə ərzində etibarlıdır.</p>
     </div>`;
 
-  const transport = getTransporter();
-  if (!transport) {
-    console.log('\n📧 [DEV PASSWORD RESET] SMTP konfiqurasiya olunmayıb — OTP konsola yazılır');
-    console.log(`   Alıcı: ${to}`);
-    console.log(`   Kod: ${code}\n`);
-    return { sent: false, devLogged: true };
-  }
-
-  await transport.sendMail({
-    from: SMTP_FROM,
-    to,
-    subject,
-    text,
-    html,
-  });
-
-  return { sent: true, devLogged: false };
+  return deliverMail({ to, subject, text, html, siteName, logTag: 'password-reset' });
 }
-
-export { smtpConfigured };

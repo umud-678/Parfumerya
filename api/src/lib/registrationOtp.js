@@ -94,7 +94,12 @@ export async function requestRegistrationOtp(db, body, siteName) {
   if (!db.registrationOtps) db.registrationOtps = [];
   db.registrationOtps.push(entry);
 
-  await sendOtpEmail({ to: email, fullName, code, siteName });
+  try {
+    await sendOtpEmail({ to: email, fullName, code, siteName });
+  } catch (err) {
+    removePending(db, email);
+    return { ok: false, status: 503, message: err.message || 'E-poçt göndərilmədi' };
+  }
 
   const devMode = process.env.NODE_ENV !== 'production' && !smtpConfigured();
 

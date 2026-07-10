@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { readDb } from '../db/index.js';
 import { ok } from '../utils/respond.js';
 import { mongoEnabled, mongoHealth } from '../db/mongoStore.js';
+import { smtpConfigured } from '../lib/mailer.js';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.get('/api/health', (_req, res) => {
     version: 2,
     uptimeSec: Math.round(process.uptime()),
     storage: mongoEnabled() ? { driver: 'mongodb', ...mongoHealth() } : { driver: 'file' },
+    email: { smtpConfigured: smtpConfigured() },
     features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage', 'register-otp', 'password-reset-otp', 'mongodb'],
   });
 });

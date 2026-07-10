@@ -12,6 +12,7 @@ import app from './src/app.js';
 import { PORT } from './src/config.js';
 import { bootRuntime, initStorage } from './src/db/index.js';
 import { mongoEnabled, closeMongo } from './src/db/mongoStore.js';
+import { smtpConfigured, verifySmtpConnection } from './src/lib/mailer.js';
 
 async function start() {
   bootRuntime();
@@ -25,6 +26,18 @@ async function start() {
       console.error('[boot] MongoDB Atlas-da Network Access → IP Access List-ə 0.0.0.0/0 əlavə olunduğundan əmin olun.');
     }
     process.exit(1);
+  }
+
+  if (smtpConfigured()) {
+    const smtp = await verifySmtpConnection();
+    if (smtp.ok) {
+      console.log(`[boot] SMTP OK (göndərən: ${smtp.from})`);
+    } else {
+      console.warn(`[boot] SMTP xəbərdarlığı: ${smtp.reason}`);
+      console.warn('[boot] OTP kodları e-poçta getməyə bilər — SMTP_USER + Gmail App Password yoxlayın');
+    }
+  } else {
+    console.warn('[boot] SMTP təyin edilməyib — OTP kodları yalnız dev rejimində konsola yazılır');
   }
 
   if (mongoEnabled()) {
