@@ -3,6 +3,7 @@ import path from 'path';
 import { DB_PATH, UPLOADS_ROOT, ALLOWED_UPLOAD_FOLDERS, PORT } from '../config.js';
 import { defaultDb, seedProducts } from './defaults.js';
 import { cleanupExpiredOtps } from '../lib/registrationOtp.js';
+import { cleanupExpiredPasswordResetOtps } from '../lib/passwordResetOtp.js';
 import { syncAllProductRatings } from '../helpers/products.js';
 import { resolveOrderItemProduct } from '../helpers/orders.js';
 import { normalizeSingleAdminRoles } from '../helpers/users.js';
@@ -134,6 +135,13 @@ export function ensureSeedData(db) {
     changed = true;
   }
   if (cleanupExpiredOtps(db)) {
+    changed = true;
+  }
+  if (!db.passwordResetOtps) {
+    db.passwordResetOtps = [];
+    changed = true;
+  }
+  if (cleanupExpiredPasswordResetOtps(db)) {
     changed = true;
   }
   if (changed) writeDb(db);

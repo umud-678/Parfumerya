@@ -142,7 +142,18 @@
     "adminPanel": "Admin Panel Login",
     "or": "or",
     "loginError": "Login failed",
-    "registerError": "Registration failed"
+    "registerError": "Registration failed",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordHint": "Enter the Gmail you registered with — we'll send a reset code",
+    "sendResetCode": "Send reset code",
+    "resetOtpSent": "Reset code sent to {{email}}",
+    "resetOtpStepHint": "Enter the code from your email and your new password",
+    "newPassword": "New password",
+    "resetPassword": "Reset password",
+    "resettingPassword": "Updating...",
+    "resetError": "Password reset failed",
+    "backToLogin": "Back to sign in",
+    "passwordResetSuccess": "Your password was updated. You can sign in now."
   },
   "wishlist": {
     "title": "Wishlist",

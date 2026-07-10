@@ -69,6 +69,36 @@ export async function verifyRegisterOtp(email: string, otp: string): Promise<Use
   };
 }
 
+export async function sendForgotPasswordOtp(email: string): Promise<{ email: string; expiresInSec: number }> {
+  return apiFetch<{ email: string; expiresInSec: number }>('/auth/forgot-password/send-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function resendForgotPasswordOtp(email: string): Promise<{ email: string; expiresInSec: number }> {
+  return apiFetch<{ email: string; expiresInSec: number }>('/auth/forgot-password/resend-otp', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function resetPasswordWithOtp(email: string, otp: string, password: string): Promise<User> {
+  const auth = await apiFetch<AuthResponse>('/auth/forgot-password/reset', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp, password }),
+  });
+  setToken(auth.accessToken);
+  return {
+    userId: auth.userId,
+    email: auth.email,
+    fullName: auth.fullName,
+    phone: auth.phone ?? '',
+    roles: auth.roles,
+    accessToken: auth.accessToken,
+  };
+}
+
 export async function getMyProfile(): Promise<Omit<User, 'accessToken'>> {
   return apiFetch<Omit<User, 'accessToken'>>('/users/me');
 }

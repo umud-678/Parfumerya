@@ -3,6 +3,10 @@ import crypto from 'crypto';
 import { readDb, writeDb } from '../db/index.js';
 import { ok, fail } from '../utils/respond.js';
 import { requestRegistrationOtp, verifyRegistrationOtp } from '../lib/registrationOtp.js';
+import {
+  requestPasswordResetOtp,
+  resetPasswordWithOtp,
+} from '../lib/passwordResetOtp.js';
 
 const router = Router();
 
@@ -79,6 +83,47 @@ router.post('/api/auth/register/resend-otp', async (req, res) => {
 
 router.post('/api/auth/register', (req, res) => {
   fail(res, 400, 'Qeydiyyat üçün OTP təsdiqi tələb olunur');
+});
+
+router.post('/api/auth/forgot-password/send-otp', async (req, res) => {
+  const db = readDb();
+  const siteName = db.settings?.siteName ?? 'Amoria';
+  const result = await requestPasswordResetOtp(db, req.body, siteName);
+  if (!result.ok) {
+    return fail(res, result.status ?? 400, result.message, result.retryAfterSec ? { retryAfterSec: result.retryAfterSec } : undefined);
+  }
+  writeDb(db);
+  const { devOtp, ...data } = result;
+  ok(res, data, result.message);
+  if (devOtp && process.env.NODE_ENV !== 'production') {
+    console.log(`[password-reset] dev kod ${req.body?.email}: ${devOtp}`);
+  }
+});
+
+router.post('/api/auth/forgot-password/resend-otp', async (req, res) => {
+  const db = readDb();
+  const siteName = db.settings?.siteName ?? 'Amoria';
+  const result = await requestPasswordResetOtp(db, req.body, siteName);
+  if (!result.ok) {
+    return fail(res, result.status ?? 400, result.message, result.retryAfterSec ? { retryAfterSec: result.retryAfterSec } : undefined);
+  }
+  writeDb(db);
+  const { devOtp, ...data } = result;
+  ok(res, data, result.message);
+  if (devOtp && process.env.NODE_ENV !== 'production') {
+    console.log(`[password-reset] dev kod ${req.body?.email}: ${devOtp}`);
+  }
+});
+
+router.post('/api/auth/forgot-password/reset', (req, res) => {
+  const db = readDb();
+  const result = resetPasswordWithOtp(db, req.body);
+  if (!result.ok) {
+    writeDb(db);
+    return fail(res, result.status ?? 400, result.message);
+  }
+  writeDb(db);
+  ok(res, result.auth, result.message);
 });
 
 export default router;

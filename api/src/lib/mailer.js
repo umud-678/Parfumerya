@@ -65,4 +65,44 @@ Kod 10 dəqiqə ərzində etibarlıdır. Bu kodu heç kimlə paylaşmayın.
   return { sent: true, devLogged: false };
 }
 
+export async function sendPasswordResetEmail({ to, fullName, code, siteName = 'Amoria' }) {
+  const subject = `${siteName} — Şifrə bərpası kodu`;
+  const text = `Salam ${fullName},
+
+${siteName} saytında şifrənizi yeniləmək üçün təsdiq kodunuz:
+
+${code}
+
+Kod 10 dəqiqə ərzində etibarlıdır. Bu kodu heç kimlə paylaşmayın.
+
+Əgər siz bu sorğunu göndərməmisinizsə, bu e-poçtu nəzərə almayın.`;
+
+  const html = `
+    <div style="font-family:Georgia,serif;max-width:480px;margin:0 auto;padding:24px;color:#1a1a1a">
+      <h2 style="color:#2d6a4f;margin:0 0 16px">${siteName}</h2>
+      <p>Salam <strong>${fullName}</strong>,</p>
+      <p>Şifrənizi yeniləmək üçün aşağıdakı təsdiq kodunu daxil edin:</p>
+      <p style="font-size:32px;letter-spacing:8px;font-weight:bold;color:#2d6a4f;margin:24px 0">${code}</p>
+      <p style="color:#666;font-size:14px">Kod 10 dəqiqə ərzində etibarlıdır.</p>
+    </div>`;
+
+  const transport = getTransporter();
+  if (!transport) {
+    console.log('\n📧 [DEV PASSWORD RESET] SMTP konfiqurasiya olunmayıb — OTP konsola yazılır');
+    console.log(`   Alıcı: ${to}`);
+    console.log(`   Kod: ${code}\n`);
+    return { sent: false, devLogged: true };
+  }
+
+  await transport.sendMail({
+    from: SMTP_FROM,
+    to,
+    subject,
+    text,
+    html,
+  });
+
+  return { sent: true, devLogged: false };
+}
+
 export { smtpConfigured };

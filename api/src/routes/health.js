@@ -22,7 +22,7 @@ router.get('/api/health', (_req, res) => {
     version: 2,
     uptimeSec: Math.round(process.uptime()),
     storage: mongoEnabled() ? { driver: 'mongodb', ...mongoHealth() } : { driver: 'file' },
-    features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage', 'register-otp', 'mongodb'],
+    features: ['hero-manage', 'hero-video', 'hero-upload', 'file-upload', 'settings', 'coupons-crud', 'categories-crud', 'profile', 'users-manage', 'register-otp', 'password-reset-otp', 'mongodb'],
   });
 });
 

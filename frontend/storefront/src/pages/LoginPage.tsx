@@ -83,6 +83,11 @@ export default function LoginPage() {
             required
             className="w-full bg-plum-900/80 border border-plum-700 rounded-xl px-4 py-3 outline-none focus:border-mint-400/50"
           />
+          <div className="flex justify-end">
+            <Link to="/forgot-password" className="text-mint-400 text-sm hover:underline">
+              {t('auth.forgotPassword')}
+            </Link>
+          </div>
           {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           <button type="submit" disabled={loading} className="w-full btn-primary py-3 disabled:opacity-60">
             {loading ? t('auth.loggingIn') : t('auth.login')}

@@ -142,7 +142,18 @@
     "adminPanel": "Вход в Admin Panel",
     "or": "или",
     "loginError": "Ошибка входа",
-    "registerError": "Ошибка регистрации"
+    "registerError": "Ошибка регистрации",
+    "forgotPassword": "Забыли пароль?",
+    "forgotPasswordHint": "Введите Gmail, с которым регистрировались — мы отправим код восстановления",
+    "sendResetCode": "Отправить код",
+    "resetOtpSent": "Код восстановления отправлен на {{email}}",
+    "resetOtpStepHint": "Введите код из письма и новый пароль",
+    "newPassword": "Новый пароль",
+    "resetPassword": "Обновить пароль",
+    "resettingPassword": "Обновление...",
+    "resetError": "Не удалось восстановить пароль",
+    "backToLogin": "Вернуться ко входу",
+    "passwordResetSuccess": "Пароль обновлён. Теперь можно войти."
   },
   "wishlist": {
     "title": "Избранное",

@@ -102,6 +102,7 @@ export function defaultDb() {
     wishlistFavorites: [],
     reviews: [],
     registrationOtps: [],
+    passwordResetOtps: [],
   };
 }
 

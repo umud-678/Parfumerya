@@ -142,7 +142,18 @@
     "adminPanel": "Admin panelinə daxil ol",
     "or": "və ya",
     "loginError": "Giriş uğursuz oldu",
-    "registerError": "Qeydiyyat uğursuz oldu"
+    "registerError": "Qeydiyyat uğursuz oldu",
+    "forgotPassword": "Şifrəmi unutdum",
+    "forgotPasswordHint": "Qeydiyyatdan keçdiyiniz Gmail ünvanını daxil edin — bərpa kodu göndəriləcək",
+    "sendResetCode": "Bərpa kodu göndər",
+    "resetOtpSent": "Bərpa kodu {{email}} ünvanına göndərildi",
+    "resetOtpStepHint": "E-poçtunuza gələn kodu və yeni şifrənizi daxil edin",
+    "newPassword": "Yeni şifrə",
+    "resetPassword": "Şifrəni yenilə",
+    "resettingPassword": "Yenilənir...",
+    "resetError": "Şifrə bərpası uğursuz oldu",
+    "backToLogin": "Giriş səhifəsinə qayıt",
+    "passwordResetSuccess": "Şifrəniz yeniləndi. İndi daxil ola bilərsiniz."
   },
   "wishlist": {
     "title": "Favoritlər",
