@@ -27,3 +27,33 @@ body {
 .sidebar-link.active {
   @apply bg-plum-800 text-mint-400 border border-mint-400/20;
 }
+
+/* Admin — mobil / planşet uyğunlaşdırma */
+.admin-content h1.font-serif.text-3xl {
+  @apply text-2xl sm:text-3xl;
+}
+
+.admin-content .space-y-6 > .flex.justify-between.items-center,
+.admin-content .space-y-8 > .flex.justify-between.items-center {
+  @apply flex-col items-stretch gap-4 sm:flex-row sm:items-center;
+}
+
+@media (max-width: 640px) {
+  .card-admin {
+    @apply rounded-xl p-4;
+  }
+
+  .admin-content .card-admin.overflow-x-auto {
+    @apply -mx-1 px-1;
+  }
+
+  .admin-content table.w-full {
+    min-width: 36rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .admin-content table.w-full {
+    min-width: 42rem;
+  }
+}

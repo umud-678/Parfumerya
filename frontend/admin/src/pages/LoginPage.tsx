@@ -60,8 +60,8 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-plum-950 px-6">
-      <div className="card-admin w-full max-w-md p-8">
+    <div className="min-h-screen min-h-dvh flex items-center justify-center bg-plum-950 px-4 py-6 sm:px-6">
+      <div className="card-admin w-full max-w-md p-6 sm:p-8">
         <button
           type="button"
           onClick={() => setFormOpen((open) => !open)}
