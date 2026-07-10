@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DB_PATH, UPLOADS_ROOT, ALLOWED_UPLOAD_FOLDERS, PORT } from '../config.js';
-import { defaultDb, seedProducts } from './defaults.js';
+import { defaultDb } from './defaults.js';
 import { cleanupExpiredOtps } from '../lib/registrationOtp.js';
 import { cleanupExpiredPasswordResetOtps } from '../lib/passwordResetOtp.js';
 import { syncAllProductRatings } from '../helpers/products.js';
@@ -37,16 +37,8 @@ export function ensureSeedData(db) {
     db.meta = {};
     changed = true;
   }
-  // Demo məhsullar yalnız ilk quraşdırmada bir dəfə yaradılır —
-  // admin bütün məhsulları silsə, geri qayıtmır
-  if (!db.products?.length) {
-    if (!db.meta.demoProductsSeeded) {
-      db.products = seedProducts();
-      db.meta.demoProductsSeeded = true;
-      changed = true;
-    }
-  } else if (!db.meta.demoProductsSeeded) {
-    db.meta.demoProductsSeeded = true;
+  if (!db.products) {
+    db.products = [];
     changed = true;
   }
   if (!db.settings) {

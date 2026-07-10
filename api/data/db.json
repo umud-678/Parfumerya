@@ -74,117 +74,7 @@
       "slug": "tom-ford"
     }
   ],
-  "products": [
-    {
-      "id": "555cab4e-2ffb-4059-9da8-3b937d167e8f",
-      "name": "Citrus Zest",
-      "slug": "citrus-zest",
-      "brandName": "Chanel",
-      "categoryId": "cat-men",
-      "categorySlug": "kisi-etirleri",
-      "categoryName": "Kişi ətirləri",
-      "price": 90,
-      "isNew": true,
-      "primaryImageUrl": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=600&fit=crop",
-      "secondaryImageUrl": "https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop",
-      "minPrice": 90,
-      "sku": "CITR-50",
-      "volumeMl": 50,
-      "stock": 5,
-      "createdAt": "2026-06-27T15:57:25.343Z",
-      "variants": [
-        {
-          "id": "f4fe087d-1aad-4e5d-a3bc-a39cbfc95bd2",
-          "sku": "citrus-zest-50",
-          "volumeMl": 50,
-          "price": 90,
-          "stockQuantity": 5
-        }
-      ],
-      "averageRating": 2,
-      "reviewCount": 1
-    },
-    {
-      "id": "110ad7dc-8a76-4f50-bea7-9e9cd85048ee",
-      "name": "Ocean Breeze",
-      "slug": "ocean-breeze",
-      "brandName": "Chanel",
-      "categoryId": "cat-cosmetic",
-      "categorySlug": "kosmetika",
-      "categoryName": "Kosmetika",
-      "price": 65,
-      "primaryImageUrl": "https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop",
-      "secondaryImageUrl": "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop",
-      "minPrice": 65,
-      "sku": "OCEA-50",
-      "volumeMl": 50,
-      "stock": 27,
-      "createdAt": "2026-06-27T15:57:25.343Z",
-      "variants": [
-        {
-          "id": "8b9f5490-4143-4d16-b90a-027ca2a53d23",
-          "sku": "ocean-breeze-50",
-          "volumeMl": 50,
-          "price": 65,
-          "stockQuantity": 27
-        }
-      ]
-    },
-    {
-      "id": "fbf340b4-007e-4a96-9b40-b1a9e5c3915a",
-      "name": "Golden Amber",
-      "slug": "golden-amber",
-      "brandName": "Tom Ford",
-      "categoryId": "cat-women",
-      "categorySlug": "qadin-etirleri",
-      "categoryName": "Qadın ətirləri",
-      "price": 100,
-      "isFeatured": true,
-      "primaryImageUrl": "https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&h=600&fit=crop",
-      "secondaryImageUrl": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=600&fit=crop",
-      "minPrice": 100,
-      "sku": "GOLD-50",
-      "volumeMl": 50,
-      "stock": 19,
-      "createdAt": "2026-06-27T15:57:25.343Z",
-      "variants": [
-        {
-          "id": "b22b8c15-cec6-4b9e-8a2c-c139d58ba174",
-          "sku": "golden-amber-50",
-          "volumeMl": 50,
-          "price": 100,
-          "stockQuantity": 19
-        }
-      ]
-    },
-    {
-      "id": "c6d0cd87-0b3c-48bb-a355-f7b80edbab82",
-      "name": "Silk Petals",
-      "slug": "silk-petals",
-      "brandName": "Dior",
-      "categoryId": "cat-cosmetic",
-      "categorySlug": "kosmetika",
-      "categoryName": "Kosmetika",
-      "price": 55,
-      "isFeatured": true,
-      "primaryImageUrl": "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop",
-      "secondaryImageUrl": "https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop",
-      "minPrice": 55,
-      "sku": "SILK-50",
-      "volumeMl": 50,
-      "stock": 12,
-      "createdAt": "2026-06-27T15:57:25.343Z",
-      "variants": [
-        {
-          "id": "2594ba41-4cbc-42d3-afda-b468188b50ce",
-          "sku": "silk-petals-50",
-          "volumeMl": 50,
-          "price": 55,
-          "stockQuantity": 12
-        }
-      ]
-    }
-  ],
+  "products": [],
   "coupons": [
     {
       "id": "coupon-summer20",
@@ -746,7 +636,5 @@
     }
   ],
   "registrationOtps": [],
-  "meta": {
-    "demoProductsSeeded": true
-  }
+  "meta": {}
 }

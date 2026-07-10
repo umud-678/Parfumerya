@@ -1,5 +1,3 @@
-import crypto from 'crypto';
-
 export function defaultDb() {
   return {
     users: [
@@ -104,27 +102,4 @@ export function defaultDb() {
     registrationOtps: [],
     passwordResetOtps: [],
   };
-}
-
-export function seedProducts() {
-  const items = [
-    { name: 'Rosewood Bliss', slug: 'rosewood-bliss', brandName: 'Dior', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 50, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=500&h=600&fit=crop' },
-    { name: 'Citrus Zest', slug: 'citrus-zest', brandName: 'Chanel', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 90, isNew: true, primaryImageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop' },
-    { name: 'Woodland Walk', slug: 'woodland-walk', brandName: 'Tom Ford', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 70, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?w=500&h=600&fit=crop' },
-    { name: 'Velvet Noir', slug: 'velvet-noir', brandName: 'Dior', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 80, isNew: true, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1595425970375-c9700298a1e4?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&h=600&fit=crop' },
-    { name: 'Ocean Breeze', slug: 'ocean-breeze', brandName: 'Chanel', categoryId: 'cat-cosmetic', categorySlug: 'kosmetika', categoryName: 'Kosmetika', price: 65, primaryImageUrl: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop' },
-    { name: 'Golden Amber', slug: 'golden-amber', brandName: 'Tom Ford', categoryId: 'cat-women', categorySlug: 'qadin-etirleri', categoryName: 'Qadın ətirləri', price: 100, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&h=600&fit=crop' },
-    { name: 'Midnight Oud', slug: 'midnight-oud', brandName: 'Tom Ford', categoryId: 'cat-men', categorySlug: 'kisi-etirleri', categoryName: 'Kişi ətirləri', price: 120, isNew: true, primaryImageUrl: 'https://images.unsplash.com/photo-1592945403244-b31f0502c71c?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1588405748880-12c705bad141?w=500&h=600&fit=crop' },
-    { name: 'Silk Petals', slug: 'silk-petals', brandName: 'Dior', categoryId: 'cat-cosmetic', categorySlug: 'kosmetika', categoryName: 'Kosmetika', price: 55, isFeatured: true, primaryImageUrl: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=500&h=600&fit=crop', secondaryImageUrl: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?w=500&h=600&fit=crop' },
-  ];
-  return items.map((p) => ({
-    id: crypto.randomUUID(),
-    ...p,
-    minPrice: p.price,
-    sku: `${p.slug.toUpperCase().slice(0, 4)}-50`,
-    volumeMl: 50,
-    stock: 20,
-    createdAt: new Date().toISOString(),
-    variants: [{ id: crypto.randomUUID(), sku: `${p.slug}-50`, volumeMl: 50, price: p.price, stockQuantity: 20 }],
-  }));
 }
