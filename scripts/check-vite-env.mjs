@@ -39,7 +39,7 @@ if (warnings.length) {
   console.warn('\n⚠️  Vercel Environment Variables (build davam edir):\n');
   warnings.forEach((w) => console.warn(`  • ${w}`));
   console.warn('\nVercel → Project → Settings → Environment Variables');
-  console.warn('Nümunə: VITE_API_URL=https://amoria-api.onrender.com/api\n');
+  console.warn('Nümunə: VITE_API_URL=https://parfumerya-3.onrender.com/api\n');
   process.exit(0);
 }
 

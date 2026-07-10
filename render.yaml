@@ -3,7 +3,7 @@
 
 services:
   - type: web
-    name: amoria-api
+    name: parfumerya-3
     runtime: node
     rootDir: api
     branch: main

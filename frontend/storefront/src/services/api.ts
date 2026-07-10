@@ -2,11 +2,11 @@ import { API_URL } from '../config/env';
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 
-export async function checkApiHealth(timeoutMs = 12_000): Promise<boolean> {
+export async function checkApiHealth(timeoutMs = 30_000): Promise<boolean> {
   try {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), timeoutMs);
-    const response = await fetch(`${API_URL}/health`, { signal: controller.signal });
+    const response = await fetch(`${API_URL}/health`, { signal: controller.signal, mode: 'cors' });
     window.clearTimeout(timer);
     if (!response.ok) return false;
     const payload = await response.json().catch(() => ({}));

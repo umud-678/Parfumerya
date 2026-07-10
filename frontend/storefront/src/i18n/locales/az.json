@@ -246,7 +246,7 @@
   },
   "api": {
     "unavailableTitle": "Backend API əlçatan deyil",
-    "unavailableHint": "Render-də API servisi yuxarı deyil və ya oyandırılır. Render dashboard-da amoria-api servisini yoxlayın, sonra yenidən cəhd edin.",
+    "unavailableHint": "Render-də API servisi yuxarı deyil və ya oyandırılır (pulsuz planda 30–60 saniyə çəkə bilər). Render dashboard-da API servisini yoxlayın, sonra yenidən cəhd edin.",
     "retry": "Yenidən yoxla",
     "retrying": "Yoxlanılır..."
   },

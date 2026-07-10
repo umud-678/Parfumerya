@@ -47,7 +47,7 @@ Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə 
 
 1. [render.com](https://render.com) → **Sign Up** → GitHub ilə qoşul
 2. **New +** → **Blueprint** → bu repo-nu seç
-3. `render.yaml` avtomatik `amoria-api` servisini yaradacaq
+3. `render.yaml` avtomatik `parfumerya-3` servisini yaradacaq
 4. **Environment Variables** (Render dashboard):
    ```
    MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/parfumerya?retryWrites=true&w=majority
@@ -56,9 +56,9 @@ Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə 
    (CORS URL-ləri Vercel deploy-dan sonra yeniləyin)
 5. **Deploy** — bitəndə API ünvanını götürün:
    ```
-   https://amoria-api.onrender.com
+   https://parfumerya-3.onrender.com
    ```
-6. Yoxlama: brauzerdə açın → `https://amoria-api.onrender.com/api/health`
+6. Yoxlama: brauzerdə açın → `https://parfumerya-3.onrender.com/api/health`
 
 ---
 
@@ -72,7 +72,7 @@ Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə 
 
    | Ad | Dəyər |
    |----|-------|
-   | `VITE_API_URL` | `https://amoria-api.onrender.com/api` |
+   | `VITE_API_URL` | `https://parfumerya-3.onrender.com/api` |
    | `VITE_ADMIN_URL` | `https://SIZIN-ADMIN.vercel.app` |
 
 6. **Deploy**
@@ -87,7 +87,7 @@ Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə 
 
    | Ad | Dəyər |
    |----|-------|
-   | `VITE_API_URL` | `https://amoria-api.onrender.com/api` |
+   | `VITE_API_URL` | `https://parfumerya-3.onrender.com/api` |
    | `VITE_STOREFRONT_URL` | `https://SIZIN-STORE.vercel.app` |
 
 4. **Deploy**
@@ -120,7 +120,7 @@ Hər iki Vercel URL-i hazır olandan sonra Render-də `CORS_ORIGINS`-i yeniləyi
 ### Build uğursuz — `VITE_API_URL` / prebuild
 Vercel → Project → **Settings → Environment Variables** əlavə edin:
 ```
-VITE_API_URL=https://SIZIN-API.onrender.com/api
+VITE_API_URL=https://parfumerya-3.onrender.com/api
 ```
 Sonra **Redeploy** edin.
 

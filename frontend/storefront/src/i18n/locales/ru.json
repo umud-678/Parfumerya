@@ -244,7 +244,7 @@
   },
   "api": {
     "unavailableTitle": "Backend API недоступен",
-    "unavailableHint": "API на Render не работает или просыпается. Проверьте сервис amoria-api в Render и повторите попытку.",
+    "unavailableHint": "API на Render не работает или просыпается (бесплатный план — до 30–60 сек). Проверьте API-сервис в Render и повторите попытку.",
     "retry": "Повторить",
     "retrying": "Проверка..."
   },

@@ -1,5 +1,5 @@
 const DEFAULT_API_URL = 'http://localhost:5005/api';
-const PRODUCTION_API_URL = 'https://parfumerya-1.onrender.com/api';
+const PRODUCTION_API_URL = 'https://parfumerya-3.onrender.com/api';
 const DEFAULT_STOREFRONT_URL = 'http://localhost:3000';
 
 function resolveApiUrl(): string {

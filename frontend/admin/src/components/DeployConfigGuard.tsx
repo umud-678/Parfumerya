@@ -12,7 +12,7 @@ export default function DeployConfigGuard({ children }: { children: React.ReactN
           Render-də deploy etdiyiniz API ünvanını yazın.
         </p>
         <p className="text-white/40 text-xs">
-          Nümunə: <code className="text-white/70">https://amoria-api.onrender.com/api</code>
+          Nümunə: <code className="text-mint-400">https://parfumerya-3.onrender.com/api</code>
         </p>
       </div>
     </div>

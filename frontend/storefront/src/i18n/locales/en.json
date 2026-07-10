@@ -244,7 +244,7 @@
   },
   "api": {
     "unavailableTitle": "Backend API is unavailable",
-    "unavailableHint": "The API on Render is down or waking up. Check the amoria-api service in Render dashboard, then retry.",
+    "unavailableHint": "The API on Render is down or waking up (free tier may take 30–60 seconds). Check your API service in the Render dashboard, then retry.",
     "retry": "Retry",
     "retrying": "Checking..."
   },
