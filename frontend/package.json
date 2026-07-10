@@ -7,7 +7,7 @@
     "dev:storefront": "npm run dev --prefix storefront",
     "dev:admin": "npm run dev --prefix admin",
     "stop": "node ../scripts/stop-dev.js",
-    "build": "npm run build --prefix storefront && npm run build --prefix admin"
+    "build": "npm run build --prefix storefront && npm run build --prefix admin -- --base=/admin/ && node merge-dist.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

@@ -19,10 +19,12 @@ import WishlistAdminPage from './pages/WishlistAdminPage';
 import SettingsPage from './pages/SettingsPage';
 import SecurityPage from './pages/SecurityPage';
 
+const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export default function App() {
   return (
     <DeployConfigGuard>
-      <BrowserRouter>
+      <BrowserRouter basename={routerBasename || undefined}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<AdminLayout />}>
