@@ -8,6 +8,34 @@ const SMTP_FROM = process.env.SMTP_FROM?.trim();
 
 let transporter = null;
 
+function logSmtpError(err, context) {
+  console.error(`[mailer] ${context} — SMTP xətası:`);
+  console.error('  message:', err?.message);
+  if (err?.code) console.error('  code:', err.code);
+  if (err?.command) console.error('  command:', err.command);
+  if (err?.response) console.error('  response:', err.response);
+  if (err?.responseCode) console.error('  responseCode:', err.responseCode);
+  if (err?.stack) console.error(err.stack);
+  console.error('  full error:', err);
+}
+
+function createSmtpTransport() {
+  const useSsl = SMTP_PORT === 465;
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: useSsl, // 587 → false (STARTTLS), 465 → true (SSL)
+    requireTLS: !useSsl,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
+    tls: {
+      minVersion: 'TLSv1.2',
+    },
+  });
+}
+
 export function smtpConfigured() {
   return Boolean(SMTP_HOST && SMTP_USER && SMTP_PASS);
 }
@@ -32,16 +60,8 @@ function resolveFromAddress(siteName = 'Amoria') {
 function getTransporter() {
   if (!smtpConfigured()) return null;
   if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_PORT === 465,
-      requireTLS: SMTP_PORT === 587,
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-      connectionTimeout: 15000,
-      greetingTimeout: 15000,
-      socketTimeout: 20000,
-    });
+    transporter = createSmtpTransport();
+    console.log(`[mailer] SMTP transporter hazır (host=${SMTP_HOST}, port=${SMTP_PORT}, secure=${SMTP_PORT === 465})`);
   }
   return transporter;
 }
@@ -54,6 +74,7 @@ export async function verifySmtpConnection() {
     await getTransporter().verify();
     return { ok: true, from: resolveFromAddress() };
   } catch (err) {
+    logSmtpError(err, 'SMTP verify uğursuz');
     return { ok: false, reason: err.message };
   }
 }
@@ -75,7 +96,9 @@ async function deliverMail({ to, subject, text, html, siteName, logTag }) {
     console.log(`[mailer] ${logTag} göndərildi → ${to} (messageId=${info.messageId ?? 'n/a'})`);
     return { sent: true, devLogged: false };
   } catch (err) {
-    console.error(`[mailer] ${logTag} uğursuz → ${to}:`, err.message);
+    logSmtpError(err, `${logTag} uğursuz → ${to}`);
+    // Bağlantı xətası ola bilər — növbəti cəhd üçün transporter sıfırlanır
+    transporter = null;
     const hint =
       err.message?.includes('Invalid login') || err.message?.includes('535')
         ? 'Gmail App Password səhvdir və ya 2FA aktiv deyil'
