@@ -20,6 +20,7 @@ import {
 
 export function ensureSeedData(db) {
   let changed = false;
+  const seedAdmin = defaultDb().users[0];
   if (!db.heroes?.length) {
     db.heroes = defaultDb().heroes;
     changed = true;
@@ -106,10 +107,21 @@ export function ensureSeedData(db) {
     changed = true;
   }
   // Zəmanət: bazada həmişə ən azı bir admin hesabı olsun
-  // (Admin girişi: umud9832@gmail.com / 12345678)
+  // (Admin girişi: umud9832+admin@gmail.com / 12345678)
   if (!db.users) db.users = [];
+  const existingSeedAdmin = db.users.find((u) => u.email === seedAdmin.email);
+  if (existingSeedAdmin) {
+    existingSeedAdmin.roles = ['Admin'];
+    existingSeedAdmin.isBlocked = false;
+  }
+  const legacyAdmin = db.users.find((u) => u.email === 'umud9832@gmail.com' && u.roles?.includes('Admin'));
+  if (legacyAdmin && legacyAdmin.email !== seedAdmin.email) {
+    legacyAdmin.email = seedAdmin.email;
+    legacyAdmin.roles = ['Admin'];
+    legacyAdmin.isBlocked = false;
+    changed = true;
+  }
   if (!db.users.some((u) => u.roles?.includes('Admin'))) {
-    const seedAdmin = defaultDb().users[0];
     const existing = db.users.find((u) => u.email === seedAdmin.email);
     if (existing) {
       existing.roles = ['Admin'];

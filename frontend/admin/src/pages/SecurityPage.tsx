@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { formatUserRole, isAdminRole } from '../utils/azLabels';
 import { getUsers, type AdminUser } from '../services/users';
 import { changePassword } from '../services/auth';
@@ -10,6 +11,8 @@ export default function SecurityPage() {
   const [message, setMessage] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
@@ -66,23 +69,45 @@ export default function SecurityPage() {
         <form onSubmit={handlePasswordChange} className="card-admin space-y-6">
           <div>
             <h2 className="text-mint-400 text-sm mb-3">Şifrə dəyişmə</h2>
-            <input
-              type="password"
-              placeholder="Cari şifrə"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-              className="w-full bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm mb-3 outline-none"
-            />
-            <input
-              type="password"
-              placeholder="Yeni şifrə (min. 8 simvol)"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              minLength={8}
-              className="w-full bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 text-sm mb-3 outline-none"
-            />
+            <div className="relative mb-3">
+              <input
+                type={showCurrentPassword ? 'text' : 'password'}
+                placeholder="Cari şifrə"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                required
+                className="w-full bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 pr-11 text-sm outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword((value) => !value)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-mint-400"
+                aria-label={showCurrentPassword ? 'Şifrəni gizlət' : 'Şifrəni göstər'}
+                aria-pressed={showCurrentPassword}
+              >
+                {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            <div className="relative mb-3">
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                placeholder="Yeni şifrə (min. 8 simvol)"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                minLength={8}
+                className="w-full bg-plum-950 border border-plum-700 rounded-xl px-4 py-3 pr-11 text-sm outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword((value) => !value)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-mint-400"
+                aria-label={showNewPassword ? 'Şifrəni gizlət' : 'Şifrəni göstər'}
+                aria-pressed={showNewPassword}
+              >
+                {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             <button
               type="submit"
               disabled={saving}

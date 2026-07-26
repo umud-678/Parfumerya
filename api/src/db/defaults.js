@@ -3,7 +3,7 @@ export function defaultDb() {
     users: [
       {
         id: 'admin-umud',
-        email: 'umud9832@gmail.com',
+        email: 'umud9832+admin@gmail.com',
         password: '12345678',
         fullName: 'Umud Admin',
         roles: ['Admin'],
