@@ -48,6 +48,8 @@ export interface CreateProductInput {
   isNew?: boolean;
 }
 
+export type UpdateProductInput = CreateProductInput;
+
 export interface CreateCategoryInput {
   name: string;
 }
@@ -197,6 +199,33 @@ export async function createProduct(input: CreateProductInput): Promise<AdminPro
     }),
   });
   return product;
+}
+
+export async function updateProduct(productId: string, input: UpdateProductInput): Promise<AdminProduct> {
+  const categories = await getCategories();
+  const brands = await getBrands();
+  const category = categories.find((c) => c.id === input.categoryId);
+  const brand = brands.find((b) => b.id === input.brandId);
+
+  if (!category) throw new Error('Kateqoriya seçilməyib');
+  if (!brand) throw new Error('Brend seçilməyib');
+
+  return apiFetch<AdminProduct>(`/products/${productId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      name: input.name.trim(),
+      description: input.description?.trim() ?? '',
+      categoryId: category.id,
+      brandId: brand.id,
+      imageUrl: input.imageUrl,
+      price: input.price,
+      stock: input.stock,
+      sku: input.sku.trim(),
+      volumeMl: input.volumeMl,
+      isFeatured: input.isFeatured ?? false,
+      isNew: input.isNew ?? true,
+    }),
+  });
 }
 
 export async function deleteProduct(id: string): Promise<void> {

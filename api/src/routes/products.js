@@ -107,6 +107,71 @@ router.post('/api/products', requireAuth, requireAdmin, (req, res) => {
   ok(res, product.id, 'Məhsul yaradıldı');
 });
 
+router.put('/api/products/:id', requireAuth, requireAdmin, (req, res) => {
+  const db = readDb();
+  const product = db.products.find((p) => p.id === req.params.id);
+  if (!product) return fail(res, 404, 'Məhsul tapılmadı');
+
+  const body = req.body ?? {};
+  const name = String(body.name ?? product.name).trim();
+  const description = body.description !== undefined ? String(body.description ?? '').trim() : product.description;
+  const sku = String(body.sku ?? product.sku ?? '').trim();
+  const slug = body.slug?.trim() || slugify(name || product.name);
+  const price = Number(body.price ?? product.price ?? product.minPrice ?? 0);
+  const stock = Math.max(0, Number(body.stock ?? product.stock ?? 0) || 0);
+  const volumeMl = Number(body.volumeMl ?? product.volumeMl ?? product.variants?.[0]?.volumeMl ?? 50);
+  const categoryId = String(body.categoryId ?? product.categoryId ?? '').trim();
+  const brandId = String(body.brandId ?? product.brandId ?? '').trim();
+  const imageUrl = body.imageUrl !== undefined ? String(body.imageUrl ?? '') : product.primaryImageUrl ?? '';
+
+  const category = db.categories.find((c) => c.id === categoryId) ?? null;
+  const brand = db.brands.find((b) => b.id === brandId) ?? null;
+  if (!category) return fail(res, 400, 'Kateqoriya seçilməyib');
+  if (!brand) return fail(res, 400, 'Brend seçilməyib');
+
+  const conflictSku = sku
+    ? db.products.find((p) => p.id !== product.id && ((p.sku || '').trim().toUpperCase() === sku.toUpperCase() || p.variants?.some((v) => (v.sku || '').trim().toUpperCase() === sku.toUpperCase())))
+    : null;
+  if (conflictSku) return fail(res, 400, 'Bu məhsul kodu artıq mövcuddur');
+
+  const conflictSlug = db.products.find((p) => p.id !== product.id && p.slug === slug);
+  if (conflictSlug) return fail(res, 400, 'Bu slug artıq mövcuddur');
+
+  product.name = name || product.name;
+  product.description = description;
+  product.categoryId = category.id;
+  product.categoryName = category.name;
+  product.categorySlug = category.slug;
+  product.brandId = brand.id;
+  product.brandName = brand.name;
+  product.primaryImageUrl = imageUrl;
+  product.price = price;
+  product.minPrice = price;
+  product.stock = stock;
+  product.sku = sku;
+  product.volumeMl = volumeMl;
+  product.slug = slug;
+  if (product.variants?.length) {
+    for (const variant of product.variants) {
+      variant.sku = sku || variant.sku;
+      variant.volumeMl = volumeMl;
+      variant.price = price;
+      variant.stockQuantity = stock;
+    }
+  } else {
+    product.variants = [{
+      id: crypto.randomUUID(),
+      sku,
+      volumeMl,
+      price,
+      stockQuantity: stock,
+    }];
+  }
+
+  writeDb(db);
+  ok(res, enrichProduct(db, product), 'Məhsul yeniləndi');
+});
+
 router.delete('/api/products/:id', requireAuth, requireAdmin, (req, res) => {
   const db = readDb();
   db.products = db.products.filter((p) => p.id !== req.params.id);

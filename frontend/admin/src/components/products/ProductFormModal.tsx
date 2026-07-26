@@ -6,13 +6,16 @@ import {
   getBrands,
   getCategories,
   uploadImage,
+  updateProduct,
   type Brand,
   type Category,
+  type AdminProduct,
   type CreateProductInput,
 } from '../../services/catalog';
 
 interface ProductFormModalProps {
   open: boolean;
+  product?: AdminProduct | null;
   onClose: () => void;
   onSaved: () => void;
 }
@@ -30,7 +33,7 @@ const emptyForm = {
   isNew: true,
 };
 
-export default function ProductFormModal({ open, onClose, onSaved }: ProductFormModalProps) {
+export default function ProductFormModal({ open, product, onClose, onSaved }: ProductFormModalProps) {
   const [form, setForm] = useState(emptyForm);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -53,6 +56,37 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
       }));
     });
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (product) {
+      setForm({
+        name: product.name,
+        description: product.description ?? '',
+        categoryId: product.categoryId,
+        brandId: product.brandId,
+        price: String(product.price),
+        stock: String(product.stock),
+        sku: product.sku,
+        volumeMl: String(product.volumeMl),
+        isFeatured: product.isFeatured,
+        isNew: product.isNew,
+      });
+      setImagePreview(product.primaryImageUrl);
+      setImageFile(null);
+      setError('');
+      setShowNewCategory(false);
+      setNewCategoryName('');
+      return;
+    }
+
+    setForm(emptyForm);
+    setImagePreview('');
+    setImageFile(null);
+    setError('');
+    setShowNewCategory(false);
+    setNewCategoryName('');
+  }, [open, product]);
 
   useEffect(() => {
     if (!imageFile) {
@@ -86,7 +120,7 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
     if (!form.name.trim()) return setError('Məhsul adı vacibdir');
     if (!form.categoryId) return setError('Kateqoriya seçin');
     if (!form.brandId) return setError('Brend seçin');
-    if (!imageFile && !imagePreview) return setError('Məhsul şəkli əlavə edin');
+    if (!imageFile && !imagePreview && !product) return setError('Məhsul şəkli əlavə edin');
 
     setLoading(true);
     try {
@@ -109,7 +143,11 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
         isNew: form.isNew,
       };
 
-      await createProduct(input);
+      if (product) {
+        await updateProduct(product.id, input);
+      } else {
+        await createProduct(input);
+      }
       setForm(emptyForm);
       setImageFile(null);
       setImagePreview('');
@@ -126,7 +164,7 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="card-admin w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="font-serif text-2xl text-mint-400">Yeni məhsul</h2>
+          <h2 className="font-serif text-2xl text-mint-400">{product ? 'Məhsulu redaktə et' : 'Yeni məhsul'}</h2>
           <button onClick={onClose} className="p-2 hover:text-mint-400">
             <X size={20} />
           </button>
@@ -294,7 +332,7 @@ export default function ProductFormModal({ open, onClose, onSaved }: ProductForm
               disabled={loading}
               className="flex-1 bg-mint-400 text-plum-900 font-semibold py-3 rounded-full disabled:opacity-60"
             >
-              {loading ? 'Saxlanılır...' : 'Məhsulu saxla'}
+              {loading ? 'Saxlanılır...' : product ? 'Dəyişiklikləri saxla' : 'Məhsulu saxla'}
             </button>
             <button
               type="button"

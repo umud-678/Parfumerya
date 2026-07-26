@@ -6,6 +6,7 @@ import { deleteProduct, getProducts, type AdminProduct } from '../services/catal
 export default function ProductsPage() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadProducts = useCallback(async () => {
@@ -27,6 +28,21 @@ export default function ProductsPage() {
     loadProducts();
   };
 
+  const handleCreate = () => {
+    setEditingProduct(null);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (product: AdminProduct) => {
+    setEditingProduct(product);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setEditingProduct(null);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -35,7 +51,7 @@ export default function ProductsPage() {
           <p className="text-white/40 text-sm mt-1">Məhsul, şəkil və kateqoriya əlavə edin</p>
         </div>
         <button
-          onClick={() => setModalOpen(true)}
+          onClick={handleCreate}
           className="flex items-center gap-2 bg-mint-400 text-plum-900 px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-mint-300 transition-colors"
         >
           <Plus size={16} /> Məhsul əlavə et
@@ -84,7 +100,13 @@ export default function ProductsPage() {
                   <td className={`py-3 px-2 ${p.stock <= 5 ? 'text-red-400' : ''}`}>{p.stock}</td>
                   <td className="py-3 px-2 text-white/40">{p.sku}</td>
                   <td className="py-3 px-2 text-right">
-                    <button className="p-1.5 hover:text-mint-400 opacity-40 cursor-not-allowed" title="Tezliklə">
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(p)}
+                      className="p-1.5 hover:text-mint-400"
+                      title="Məhsulu redaktə et"
+                      aria-label="Məhsulu redaktə et"
+                    >
                       <Pencil size={16} />
                     </button>
                     <button
@@ -103,7 +125,8 @@ export default function ProductsPage() {
 
       <ProductFormModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        product={editingProduct}
+        onClose={handleModalClose}
         onSaved={loadProducts}
       />
     </div>
