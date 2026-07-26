@@ -1,5 +1,6 @@
 import { apiFetch, getAuthToken } from './api';
 import { API_URL } from '../config/env';
+import { resolveMediaUrl } from '../utils/media';
 
 export interface Category {
   id: string;
@@ -77,7 +78,7 @@ function mapApiProduct(p: Record<string, unknown>): AdminProduct {
     categoryName: String(p.categoryName ?? ''),
     brandId: String(p.brandId ?? ''),
     brandName: String(p.brandName ?? ''),
-    primaryImageUrl: String(p.primaryImageUrl ?? ''),
+    primaryImageUrl: resolveMediaUrl(String(p.primaryImageUrl ?? '')),
     price: Number(p.minPrice ?? p.price ?? v?.price ?? 0),
     stock: Number(p.stock ?? v?.stockQuantity ?? 0),
     sku: String(p.sku ?? v?.sku ?? ''),

@@ -14,6 +14,7 @@
     "test:mongo": "node test/mongo-smoke.mjs"
   },
   "dependencies": {
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongodb": "^7.4.0",

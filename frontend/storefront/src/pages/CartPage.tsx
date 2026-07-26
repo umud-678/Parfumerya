@@ -4,6 +4,7 @@ import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { updateQuantity, removeFromCart } from '../store/cartSlice';
 import { PageShell } from '../components/ui/FloralDecor';
+import { resolveMediaUrl } from '../utils/media';
 
 export default function CartPage() {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export default function CartPage() {
         {items.map((item) => (
           <div key={item.variantId} className="card-elegant p-4 sm:p-6">
             <div className="flex gap-3 sm:gap-6 items-start">
-              <img src={item.imageUrl} alt={item.name} className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl bg-plum-900/30 shrink-0" />
+              <img src={resolveMediaUrl(item.imageUrl)} alt={item.name} className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-xl bg-plum-900/30 shrink-0" />
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-sm sm:text-base line-clamp-2">{item.name}</h3>
                 <p className="text-white/50 text-xs sm:text-sm">{item.volumeMl} ml</p>

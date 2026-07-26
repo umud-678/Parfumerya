@@ -1,5 +1,6 @@
 import { apiFetch } from './api';
 import type { Category, HeroSlide, Product, ProductQuery } from '../types';
+import { resolveMediaUrl } from '../utils/media';
 
 function mapProduct(p: Record<string, unknown>): Product {
   const price = Number(p.minPrice ?? p.price ?? 0);
@@ -12,8 +13,10 @@ function mapProduct(p: Record<string, unknown>): Product {
     categoryId: String(p.categoryId ?? ''),
     categorySlug: String(p.categorySlug ?? ''),
     categoryName: String(p.categoryName ?? ''),
-    primaryImageUrl: String(p.primaryImageUrl ?? ''),
-    secondaryImageUrl: p.secondaryImageUrl as string | undefined,
+    primaryImageUrl: resolveMediaUrl(String(p.primaryImageUrl ?? '')),
+    secondaryImageUrl: p.secondaryImageUrl
+      ? resolveMediaUrl(String(p.secondaryImageUrl))
+      : undefined,
     minPrice: price,
     averageRating:
       p.averageRating != null ? Number(p.averageRating) : undefined,

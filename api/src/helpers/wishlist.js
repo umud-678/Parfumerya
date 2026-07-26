@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { resolveUploadUrl } from '../utils/media.js';
 
 export function getProductFavoriteCount(db, productId) {
   return (db.wishlistFavorites ?? []).filter((f) => f.productId === productId).length;
@@ -41,7 +42,7 @@ export function aggregateWishlistStats(db) {
         productId: entry.productId,
         productName: entry.productName,
         productSlug: entry.productSlug,
-        imageUrl: entry.imageUrl,
+        imageUrl: resolveUploadUrl(entry.imageUrl),
         categoryName: entry.categoryName ?? '',
         minPrice: entry.minPrice ?? 0,
         favoriteCount: 0,

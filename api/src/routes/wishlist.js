@@ -8,6 +8,7 @@ import {
   maybeNotifyFavoriteMilestone,
   productSnapshot,
 } from '../helpers/wishlist.js';
+import { resolveUploadUrl } from '../utils/media.js';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get('/api/wishlist/my', requireAuth, (req, res) => {
     id: e.productId,
     name: e.productName,
     slug: e.productSlug,
-    primaryImageUrl: e.imageUrl,
+    primaryImageUrl: resolveUploadUrl(e.imageUrl),
     categoryName: e.categoryName,
     minPrice: e.minPrice,
     brandName: e.brandName ?? '',
@@ -115,7 +116,7 @@ router.post('/api/wishlist/sync', requireAuth, (req, res) => {
       id: e.productId,
       name: e.productName,
       slug: e.productSlug,
-      primaryImageUrl: e.imageUrl,
+      primaryImageUrl: resolveUploadUrl(e.imageUrl),
       categoryName: e.categoryName,
       minPrice: e.minPrice,
       brandName: e.brandName ?? '',

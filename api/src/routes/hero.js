@@ -11,7 +11,8 @@ router.get('/api/hero', (_req, res) => {
   const db = readDb();
   const heroes = (db.heroes ?? [])
     .filter((h) => h.isActive !== false)
-    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+    .map((hero) => resolveHeroForDeploy(hero));
   ok(res, heroes);
 });
 
@@ -31,7 +32,7 @@ router.get('/api/hero/manage', requireAuth, requireAdmin, (_req, res) => {
   }
   const hero = (db.heroes ?? []).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))[0] ?? null;
   if (!hero) return fail(res, 404, 'Ana səhifə materialı tapılmadı');
-  ok(res, hero);
+  ok(res, resolveHeroForDeploy(hero));
 });
 
 router.put('/api/hero/:id', requireAuth, requireAdmin, (req, res) => {
@@ -49,29 +50,29 @@ router.put('/api/hero/:id', requireAuth, requireAdmin, (req, res) => {
   }
   hero.updatedAt = new Date().toISOString();
   writeDb(db);
-  ok(res, hero, 'Ana ekran banneri yeniləndi');
+  ok(res, resolveHeroForDeploy(hero), 'Ana ekran banneri yeniləndi');
 });
 
-router.delete('/api/hero/:id/video', requireAuth, requireAdmin, (req, res) => {
+router.delete('/api/hero/:id/video', requireAuth, requireAdmin, async (req, res) => {
   const db = readDb();
   const hero = db.heroes?.find((h) => h.id === req.params.id);
   if (!hero) return fail(res, 404, 'Ana səhifə materialı tapılmadı');
-  deleteUploadedFile(hero.videoUrl);
+  await deleteUploadedFile(hero.videoUrl);
   hero.videoUrl = '/videos/hero.mp4';
   hero.updatedAt = new Date().toISOString();
   writeDb(db);
-  ok(res, hero, 'Video silindi və standart videoya qayıdıldı');
+  ok(res, resolveHeroForDeploy(hero), 'Video silindi və standart videoya qayıdıldı');
 });
 
-router.delete('/api/hero/:id/poster', requireAuth, requireAdmin, (req, res) => {
+router.delete('/api/hero/:id/poster', requireAuth, requireAdmin, async (req, res) => {
   const db = readDb();
   const hero = db.heroes?.find((h) => h.id === req.params.id);
   if (!hero) return fail(res, 404, 'Ana səhifə materialı tapılmadı');
-  deleteUploadedFile(hero.posterUrl);
+  await deleteUploadedFile(hero.posterUrl);
   hero.posterUrl = '';
   hero.updatedAt = new Date().toISOString();
   writeDb(db);
-  ok(res, hero, 'Poster silindi');
+  ok(res, resolveHeroForDeploy(hero), 'Poster silindi');
 });
 
 export default router;

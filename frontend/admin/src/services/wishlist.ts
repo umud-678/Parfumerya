@@ -1,4 +1,5 @@
 import { apiFetch } from './api';
+import { resolveMediaUrl } from '../utils/media';
 
 export interface WishlistStatItem {
   productId: string;
@@ -21,5 +22,12 @@ export interface WishlistStats {
 }
 
 export async function getWishlistStats(): Promise<WishlistStats> {
-  return apiFetch<WishlistStats>('/wishlist/stats');
+  const stats = await apiFetch<WishlistStats>('/wishlist/stats');
+  return {
+    ...stats,
+    items: (stats.items ?? []).map((item) => ({
+      ...item,
+      imageUrl: resolveMediaUrl(item.imageUrl),
+    })),
+  };
 }

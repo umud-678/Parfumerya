@@ -1,3 +1,5 @@
+import { resolveUploadUrl } from '../utils/media.js';
+
 export function findProductByVariantId(db, variantId) {
   if (!variantId) return null;
   return (
@@ -51,7 +53,12 @@ export function productReviewStats(db, productId) {
 export function enrichProduct(db, product) {
   const stats = productReviewStats(db, product.id);
   const { averageRating: _stored, reviewCount: _rc, ...rest } = product;
-  return { ...rest, ...stats };
+  return {
+    ...rest,
+    primaryImageUrl: resolveUploadUrl(rest.primaryImageUrl),
+    secondaryImageUrl: rest.secondaryImageUrl ? resolveUploadUrl(rest.secondaryImageUrl) : rest.secondaryImageUrl,
+    ...stats,
+  };
 }
 
 export function recalcProductRating(db, productId) {

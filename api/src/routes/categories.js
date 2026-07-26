@@ -4,6 +4,7 @@ import { readDb, writeDb } from '../db/index.js';
 import { ok, fail } from '../utils/respond.js';
 import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import { slugify } from '../utils/slugify.js';
+import { resolveUploadUrl } from '../utils/media.js';
 
 const router = Router();
 
@@ -11,6 +12,7 @@ router.get('/api/categories', (_req, res) => {
   const db = readDb();
   const data = db.categories.map((cat) => ({
     ...cat,
+    imageUrl: resolveUploadUrl(cat.imageUrl),
     productCount: db.products.filter(
       (p) => p.categoryId === cat.id || p.categorySlug === cat.slug
     ).length,
@@ -25,7 +27,7 @@ router.get('/api/categories/:slug', (req, res) => {
   const productCount = db.products.filter(
     (p) => p.categoryId === category.id || p.categorySlug === category.slug
   ).length;
-  ok(res, { ...category, productCount });
+  ok(res, { ...category, imageUrl: resolveUploadUrl(category.imageUrl), productCount });
 });
 
 router.post('/api/categories', requireAuth, requireAdmin, (req, res) => {
@@ -45,7 +47,7 @@ router.post('/api/categories', requireAuth, requireAdmin, (req, res) => {
   };
   db.categories.push(cat);
   writeDb(db);
-  ok(res, cat, 'Kateqoriya yaradıldı');
+  ok(res, { ...cat, imageUrl: resolveUploadUrl(cat.imageUrl) }, 'Kateqoriya yaradıldı');
 });
 
 router.put('/api/categories/:id', requireAuth, requireAdmin, (req, res) => {
@@ -72,7 +74,7 @@ router.put('/api/categories/:id', requireAuth, requireAdmin, (req, res) => {
   });
 
   writeDb(db);
-  ok(res, cat, 'Kateqoriya yeniləndi');
+  ok(res, { ...cat, imageUrl: resolveUploadUrl(cat.imageUrl) }, 'Kateqoriya yeniləndi');
 });
 
 router.delete('/api/categories/:id', requireAuth, requireAdmin, (req, res) => {

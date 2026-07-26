@@ -52,6 +52,9 @@ Bu URL-i aşağıda Render-də `MONGODB_URI` kimi qoyacaqsan. **Başqa heç nə 
    ```
    MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/parfumerya?retryWrites=true&w=majority
    CORS_ORIGINS=https://SIZIN-STORE.vercel.app,https://SIZIN-ADMIN.vercel.app
+   CLOUDINARY_CLOUD_NAME=...
+   CLOUDINARY_API_KEY=...
+   CLOUDINARY_API_SECRET=...
    ```
    (CORS URL-ləri Vercel deploy-dan sonra yeniləyin)
 5. **Deploy** — bitəndə API ünvanını götürün:
@@ -104,6 +107,7 @@ Hər iki Vercel URL-i hazır olandan sonra Render-də `CORS_ORIGINS`-i yeniləyi
 
 - [ ] `https://...onrender.com/api/health` → `{"success":true,...}` və içində `"storage":{"driver":"mongodb","connected":true,...}`
 - [ ] Storefront açılır, məhsullar görünür
+- [ ] Admin-dən yüklənən şəkil URL-i Cloudinary-dən gəlir və yenidən deploy edəndə də qalır
 - [ ] Admin-ə daxil olmaq olur (`umud9832@gmail.com` / `12345678`)
 - [ ] Sifariş vermək olur
 
