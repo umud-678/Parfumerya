@@ -8,12 +8,22 @@ import {
   resetPasswordWithOtp,
 } from '../lib/passwordResetOtp.js';
 
+const ADMIN_EMAIL_ALIASES = new Map([
+  ['umud9832@gmail.com', 'umud9832+admin@gmail.com'],
+]);
+
+function resolveLoginEmail(email) {
+  const normalized = String(email ?? '').trim().toLowerCase();
+  return ADMIN_EMAIL_ALIASES.get(normalized) ?? normalized;
+}
+
 const router = Router();
 
 router.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body ?? {};
   const db = readDb();
-  const user = db.users.find((u) => u.email === email && u.password === password);
+  const loginEmail = resolveLoginEmail(email);
+  const user = db.users.find((u) => u.email === loginEmail && u.password === password);
   if (!user) return fail(res, 401, 'Email və ya şifrə səhvdir');
   if (user.isBlocked) return fail(res, 403, 'Hesabınız bloklanıb. Admin ilə əlaqə saxlayın.');
 

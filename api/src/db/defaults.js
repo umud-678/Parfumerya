@@ -4,7 +4,7 @@ export function defaultDb() {
       {
         id: 'admin-umud',
         email: 'umud9832+admin@gmail.com',
-        password: '12345678',
+        password: '11111111',
         fullName: 'Umud Admin',
         roles: ['Admin'],
         isBlocked: false,

@@ -113,10 +113,12 @@ export function ensureSeedData(db) {
   if (existingSeedAdmin) {
     existingSeedAdmin.roles = ['Admin'];
     existingSeedAdmin.isBlocked = false;
+    existingSeedAdmin.password = seedAdmin.password;
   }
   const legacyAdmin = db.users.find((u) => u.email === 'umud9832@gmail.com' && u.roles?.includes('Admin'));
   if (legacyAdmin && legacyAdmin.email !== seedAdmin.email) {
     legacyAdmin.email = seedAdmin.email;
+    legacyAdmin.password = seedAdmin.password;
     legacyAdmin.roles = ['Admin'];
     legacyAdmin.isBlocked = false;
     changed = true;
@@ -126,6 +128,7 @@ export function ensureSeedData(db) {
     if (existing) {
       existing.roles = ['Admin'];
       existing.isBlocked = false;
+      existing.password = seedAdmin.password;
     } else {
       db.users.unshift(seedAdmin);
     }
