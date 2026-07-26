@@ -90,10 +90,25 @@ async function deliverMail({ to, subject, text, html, siteName, logTag }) {
     return { sent: false, devLogged: true };
   }
 
-  const from = resolveFromAddress(siteName);
+  const fromAddress = SMTP_USER;
+  const from = { name: siteName || 'Amoria', address: fromAddress };
   try {
-    const info = await transport.sendMail({ from, to, subject, text, html });
-    console.log(`[mailer] ${logTag} göndərildi → ${to} (messageId=${info.messageId ?? 'n/a'})`);
+    const info = await transport.sendMail({
+      from,
+      sender: SMTP_USER,
+      replyTo: SMTP_USER,
+      to,
+      subject,
+      text,
+      html,
+      envelope: {
+        from: SMTP_USER,
+        to,
+      },
+    });
+    console.log(
+      `[mailer] ${logTag} göndərildi → ${to} (messageId=${info.messageId ?? 'n/a'}, accepted=${JSON.stringify(info.accepted ?? [])}, rejected=${JSON.stringify(info.rejected ?? [])})`
+    );
     return { sent: true, devLogged: false };
   } catch (err) {
     logSmtpError(err, `${logTag} uğursuz → ${to}`);
